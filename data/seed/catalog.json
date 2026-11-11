@@ -1,0 +1,5150 @@
+{
+  "schemaVersion": 1,
+  "mode": "seed",
+  "generatedAt": "2026-11-11T19:59:58.156Z",
+  "videos": [
+    {
+      "youtubeId": "vWv4Y-M964I",
+      "title": "Clippers vs. Suns | Postgame Interviews | Nov. 8, 2026 | LA Clippers",
+      "channelId": "UCoK6pw3iIVF9WAWnQd3hj-g",
+      "channelTitle": "LA Clippers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/vWv4Y-M964I/hqdefault.jpg",
+      "publishedAt": "2026-11-11T19:40:15.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "LAC"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "K1dsa0nTiog",
+      "title": "Herb Jones on Warriors loss, upcoming homestand | Pelicans-Nets Shootaround 11/11/2026",
+      "channelId": "UCHvG7tf62PwI04ZRfoptRSw",
+      "channelTitle": "New Orleans Pelicans",
+      "thumbnailUrl": "https://i.ytimg.com/vi/K1dsa0nTiog/hqdefault.jpg",
+      "publishedAt": "2026-11-11T18:08:44.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PREGAME_INTERVIEW",
+        "gamePhase": "pregame",
+        "teamIds": [
+          "NOP"
+        ],
+        "playerNames": [],
+        "reason": "shootaround"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "647MAN2WJCI",
+      "title": "Jordan Clarkson Postgame Media | November 10, 2026",
+      "channelId": "UC0hb8f0OXHEzDrJDUq-YVVw",
+      "channelTitle": "New York Knicks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/647MAN2WJCI/hqdefault.jpg",
+      "publishedAt": "2026-11-11T17:13:23.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "NYK"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "_7TMNmEtbBk",
+      "title": "These Rookies Are Putting On A SHOW To Start The Season 👀🔥 | Top Plays",
+      "channelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
+      "channelTitle": "NBA",
+      "thumbnailUrl": "https://i.ytimg.com/vi/_7TMNmEtbBk/hqdefault.jpg",
+      "publishedAt": "2026-11-11T17:00:01.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "TOP_PLAYS",
+        "gamePhase": null,
+        "teamIds": [],
+        "playerNames": [],
+        "reason": "top-plays"
+      },
+      "provenance": {
+        "publisherType": "league",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "gCN7Eho3qc4",
+      "title": "NBA's Nightly Recap | November 10, 2026",
+      "channelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
+      "channelTitle": "NBA",
+      "thumbnailUrl": "https://i.ytimg.com/vi/gCN7Eho3qc4/hqdefault.jpg",
+      "publishedAt": "2026-11-11T09:01:54.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "TOP_PLAYS",
+        "gamePhase": null,
+        "teamIds": [],
+        "playerNames": [],
+        "reason": "top-plays"
+      },
+      "provenance": {
+        "publisherType": "league",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "3CLul78Qpu0",
+      "title": "Postgame Media Availability with Coach Daigneault, JMac, and Shai | OKC Thunder | November 10, 2026",
+      "channelId": "UCpXdQhy6kb5CTD8hKlmOL3w",
+      "channelTitle": "Oklahoma City Thunder",
+      "thumbnailUrl": "https://i.ytimg.com/vi/3CLul78Qpu0/hqdefault.jpg",
+      "publishedAt": "2026-11-11T08:07:39.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "OKC"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "7Zh5T6xb6jk",
+      "title": "NBA's Top 10 Plays of the Night | November 10, 2026",
+      "channelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
+      "channelTitle": "NBA",
+      "thumbnailUrl": "https://i.ytimg.com/vi/7Zh5T6xb6jk/hqdefault.jpg",
+      "publishedAt": "2026-11-11T08:07:23.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "TOP_PLAYS",
+        "gamePhase": null,
+        "teamIds": [],
+        "playerNames": [],
+        "reason": "top-plays"
+      },
+      "provenance": {
+        "publisherType": "league",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "X1RF9sBZ7QE",
+      "title": "Damian Lillard Postgame Interview | Portland Trail Blazers 123, OKC Thunder 103 | Nov. 10, 2026",
+      "channelId": "UCXk66yyzXo7-2M1BMqLhltQ",
+      "channelTitle": "Portland Trail Blazers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/X1RF9sBZ7QE/hqdefault.jpg",
+      "publishedAt": "2026-11-11T07:58:22.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "POR"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "ifxr-ockxF4",
+      "title": "Micah Nori Postgame Interview | Trail Blazers 123, Oklahoma City Thunder 103 | Nov. 10, 2026",
+      "channelId": "UCXk66yyzXo7-2M1BMqLhltQ",
+      "channelTitle": "Portland Trail Blazers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/ifxr-ockxF4/hqdefault.jpg",
+      "publishedAt": "2026-11-11T07:40:01.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "POR"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "jq-8ZjGq98A",
+      "title": "Deni Avdija Highlights (24 Points, 8 Assists) | Trail Blazers 123, Thunder 103 | Nov. 10, 2026",
+      "channelId": "UCXk66yyzXo7-2M1BMqLhltQ",
+      "channelTitle": "Portland Trail Blazers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/jq-8ZjGq98A/hqdefault.jpg",
+      "publishedAt": "2026-11-11T07:05:44.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "POR"
+        ],
+        "playerNames": [],
+        "reason": "highlights-stat-line"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "WtmaQ-mk6Ls",
+      "title": "THUNDER at TRAIL BLAZERS | FULL GAME HIGHLIGHTS | November 10, 2026",
+      "channelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
+      "channelTitle": "NBA",
+      "thumbnailUrl": "https://i.ytimg.com/vi/WtmaQ-mk6Ls/hqdefault.jpg",
+      "publishedAt": "2026-11-11T07:00:08.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "OKC",
+          "POR"
+        ],
+        "playerNames": [],
+        "reason": "highlights-full-game"
+      },
+      "provenance": {
+        "publisherType": "league",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "_Ido9ON_VC0",
+      "title": "Head Coach Jordan Ott Postgame Media Availability  | 11-10-26",
+      "channelId": "UCLxlWVVHz2a8SdCfxzVXzQw",
+      "channelTitle": "Phoenix Suns",
+      "thumbnailUrl": "https://i.ytimg.com/vi/_Ido9ON_VC0/hqdefault.jpg",
+      "publishedAt": "2026-11-11T06:50:31.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "COACH_PRESS_CONFERENCE",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "PHX"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session-coach"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "vgR_TRc9eqs",
+      "title": "Damian Lillard Highlights (25 Points) | Portland Trail Blazers 123, OKC Thunder 103 | Nov. 10, 2026",
+      "channelId": "UCXk66yyzXo7-2M1BMqLhltQ",
+      "channelTitle": "Portland Trail Blazers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/vgR_TRc9eqs/hqdefault.jpg",
+      "publishedAt": "2026-11-11T06:50:23.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "POR"
+        ],
+        "playerNames": [],
+        "reason": "highlights-stat-line"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "8jgOI6izgwU",
+      "title": "Jordan Goodwin Postgame Media Availability  | 11-10-26",
+      "channelId": "UCLxlWVVHz2a8SdCfxzVXzQw",
+      "channelTitle": "Phoenix Suns",
+      "thumbnailUrl": "https://i.ytimg.com/vi/8jgOI6izgwU/hqdefault.jpg",
+      "publishedAt": "2026-11-11T06:48:45.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "PHX"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "8xADFrKjJC4",
+      "title": "Game Highlights: Portland Trail Blazers 123, Oklahoma City Thunder 103 | Nov. 10, 2026",
+      "channelId": "UCXk66yyzXo7-2M1BMqLhltQ",
+      "channelTitle": "Portland Trail Blazers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/8xADFrKjJC4/hqdefault.jpg",
+      "publishedAt": "2026-11-11T06:44:39.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "POR"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "egclyHCo1dI",
+      "title": "POSTGAME SOUND: ORLANDO MAGIC VS. SACRAMENTO KINGS | COACH SWEENEY, FRANZ WAGNER & ANTHONY BLACK",
+      "channelId": "UCxHFH-yfbhUrsWY4prPx3oQ",
+      "channelTitle": "Orlando Magic",
+      "thumbnailUrl": "https://i.ytimg.com/vi/egclyHCo1dI/hqdefault.jpg",
+      "publishedAt": "2026-11-11T06:43:15.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "ORL"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "O5DRYvH04QI",
+      "title": "Paul George Breaks Down His 36-PT Performance In Philly",
+      "channelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
+      "channelTitle": "NBA",
+      "thumbnailUrl": "https://i.ytimg.com/vi/O5DRYvH04QI/hqdefault.jpg",
+      "publishedAt": "2026-11-11T06:07:44.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "OFFICIAL_BASKETBALL_INTERVIEW",
+        "gamePhase": null,
+        "teamIds": [],
+        "playerNames": [],
+        "reason": "talk-verb"
+      },
+      "provenance": {
+        "publisherType": "league",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "cEDaKF_RL-0",
+      "title": "Phoenix Suns beat Los Angeles Clippers 133-110 | Game Highlights 11-10-26",
+      "channelId": "UCLxlWVVHz2a8SdCfxzVXzQw",
+      "channelTitle": "Phoenix Suns",
+      "thumbnailUrl": "https://i.ytimg.com/vi/cEDaKF_RL-0/hqdefault.jpg",
+      "publishedAt": "2026-11-11T06:07:36.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "PHX"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "TajBKIjtuPw",
+      "title": "FULL GAME HIGHLIGHTS: ORLANDO MAGIC VS. SACRAMENTO KINGS 11.11.26",
+      "channelId": "UCxHFH-yfbhUrsWY4prPx3oQ",
+      "channelTitle": "Orlando Magic",
+      "thumbnailUrl": "https://i.ytimg.com/vi/TajBKIjtuPw/hqdefault.jpg",
+      "publishedAt": "2026-11-11T06:06:42.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "ORL"
+        ],
+        "playerNames": [],
+        "reason": "highlights-full-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "FuNJ6VVVQxY",
+      "title": "EXTENDED: CELTICS at 76ERS | FULL GAME HIGHLIGHTS | November 10, 2026",
+      "channelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
+      "channelTitle": "NBA",
+      "thumbnailUrl": "https://i.ytimg.com/vi/FuNJ6VVVQxY/hqdefault.jpg",
+      "publishedAt": "2026-11-11T06:02:54.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "BOS",
+          "PHI"
+        ],
+        "playerNames": [],
+        "reason": "highlights-full-game"
+      },
+      "provenance": {
+        "publisherType": "league",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "7j_QT3kVKYE",
+      "title": "MAGIC at KINGS | FULL GAME HIGHLIGHTS | November 10, 2026",
+      "channelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
+      "channelTitle": "NBA",
+      "thumbnailUrl": "https://i.ytimg.com/vi/7j_QT3kVKYE/hqdefault.jpg",
+      "publishedAt": "2026-11-11T05:53:21.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "ORL",
+          "SAC"
+        ],
+        "playerNames": [],
+        "reason": "highlights-full-game"
+      },
+      "provenance": {
+        "publisherType": "league",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "PnEEnfwfeT4",
+      "title": "POSTGAME HIGHLIGHTS: ORLANDO MAGIC VS. SACRAMENTO KINGS 11.10.26 PRESENTED BY PLANET FITNESS",
+      "channelId": "UCxHFH-yfbhUrsWY4prPx3oQ",
+      "channelTitle": "Orlando Magic",
+      "thumbnailUrl": "https://i.ytimg.com/vi/PnEEnfwfeT4/hqdefault.jpg",
+      "publishedAt": "2026-11-11T05:42:49.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "ORL"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "njFfIDmCo6o",
+      "title": "Giannis Antetokounmpo DOMINATED with 30 PTS & 11 REB In Utah| November 10, 2026",
+      "channelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
+      "channelTitle": "NBA",
+      "thumbnailUrl": "https://i.ytimg.com/vi/njFfIDmCo6o/hqdefault.jpg",
+      "publishedAt": "2026-11-11T05:32:36.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [],
+        "playerNames": [],
+        "reason": "stat-line-title"
+      },
+      "provenance": {
+        "publisherType": "league",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "chWvKIyO2uU",
+      "title": "Collier explains why he feels Utah is “close to turning the corner”",
+      "channelId": "UCv9iSdeI9IzWfV8yTDsMYWA",
+      "channelTitle": "Utah Jazz",
+      "thumbnailUrl": "https://i.ytimg.com/vi/chWvKIyO2uU/hqdefault.jpg",
+      "publishedAt": "2026-11-11T05:22:47.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "OFFICIAL_BASKETBALL_INTERVIEW",
+        "gamePhase": null,
+        "teamIds": [
+          "UTA"
+        ],
+        "playerNames": [],
+        "reason": "talk-verb"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "tMsnoYKQMSg",
+      "title": "EVERY TRIPLE in Suns Season-High 22 3PM vs Los Angeles Clippers | Phoenix Suns Highlights",
+      "channelId": "UCLxlWVVHz2a8SdCfxzVXzQw",
+      "channelTitle": "Phoenix Suns",
+      "thumbnailUrl": "https://i.ytimg.com/vi/tMsnoYKQMSg/hqdefault.jpg",
+      "publishedAt": "2026-11-11T05:19:01.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "PHX"
+        ],
+        "playerNames": [],
+        "reason": "highlights-team"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "0YEK8b_K0lM",
+      "title": "Will Hardy talks about Utah’s fight in the fourth, Collier’s contributions vs Miami",
+      "channelId": "UCv9iSdeI9IzWfV8yTDsMYWA",
+      "channelTitle": "Utah Jazz",
+      "thumbnailUrl": "https://i.ytimg.com/vi/0YEK8b_K0lM/hqdefault.jpg",
+      "publishedAt": "2026-11-11T05:18:37.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "OFFICIAL_BASKETBALL_INTERVIEW",
+        "gamePhase": null,
+        "teamIds": [
+          "UTA"
+        ],
+        "playerNames": [],
+        "reason": "talk-verb"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "QMJ6w_jGfds",
+      "title": "Jordan Goodwin Postgame On-Court Interview after Suns win against Los Angeles Clippers | 11-10-26",
+      "channelId": "UCLxlWVVHz2a8SdCfxzVXzQw",
+      "channelTitle": "Phoenix Suns",
+      "thumbnailUrl": "https://i.ytimg.com/vi/QMJ6w_jGfds/hqdefault.jpg",
+      "publishedAt": "2026-11-11T05:12:10.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "PHX"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "KPlqaEIp0nI",
+      "title": "Ace with 23 pts, 7 reb against Heat at home 🎥",
+      "channelId": "UCv9iSdeI9IzWfV8yTDsMYWA",
+      "channelTitle": "Utah Jazz",
+      "thumbnailUrl": "https://i.ytimg.com/vi/KPlqaEIp0nI/hqdefault.jpg",
+      "publishedAt": "2026-11-11T05:05:19.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "UTA"
+        ],
+        "playerNames": [],
+        "reason": "stat-line-title"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "RJKtDFTA-tE",
+      "title": "OG Anunoby HIGHLIGHT REEL vs Milwaukee | November 10, 2026",
+      "channelId": "UC0hb8f0OXHEzDrJDUq-YVVw",
+      "channelTitle": "New York Knicks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/RJKtDFTA-tE/hqdefault.jpg",
+      "publishedAt": "2026-11-11T04:13:04.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "NYK"
+        ],
+        "playerNames": [],
+        "reason": "highlights-player-words"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "SIswoHvm7E4",
+      "title": "Paul George GOES OFF in return to Philly as Celtics crush Sixers 123-101 | Extended Highlights",
+      "channelId": "UCMfT9dr6xC_RIWoA9hI0meQ",
+      "channelTitle": "Boston Celtics",
+      "thumbnailUrl": "https://i.ytimg.com/vi/SIswoHvm7E4/hqdefault.jpg",
+      "publishedAt": "2026-11-11T04:09:09.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "BOS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-full-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "gp-UFbnebsg",
+      "title": "Taylor Jenkins Postgame Press Conference | 11.10.26",
+      "channelId": "UCRZDEVva3Z8h_Q0VetTgDUA",
+      "channelTitle": "Milwaukee Bucks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/gp-UFbnebsg/hqdefault.jpg",
+      "publishedAt": "2026-11-11T03:33:34.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "MIL"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "tRYzxN4-XT0",
+      "title": "Alvan Adams Media Availability | Phoenix Suns | 11-10-26",
+      "channelId": "UCLxlWVVHz2a8SdCfxzVXzQw",
+      "channelTitle": "Phoenix Suns",
+      "thumbnailUrl": "https://i.ytimg.com/vi/tRYzxN4-XT0/hqdefault.jpg",
+      "publishedAt": "2026-11-11T03:19:48.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "PHX"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "cC6FpnvEwvI",
+      "title": "SHOOTAROUND SOUND: ORLANDO MAGIC VS. SACRAMENTO KINGS | ANTHONY BLACK & NIKOLA VUCEVIC",
+      "channelId": "UCxHFH-yfbhUrsWY4prPx3oQ",
+      "channelTitle": "Orlando Magic",
+      "thumbnailUrl": "https://i.ytimg.com/vi/cC6FpnvEwvI/hqdefault.jpg",
+      "publishedAt": "2026-11-10T21:45:12.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PREGAME_INTERVIEW",
+        "gamePhase": "pregame",
+        "teamIds": [
+          "ORL"
+        ],
+        "playerNames": [],
+        "reason": "shootaround"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "JhQJIpll138",
+      "title": "Shootaround Media Availability with Caruso & Hartenstein | November 10, 2026 | OKC Thunder",
+      "channelId": "UCpXdQhy6kb5CTD8hKlmOL3w",
+      "channelTitle": "Oklahoma City Thunder",
+      "thumbnailUrl": "https://i.ytimg.com/vi/JhQJIpll138/hqdefault.jpg",
+      "publishedAt": "2026-11-10T20:28:31.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PREGAME_INTERVIEW",
+        "gamePhase": "pregame",
+        "teamIds": [
+          "OKC"
+        ],
+        "playerNames": [],
+        "reason": "shootaround"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "rgTvu8B3m1o",
+      "title": "“[Trey] Is A Smart Guy” | Pablo Prigioni Practice Sound | 11.10.26",
+      "channelId": "UCXWDN5NKVFgnPt25CMh98Cg",
+      "channelTitle": "Minnesota Timberwolves",
+      "thumbnailUrl": "https://i.ytimg.com/vi/rgTvu8B3m1o/hqdefault.jpg",
+      "publishedAt": "2026-11-10T20:10:50.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "MIN"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "XSTWuTAX8p8",
+      "title": "“We Got A Big Goal To Win The Championship” | Jaden McDaniels Practice Sound | 11.10.26",
+      "channelId": "UCXWDN5NKVFgnPt25CMh98Cg",
+      "channelTitle": "Minnesota Timberwolves",
+      "thumbnailUrl": "https://i.ytimg.com/vi/XSTWuTAX8p8/hqdefault.jpg",
+      "publishedAt": "2026-11-10T20:10:16.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "MIN"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "VIjhQe3NnrY",
+      "title": "Brayden Burries and Nate Ament Shootaround Media Availability | 11.10.26",
+      "channelId": "UCRZDEVva3Z8h_Q0VetTgDUA",
+      "channelTitle": "Milwaukee Bucks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/VIjhQe3NnrY/hqdefault.jpg",
+      "publishedAt": "2026-11-10T18:42:34.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PREGAME_INTERVIEW",
+        "gamePhase": "pregame",
+        "teamIds": [
+          "MIL"
+        ],
+        "playerNames": [],
+        "reason": "shootaround"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "2bN4Zz9lLKM",
+      "title": "Philadelphia 76ers Practice Media Availability 🎙️ | Jabari Walker | 11.10.26",
+      "channelId": "UC5qJUyng_ezl0TVjVJFqtfQ",
+      "channelTitle": "Philadelphia 76ers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/2bN4Zz9lLKM/hqdefault.jpg",
+      "publishedAt": "2026-11-10T17:11:47.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "PHI"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "BH4qlv6H--8",
+      "title": "Caleb Wilson Opens Up About His Basketball Journey | Q&A",
+      "channelId": "UCvZi1jVVZ2yq0k5kkjzmuGw",
+      "channelTitle": "Chicago Bulls",
+      "thumbnailUrl": "https://i.ytimg.com/vi/BH4qlv6H--8/hqdefault.jpg",
+      "publishedAt": "2026-11-10T16:00:05.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "OFFICIAL_BASKETBALL_INTERVIEW",
+        "gamePhase": null,
+        "teamIds": [
+          "CHI"
+        ],
+        "playerNames": [],
+        "reason": "interview"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "hUinEotYZ-M",
+      "title": "Tuomas Iisalo Press Conference | Grizzlies vs. Raptors",
+      "channelId": "UCCK5EpWKYrAmILfaZThCV-Q",
+      "channelTitle": "Memphis Grizzlies",
+      "thumbnailUrl": "https://i.ytimg.com/vi/hUinEotYZ-M/hqdefault.jpg",
+      "publishedAt": "2026-11-10T11:10:10.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "MEM"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "RO4mB3hbFP0",
+      "title": "Jamahl Mosley | Pelicans vs. Warriors Postgame Interview 11/9/26",
+      "channelId": "UCHvG7tf62PwI04ZRfoptRSw",
+      "channelTitle": "New Orleans Pelicans",
+      "thumbnailUrl": "https://i.ytimg.com/vi/RO4mB3hbFP0/hqdefault.jpg",
+      "publishedAt": "2026-11-10T06:06:17.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "NOP"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "lx7qrhOpJ3c",
+      "title": "Derik Queen Highlights vs. Golden State Warriors 11/9/26",
+      "channelId": "UCHvG7tf62PwI04ZRfoptRSw",
+      "channelTitle": "New Orleans Pelicans",
+      "thumbnailUrl": "https://i.ytimg.com/vi/lx7qrhOpJ3c/hqdefault.jpg",
+      "publishedAt": "2026-11-10T05:57:06.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "NOP"
+        ],
+        "playerNames": [],
+        "reason": "highlights-named-player"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "GzMddriBv2A",
+      "title": "Full Denver Nuggets Postgame Media Availability vs. HOU 🎙",
+      "channelId": "UCl8hzdP5wVlhuzNG3WCJa1w",
+      "channelTitle": "Denver Nuggets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/GzMddriBv2A/hqdefault.jpg",
+      "publishedAt": "2026-11-10T05:43:28.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "DEN"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "BZkSD9me9fo",
+      "title": "Head Coach Jordan Ott Postgame Media Availability | 11-9-26",
+      "channelId": "UCLxlWVVHz2a8SdCfxzVXzQw",
+      "channelTitle": "Phoenix Suns",
+      "thumbnailUrl": "https://i.ytimg.com/vi/BZkSD9me9fo/hqdefault.jpg",
+      "publishedAt": "2026-11-10T05:13:24.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "COACH_PRESS_CONFERENCE",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "PHX"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session-coach"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "TYK7SwLyT0s",
+      "title": "Highlights: WEMBY DROPS 40 POINTS IN SPURS BIG WIN OVER SUNS",
+      "channelId": "UCEZHE-0CoHqeL1LGFa2EmQw",
+      "channelTitle": "San Antonio Spurs",
+      "thumbnailUrl": "https://i.ytimg.com/vi/TYK7SwLyT0s/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:54:58.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "SAS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-stat-line"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "VW3u2tQw9cg",
+      "title": "Rick Carlisle Postgame Media Availability at Dallas Mavericks | November 9, 2026",
+      "channelId": "UCUQDCnAwU-35cOo8WCzg6zA",
+      "channelTitle": "Indiana Pacers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/VW3u2tQw9cg/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:46:26.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "IND"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "iod1wlPhizE",
+      "title": "Nikola Jokić 25 Points and 16 Rebounds | Game Highlights DEN vs. HOU",
+      "channelId": "UCl8hzdP5wVlhuzNG3WCJa1w",
+      "channelTitle": "Denver Nuggets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/iod1wlPhizE/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:38:08.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "DEN"
+        ],
+        "playerNames": [],
+        "reason": "highlights-stat-line"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "Sm-h6-bQxes",
+      "title": "Jamal Murray 38 Points | Game Highlights DEN vs. HOU",
+      "channelId": "UCl8hzdP5wVlhuzNG3WCJa1w",
+      "channelTitle": "Denver Nuggets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/Sm-h6-bQxes/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:37:50.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "DEN"
+        ],
+        "playerNames": [],
+        "reason": "highlights-stat-line"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "JzYmV1wTDUs",
+      "title": "Mavericks Highlights vs. Indiana Pacers | November 9, 2026",
+      "channelId": "UCZywaCS_y9YOSSAC9z3dIeg",
+      "channelTitle": "Dallas Mavericks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/JzYmV1wTDUs/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:30:32.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "DAL"
+        ],
+        "playerNames": [],
+        "reason": "highlights-team"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "GF_FcsfGWqk",
+      "title": "Toronto Raptors Full Media Availability | Post Game vs Memphis Grizzlies | November 09, 2026",
+      "channelId": "UCYBFE432C2AmNRDGEXE4uVg",
+      "channelTitle": "Toronto Raptors",
+      "thumbnailUrl": "https://i.ytimg.com/vi/GF_FcsfGWqk/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:22:46.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "TOR"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "EQQ6PWdio4E",
+      "title": "Cooper Flagg (43 PTS, 10 REB, 6 AST) vs. Indiana Pacers | November 9, 2026",
+      "channelId": "UCZywaCS_y9YOSSAC9z3dIeg",
+      "channelTitle": "Dallas Mavericks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/EQQ6PWdio4E/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:15:56.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "DAL"
+        ],
+        "playerNames": [],
+        "reason": "stat-line-title"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "j0jITf8AGRs",
+      "title": "Hornets vs Cavaliers: Tidjane Salaün Postgame Media Availability | 11/9/2026",
+      "channelId": "UCPhFI5lIFnSggz7HgY9UuuQ",
+      "channelTitle": "Charlotte Hornets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/j0jITf8AGRs/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:12:57.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "CHA"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "vk79V_XahBU",
+      "title": "Kyrie Irving (35 points) vs. Indiana Pacers | November 9, 2026",
+      "channelId": "UCZywaCS_y9YOSSAC9z3dIeg",
+      "channelTitle": "Dallas Mavericks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/vk79V_XahBU/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:12:46.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "DAL"
+        ],
+        "playerNames": [],
+        "reason": "stat-line-title"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "9bx8mdfvsHk",
+      "title": "Jamal Shead | Post Game at  Memphis Grizzlies | November 09, 2026",
+      "channelId": "UCYBFE432C2AmNRDGEXE4uVg",
+      "channelTitle": "Toronto Raptors",
+      "thumbnailUrl": "https://i.ytimg.com/vi/9bx8mdfvsHk/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:12:18.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "TOR"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "sb1F3GVweTw",
+      "title": "Jakob Poeltl | Post Game at  Memphis Grizzlies | November 09, 2026",
+      "channelId": "UCYBFE432C2AmNRDGEXE4uVg",
+      "channelTitle": "Toronto Raptors",
+      "thumbnailUrl": "https://i.ytimg.com/vi/sb1F3GVweTw/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:11:13.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "TOR"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "moLcB7Qj_MY",
+      "title": "Media Availability: Head Coach Brian Keefe and AJ Dybantsa | 11.9.26",
+      "channelId": "UChvzoBPvORuNGtHTMzjUsIQ",
+      "channelTitle": "Washington Wizards",
+      "thumbnailUrl": "https://i.ytimg.com/vi/moLcB7Qj_MY/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:09:38.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "WAS"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "ANbTZbGN37Y",
+      "title": "Pascal Siakam Leads the Way in Close Loss in Dallas| Full Game Highlights",
+      "channelId": "UCUQDCnAwU-35cOo8WCzg6zA",
+      "channelTitle": "Indiana Pacers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/ANbTZbGN37Y/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:08:59.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "IND"
+        ],
+        "playerNames": [],
+        "reason": "highlights-full-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "4KumCesEkmM",
+      "title": "Hornets vs Cavaliers: Naz Reid Postgame Media Availability | 11/9/2026",
+      "channelId": "UCPhFI5lIFnSggz7HgY9UuuQ",
+      "channelTitle": "Charlotte Hornets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/4KumCesEkmM/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:07:56.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "CHA"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "Zam8Hpx3QP0",
+      "title": "Hornets vs Cavaliers: Coach Charles Lee Postgame Media Availability | 11/9/2026",
+      "channelId": "UCPhFI5lIFnSggz7HgY9UuuQ",
+      "channelTitle": "Charlotte Hornets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/Zam8Hpx3QP0/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:03:07.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "COACH_PRESS_CONFERENCE",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "CHA"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session-coach"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "z2ZESUNQwF4",
+      "title": "Darko Rajakovic | Post Game at  Memphis Grizzlies | November 09, 2026",
+      "channelId": "UCYBFE432C2AmNRDGEXE4uVg",
+      "channelTitle": "Toronto Raptors",
+      "thumbnailUrl": "https://i.ytimg.com/vi/z2ZESUNQwF4/hqdefault.jpg",
+      "publishedAt": "2026-11-10T04:02:15.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "TOR"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "-e6jx7rs9gE",
+      "title": "Raptors vs Grizzlies Game Highlights | November 09, 2026",
+      "channelId": "UCYBFE432C2AmNRDGEXE4uVg",
+      "channelTitle": "Toronto Raptors",
+      "thumbnailUrl": "https://i.ytimg.com/vi/-e6jx7rs9gE/hqdefault.jpg",
+      "publishedAt": "2026-11-10T03:51:51.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "TOR"
+        ],
+        "playerNames": [],
+        "reason": "highlights-team"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "u4MkNuF6xy4",
+      "title": "Hawks vs. Lakers Postgame Press Conference: Dyson Daniels",
+      "channelId": "UCpfcwELvR1wtcRJ0UxNXHYw",
+      "channelTitle": "Atlanta Hawks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/u4MkNuF6xy4/hqdefault.jpg",
+      "publishedAt": "2026-11-10T03:50:20.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "ATL"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "OVNDGoXvMD4",
+      "title": "Daniss Jenkins Highlights  l  Pistons vs Wizards  l 11.09.26 #NBA",
+      "channelId": "UCtcSBo9EzOtXHxiPhU6RN8A",
+      "channelTitle": "Detroit Pistons",
+      "thumbnailUrl": "https://i.ytimg.com/vi/OVNDGoXvMD4/hqdefault.jpg",
+      "publishedAt": "2026-11-10T03:43:02.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "DET"
+        ],
+        "playerNames": [],
+        "reason": "highlights-named-player"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "G0wFyTgHAMY",
+      "title": "John Collins Highlights  l  Pistons vs Wizards  l 11.09.26 #NBA",
+      "channelId": "UCtcSBo9EzOtXHxiPhU6RN8A",
+      "channelTitle": "Detroit Pistons",
+      "thumbnailUrl": "https://i.ytimg.com/vi/G0wFyTgHAMY/hqdefault.jpg",
+      "publishedAt": "2026-11-10T03:42:00.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "DET"
+        ],
+        "playerNames": [],
+        "reason": "highlights-named-player"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "t4Cf5zYZp7w",
+      "title": "Post Game Press Conference l J.B. Bickerstaff l Pistons at Wizards  l 11.09.26 #NBA",
+      "channelId": "UCtcSBo9EzOtXHxiPhU6RN8A",
+      "channelTitle": "Detroit Pistons",
+      "thumbnailUrl": "https://i.ytimg.com/vi/t4Cf5zYZp7w/hqdefault.jpg",
+      "publishedAt": "2026-11-10T03:22:36.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "DET"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "tqh6vP1CkP4",
+      "title": "Highlights: Washington Wizards at Detroit Pistons",
+      "channelId": "UChvzoBPvORuNGtHTMzjUsIQ",
+      "channelTitle": "Washington Wizards",
+      "thumbnailUrl": "https://i.ytimg.com/vi/tqh6vP1CkP4/hqdefault.jpg",
+      "publishedAt": "2026-11-10T03:15:14.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "WAS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "63DeYf68fIk",
+      "title": "Ty Jerome Walk-Off Interview | Grizzlies vs. Raptors",
+      "channelId": "UCCK5EpWKYrAmILfaZThCV-Q",
+      "channelTitle": "Memphis Grizzlies",
+      "thumbnailUrl": "https://i.ytimg.com/vi/63DeYf68fIk/hqdefault.jpg",
+      "publishedAt": "2026-11-10T03:09:56.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "MEM"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "-Q5JUPv2ZAE",
+      "title": "Bounce Back at Home | Detroit Pistons vs. Washington Wizards Highlights | 11.09.26 #NBA",
+      "channelId": "UCtcSBo9EzOtXHxiPhU6RN8A",
+      "channelTitle": "Detroit Pistons",
+      "thumbnailUrl": "https://i.ytimg.com/vi/-Q5JUPv2ZAE/hqdefault.jpg",
+      "publishedAt": "2026-11-10T03:07:51.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "DET"
+        ],
+        "playerNames": [],
+        "reason": "highlights-team"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "xH5k8cCU-n8",
+      "title": "Memphis Grizzlies Highlights vs Toronto Raptors",
+      "channelId": "UCCK5EpWKYrAmILfaZThCV-Q",
+      "channelTitle": "Memphis Grizzlies",
+      "thumbnailUrl": "https://i.ytimg.com/vi/xH5k8cCU-n8/hqdefault.jpg",
+      "publishedAt": "2026-11-10T03:04:53.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "MEM"
+        ],
+        "playerNames": [],
+        "reason": "highlights-team"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "GyjuJ8BJXrw",
+      "title": "Highlights: AJ ties career high with 21 points at Pistons",
+      "channelId": "UChvzoBPvORuNGtHTMzjUsIQ",
+      "channelTitle": "Washington Wizards",
+      "thumbnailUrl": "https://i.ytimg.com/vi/GyjuJ8BJXrw/hqdefault.jpg",
+      "publishedAt": "2026-11-10T03:03:33.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "WAS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-stat-line"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "NTztQb35KsY",
+      "title": "Cameron Boozer Highlights vs Toronto Raptors",
+      "channelId": "UCCK5EpWKYrAmILfaZThCV-Q",
+      "channelTitle": "Memphis Grizzlies",
+      "thumbnailUrl": "https://i.ytimg.com/vi/NTztQb35KsY/hqdefault.jpg",
+      "publishedAt": "2026-11-10T03:02:02.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "MEM"
+        ],
+        "playerNames": [],
+        "reason": "highlights-named-player"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "Vn1TlU6wsQ0",
+      "title": "Jerami Grant Highlights vs Toronto Raptors",
+      "channelId": "UCCK5EpWKYrAmILfaZThCV-Q",
+      "channelTitle": "Memphis Grizzlies",
+      "thumbnailUrl": "https://i.ytimg.com/vi/Vn1TlU6wsQ0/hqdefault.jpg",
+      "publishedAt": "2026-11-10T03:00:44.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "MEM"
+        ],
+        "playerNames": [],
+        "reason": "highlights-named-player"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "YTRRoA511EE",
+      "title": "Ty Jerome Highlights vs Toronto Raptors",
+      "channelId": "UCCK5EpWKYrAmILfaZThCV-Q",
+      "channelTitle": "Memphis Grizzlies",
+      "thumbnailUrl": "https://i.ytimg.com/vi/YTRRoA511EE/hqdefault.jpg",
+      "publishedAt": "2026-11-10T03:00:04.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "MEM"
+        ],
+        "playerNames": [],
+        "reason": "highlights-named-player"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "3UEZKwN34JM",
+      "title": "Highlights: Anthony Davis puts up 44 points at Pistons",
+      "channelId": "UChvzoBPvORuNGtHTMzjUsIQ",
+      "channelTitle": "Washington Wizards",
+      "thumbnailUrl": "https://i.ytimg.com/vi/3UEZKwN34JM/hqdefault.jpg",
+      "publishedAt": "2026-11-10T02:58:51.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "WAS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-stat-line"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "SooZktkD5Z0",
+      "title": "Game Highlights | Hornets Defeat Cavs 124-112 | 11/9/2026",
+      "channelId": "UCPhFI5lIFnSggz7HgY9UuuQ",
+      "channelTitle": "Charlotte Hornets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/SooZktkD5Z0/hqdefault.jpg",
+      "publishedAt": "2026-11-10T02:56:46.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "CHA"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "edNoNKa2dgg",
+      "title": "CJ McCollum eclipses 17,000 Career Points in Hawks matchup vs. Lakers",
+      "channelId": "UCpfcwELvR1wtcRJ0UxNXHYw",
+      "channelTitle": "Atlanta Hawks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/edNoNKa2dgg/hqdefault.jpg",
+      "publishedAt": "2026-11-10T02:54:56.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "ATL"
+        ],
+        "playerNames": [],
+        "reason": "stat-line-title"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "qLM6wYN8hyQ",
+      "title": "Hawks vs. Lakers Postgame Press Conference: Head Coach Quin Snyder",
+      "channelId": "UCpfcwELvR1wtcRJ0UxNXHYw",
+      "channelTitle": "Atlanta Hawks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/qLM6wYN8hyQ/hqdefault.jpg",
+      "publishedAt": "2026-11-10T02:54:28.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "COACH_PRESS_CONFERENCE",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "ATL"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session-coach"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "ICIY3efP8pY",
+      "title": "Game Highlights | Naz Reid 25 PTS and 13 REB as Hornets Take Down Cavs | 11/9/2026",
+      "channelId": "UCPhFI5lIFnSggz7HgY9UuuQ",
+      "channelTitle": "Charlotte Hornets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/ICIY3efP8pY/hqdefault.jpg",
+      "publishedAt": "2026-11-10T02:52:51.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "CHA"
+        ],
+        "playerNames": [],
+        "reason": "highlights-stat-line"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "VCzvPvtPe08",
+      "title": "Game Highlights | Grayson Allen Scores 27 PTS as Hornets Take Down Cavs | 11/9/2026",
+      "channelId": "UCPhFI5lIFnSggz7HgY9UuuQ",
+      "channelTitle": "Charlotte Hornets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/VCzvPvtPe08/hqdefault.jpg",
+      "publishedAt": "2026-11-10T02:48:56.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "CHA"
+        ],
+        "playerNames": [],
+        "reason": "highlights-stat-line"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "er-0X-yJBEE",
+      "title": "Cavs at Hornets | Kenny Atkinson Post Game | 11.09.2026",
+      "channelId": "UCOdS-I1sYkKWhtTjMUWP_TA",
+      "channelTitle": "Cleveland Cavaliers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/er-0X-yJBEE/hqdefault.jpg",
+      "publishedAt": "2026-11-10T02:38:54.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "CLE"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "-BSN5vAaKVA",
+      "title": "Micah Nori Media Availability | Nov. 9, 2026 | Portland Trail Blazers",
+      "channelId": "UCXk66yyzXo7-2M1BMqLhltQ",
+      "channelTitle": "Portland Trail Blazers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/-BSN5vAaKVA/hqdefault.jpg",
+      "publishedAt": "2026-11-09T23:02:05.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "POR"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "6lZohNGKAMQ",
+      "title": "Damian Lillard Media Availability | Nov. 9, 2026 | Portland Trail Blazers",
+      "channelId": "UCXk66yyzXo7-2M1BMqLhltQ",
+      "channelTitle": "Portland Trail Blazers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/6lZohNGKAMQ/hqdefault.jpg",
+      "publishedAt": "2026-11-09T22:40:49.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "POR"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "oa_R7gMeYes",
+      "title": "One on One with Nique Clifford and Nick Gallo | November 9, 2026 | OKC Thunder",
+      "channelId": "UCpXdQhy6kb5CTD8hKlmOL3w",
+      "channelTitle": "Oklahoma City Thunder",
+      "thumbnailUrl": "https://i.ytimg.com/vi/oa_R7gMeYes/hqdefault.jpg",
+      "publishedAt": "2026-11-09T21:47:19.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "OFFICIAL_BASKETBALL_INTERVIEW",
+        "gamePhase": null,
+        "teamIds": [
+          "OKC"
+        ],
+        "playerNames": [],
+        "reason": "interview"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "Wxz5POC3-J0",
+      "title": "PRACTICE SOUND: COACH SWEENEY & DESMOND BANE BY SAS",
+      "channelId": "UCxHFH-yfbhUrsWY4prPx3oQ",
+      "channelTitle": "Orlando Magic",
+      "thumbnailUrl": "https://i.ytimg.com/vi/Wxz5POC3-J0/hqdefault.jpg",
+      "publishedAt": "2026-11-09T21:00:13.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "ORL"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "nkg52cGUhgg",
+      "title": "Collin Gillespie Shootaround Media Availability | 11-9-26",
+      "channelId": "UCLxlWVVHz2a8SdCfxzVXzQw",
+      "channelTitle": "Phoenix Suns",
+      "thumbnailUrl": "https://i.ytimg.com/vi/nkg52cGUhgg/hqdefault.jpg",
+      "publishedAt": "2026-11-09T19:13:59.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PREGAME_INTERVIEW",
+        "gamePhase": "pregame",
+        "teamIds": [
+          "PHX"
+        ],
+        "playerNames": [],
+        "reason": "shootaround"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "bgEetbCdAC8",
+      "title": "Golden State Warriors Plays of the Week | Week 3 (2026-27 NBA Season)",
+      "channelId": "UCeYc_OjHs3QNxIjti2whKzg",
+      "channelTitle": "Golden State Warriors",
+      "thumbnailUrl": "https://i.ytimg.com/vi/bgEetbCdAC8/hqdefault.jpg",
+      "publishedAt": "2026-11-09T17:47:16.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "TOP_PLAYS",
+        "gamePhase": null,
+        "teamIds": [
+          "GSW"
+        ],
+        "playerNames": [],
+        "reason": "top-plays"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "FKl6F2cL1Oo",
+      "title": "Stars & Stripes Sit-Down with Sixers Forward Jabari Walker",
+      "channelId": "UC5qJUyng_ezl0TVjVJFqtfQ",
+      "channelTitle": "Philadelphia 76ers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/FKl6F2cL1Oo/hqdefault.jpg",
+      "publishedAt": "2026-11-09T16:36:14.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "OFFICIAL_BASKETBALL_INTERVIEW",
+        "gamePhase": null,
+        "teamIds": [
+          "PHI"
+        ],
+        "playerNames": [],
+        "reason": "interview"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "0bg0sW1ve8s",
+      "title": "Clippers vs. Pelicans | Postgame Interviews | Nov. 8, 2026 | LA Clippers",
+      "channelId": "UCoK6pw3iIVF9WAWnQd3hj-g",
+      "channelTitle": "LA Clippers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/0bg0sW1ve8s/hqdefault.jpg",
+      "publishedAt": "2026-11-09T11:05:45.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "LAC"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "2V_E3HF7Ymo",
+      "title": "Darius Garland: Double-Double vs. Pelicans Highlights | LA Clippers",
+      "channelId": "UCoK6pw3iIVF9WAWnQd3hj-g",
+      "channelTitle": "LA Clippers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/2V_E3HF7Ymo/hqdefault.jpg",
+      "publishedAt": "2026-11-09T10:28:08.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "LAC"
+        ],
+        "playerNames": [],
+        "reason": "highlights-stat-line"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "9nfupQPWYxU",
+      "title": "Clippers Defeat Pelicans - GAME HIGHLIGHTS | LA Clippers",
+      "channelId": "UCoK6pw3iIVF9WAWnQd3hj-g",
+      "channelTitle": "LA Clippers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/9nfupQPWYxU/hqdefault.jpg",
+      "publishedAt": "2026-11-09T09:49:52.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "LAC"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "OvydRh0OZGQ",
+      "title": "Trey Murphy III | Pelicans vs. Clippers Postgame Interview 11/8/26",
+      "channelId": "UCHvG7tf62PwI04ZRfoptRSw",
+      "channelTitle": "New Orleans Pelicans",
+      "thumbnailUrl": "https://i.ytimg.com/vi/OvydRh0OZGQ/hqdefault.jpg",
+      "publishedAt": "2026-11-09T06:25:16.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "NOP"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "2iJQSJ8w88Q",
+      "title": "Jamahl Mosley | Pelicans vs. Clippers Postgame Interview 11/8/26",
+      "channelId": "UCHvG7tf62PwI04ZRfoptRSw",
+      "channelTitle": "New Orleans Pelicans",
+      "thumbnailUrl": "https://i.ytimg.com/vi/2iJQSJ8w88Q/hqdefault.jpg",
+      "publishedAt": "2026-11-09T06:25:14.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "NOP"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "tcekbbJ8OUg",
+      "title": "Trey Murphy III Highlights vs. LA Clippers 11/8/26",
+      "channelId": "UCHvG7tf62PwI04ZRfoptRSw",
+      "channelTitle": "New Orleans Pelicans",
+      "thumbnailUrl": "https://i.ytimg.com/vi/tcekbbJ8OUg/hqdefault.jpg",
+      "publishedAt": "2026-11-09T05:31:35.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "NOP"
+        ],
+        "playerNames": [],
+        "reason": "highlights-named-player"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "UHpMUk0M35c",
+      "title": "Zion Williamson Highlights vs. LA Clippers 11/8/26",
+      "channelId": "UCHvG7tf62PwI04ZRfoptRSw",
+      "channelTitle": "New Orleans Pelicans",
+      "thumbnailUrl": "https://i.ytimg.com/vi/UHpMUk0M35c/hqdefault.jpg",
+      "publishedAt": "2026-11-09T05:29:19.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "NOP"
+        ],
+        "playerNames": [],
+        "reason": "highlights-named-player"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "il5n8LgO95Q",
+      "title": "\"The Fans Gave Us Juice We Needed To Get The Win.\" | Bones Hyland Postgame Sound | 11.8.26",
+      "channelId": "UCXWDN5NKVFgnPt25CMh98Cg",
+      "channelTitle": "Minnesota Timberwolves",
+      "thumbnailUrl": "https://i.ytimg.com/vi/il5n8LgO95Q/hqdefault.jpg",
+      "publishedAt": "2026-11-09T05:12:48.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "MIN"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "IEgTJ8FdnJU",
+      "title": "\"We Have A Great Group Of Guys, I Love Playing With Them.\" | LaMelo Ball Postgame Sound | 11.8.26",
+      "channelId": "UCXWDN5NKVFgnPt25CMh98Cg",
+      "channelTitle": "Minnesota Timberwolves",
+      "thumbnailUrl": "https://i.ytimg.com/vi/IEgTJ8FdnJU/hqdefault.jpg",
+      "publishedAt": "2026-11-09T05:10:44.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "MIN"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "7hMvECwzy4Q",
+      "title": "\"We Know What It Takes To Win.\" | Rudy Gobert Postgame Sound | 11.8.26",
+      "channelId": "UCXWDN5NKVFgnPt25CMh98Cg",
+      "channelTitle": "Minnesota Timberwolves",
+      "thumbnailUrl": "https://i.ytimg.com/vi/7hMvECwzy4Q/hqdefault.jpg",
+      "publishedAt": "2026-11-09T05:06:28.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "MIN"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "7lO5REgNDms",
+      "title": "\"Everyone's Contributing To Our High Quality Basketball.\" | Chris Finch Postgame Sound | 11.8.26",
+      "channelId": "UCXWDN5NKVFgnPt25CMh98Cg",
+      "channelTitle": "Minnesota Timberwolves",
+      "thumbnailUrl": "https://i.ytimg.com/vi/7lO5REgNDms/hqdefault.jpg",
+      "publishedAt": "2026-11-09T05:05:55.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "MIN"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "1tN8GdDvezs",
+      "title": "Brayden Burries Postgame Media Availability | 11.08.26",
+      "channelId": "UCRZDEVva3Z8h_Q0VetTgDUA",
+      "channelTitle": "Milwaukee Bucks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/1tN8GdDvezs/hqdefault.jpg",
+      "publishedAt": "2026-11-09T04:07:05.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "MIL"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "_hTSSBAiKXU",
+      "title": "Kyle Kuzma Postgame Media Availability | 11.08.26",
+      "channelId": "UCRZDEVva3Z8h_Q0VetTgDUA",
+      "channelTitle": "Milwaukee Bucks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/_hTSSBAiKXU/hqdefault.jpg",
+      "publishedAt": "2026-11-09T03:55:17.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "MIL"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "XNDgZeHIzhE",
+      "title": "Mavericks Highlights vs. Brooklyn Nets | November 8, 2026",
+      "channelId": "UCZywaCS_y9YOSSAC9z3dIeg",
+      "channelTitle": "Dallas Mavericks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/XNDgZeHIzhE/hqdefault.jpg",
+      "publishedAt": "2026-11-09T03:48:56.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "DAL"
+        ],
+        "playerNames": [],
+        "reason": "highlights-team"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "pL03hNaWzbU",
+      "title": "Cooper Flagg (25 PTS 12 AST) vs. Brooklyn Nets | November 8, 2026",
+      "channelId": "UCZywaCS_y9YOSSAC9z3dIeg",
+      "channelTitle": "Dallas Mavericks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/pL03hNaWzbU/hqdefault.jpg",
+      "publishedAt": "2026-11-09T03:48:10.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "DAL"
+        ],
+        "playerNames": [],
+        "reason": "stat-line-title"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "3Zwd7XRWZwM",
+      "title": "Will hardy talks Darryn Peterson's continued growth, Kyle Filipowski's contributions vs Minnesota",
+      "channelId": "UCv9iSdeI9IzWfV8yTDsMYWA",
+      "channelTitle": "Utah Jazz",
+      "thumbnailUrl": "https://i.ytimg.com/vi/3Zwd7XRWZwM/hqdefault.jpg",
+      "publishedAt": "2026-11-09T03:46:59.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "OFFICIAL_BASKETBALL_INTERVIEW",
+        "gamePhase": null,
+        "teamIds": [
+          "UTA"
+        ],
+        "playerNames": [],
+        "reason": "talk-verb"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "O8ANYWvNn1A",
+      "title": "Taylor Jenkins Postgame Press Conference | 11.8.26",
+      "channelId": "UCRZDEVva3Z8h_Q0VetTgDUA",
+      "channelTitle": "Milwaukee Bucks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/O8ANYWvNn1A/hqdefault.jpg",
+      "publishedAt": "2026-11-09T03:44:28.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "MIL"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "XWTlu3xF0Tk",
+      "title": "Jayson Tatum & Paul George combine for 48 points in win over Bucks | Extended Highlights",
+      "channelId": "UCMfT9dr6xC_RIWoA9hI0meQ",
+      "channelTitle": "Boston Celtics",
+      "thumbnailUrl": "https://i.ytimg.com/vi/XWTlu3xF0Tk/hqdefault.jpg",
+      "publishedAt": "2026-11-09T03:37:36.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "BOS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-full-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "ElYRy03drg0",
+      "title": "Kyrie Irving (21 points) vs. Brooklyn Nets | November 8, 2026",
+      "channelId": "UCZywaCS_y9YOSSAC9z3dIeg",
+      "channelTitle": "Dallas Mavericks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/ElYRy03drg0/hqdefault.jpg",
+      "publishedAt": "2026-11-09T03:35:55.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "DAL"
+        ],
+        "playerNames": [],
+        "reason": "stat-line-title"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "AptxIwiZgsA",
+      "title": "Daniel Gafford (18 points) vs. Brooklyn Nets | November 8, 2026",
+      "channelId": "UCZywaCS_y9YOSSAC9z3dIeg",
+      "channelTitle": "Dallas Mavericks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/AptxIwiZgsA/hqdefault.jpg",
+      "publishedAt": "2026-11-09T03:35:44.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "DAL"
+        ],
+        "playerNames": [],
+        "reason": "stat-line-title"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "SRwtHU4chCE",
+      "title": "Highlights: Bucks 97 - Celtics 117 | 11.8.26",
+      "channelId": "UCRZDEVva3Z8h_Q0VetTgDUA",
+      "channelTitle": "Milwaukee Bucks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/SRwtHU4chCE/hqdefault.jpg",
+      "publishedAt": "2026-11-09T03:30:07.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "MIL"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "ng3b78uNx6U",
+      "title": "Highlights: Kyle Kuzma Scores 27 Points vs. Celtics | 11.8.26",
+      "channelId": "UCRZDEVva3Z8h_Q0VetTgDUA",
+      "channelTitle": "Milwaukee Bucks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/ng3b78uNx6U/hqdefault.jpg",
+      "publishedAt": "2026-11-09T03:28:53.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "MIL"
+        ],
+        "playerNames": [],
+        "reason": "highlights-stat-line"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "kEeXU5V7RB0",
+      "title": "DP with career high 26 pts against Minnesota 🎥",
+      "channelId": "UCv9iSdeI9IzWfV8yTDsMYWA",
+      "channelTitle": "Utah Jazz",
+      "thumbnailUrl": "https://i.ytimg.com/vi/kEeXU5V7RB0/hqdefault.jpg",
+      "publishedAt": "2026-11-09T02:54:56.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "UTA"
+        ],
+        "playerNames": [],
+        "reason": "stat-line-title"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "1flrUhkRZ9c",
+      "title": "Rudy Gobert Notches Another Double-Double Vs The Utah Jazz | 11.8.26",
+      "channelId": "UCXWDN5NKVFgnPt25CMh98Cg",
+      "channelTitle": "Minnesota Timberwolves",
+      "thumbnailUrl": "https://i.ytimg.com/vi/1flrUhkRZ9c/hqdefault.jpg",
+      "publishedAt": "2026-11-09T02:54:55.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "MIN"
+        ],
+        "playerNames": [],
+        "reason": "stat-line-title"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "qHwLZurjuPw",
+      "title": "Ayo Dosunmu Is Too Fast For The Utah Jazz With 26 Points | 11.8.26",
+      "channelId": "UCXWDN5NKVFgnPt25CMh98Cg",
+      "channelTitle": "Minnesota Timberwolves",
+      "thumbnailUrl": "https://i.ytimg.com/vi/qHwLZurjuPw/hqdefault.jpg",
+      "publishedAt": "2026-11-09T02:51:34.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "MIN"
+        ],
+        "playerNames": [],
+        "reason": "stat-line-title"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "CFkA_HYzFDM",
+      "title": "Post Game Press Conference l Daniss Jenkins l Pistons at Lakers   11.08.26 #NBA",
+      "channelId": "UCtcSBo9EzOtXHxiPhU6RN8A",
+      "channelTitle": "Detroit Pistons",
+      "thumbnailUrl": "https://i.ytimg.com/vi/CFkA_HYzFDM/hqdefault.jpg",
+      "publishedAt": "2026-11-09T02:05:19.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "DET"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "vs6biCduqmI",
+      "title": "Detroit Pistons vs. Los Angeles Lakers Highlights | 11.08.26 #NBA",
+      "channelId": "UCtcSBo9EzOtXHxiPhU6RN8A",
+      "channelTitle": "Detroit Pistons",
+      "thumbnailUrl": "https://i.ytimg.com/vi/vs6biCduqmI/hqdefault.jpg",
+      "publishedAt": "2026-11-09T01:58:28.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "DET"
+        ],
+        "playerNames": [],
+        "reason": "highlights-team"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "JhsB25TRbLI",
+      "title": "Post Game Press Conference l J.B. Bickerstaff l Pistons vs  Lakers   11.08.26 #NBA",
+      "channelId": "UCtcSBo9EzOtXHxiPhU6RN8A",
+      "channelTitle": "Detroit Pistons",
+      "thumbnailUrl": "https://i.ytimg.com/vi/JhsB25TRbLI/hqdefault.jpg",
+      "publishedAt": "2026-11-09T01:55:53.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "DET"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "-gqlekhb36E",
+      "title": "Game Highlights: Philadelphia Moves to 9-2 With Win Over Bulls",
+      "channelId": "UC5qJUyng_ezl0TVjVJFqtfQ",
+      "channelTitle": "Philadelphia 76ers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/-gqlekhb36E/hqdefault.jpg",
+      "publishedAt": "2026-11-08T23:10:35.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "PHI"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "jbvH4tNsuy8",
+      "title": "Media Availability: Head Coach Brian Keefe, Trae Young, and AJ Dybantsa | 11.7.26",
+      "channelId": "UChvzoBPvORuNGtHTMzjUsIQ",
+      "channelTitle": "Washington Wizards",
+      "thumbnailUrl": "https://i.ytimg.com/vi/jbvH4tNsuy8/hqdefault.jpg",
+      "publishedAt": "2026-11-08T15:52:00.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "WAS"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "u1mxt6QxxBY",
+      "title": "Top 5 Plays | BEST PLAYS FROM THIS WEEK | Sponsored by AT&T",
+      "channelId": "UCZywaCS_y9YOSSAC9z3dIeg",
+      "channelTitle": "Dallas Mavericks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/u1mxt6QxxBY/hqdefault.jpg",
+      "publishedAt": "2026-11-08T13:30:09.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "TOP_PLAYS",
+        "gamePhase": null,
+        "teamIds": [
+          "DAL"
+        ],
+        "playerNames": [],
+        "reason": "top-plays"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "A-hTZAnBVrk",
+      "title": "Hawks vs. Nets Postgame Press Conference: Jalen Johnson",
+      "channelId": "UCpfcwELvR1wtcRJ0UxNXHYw",
+      "channelTitle": "Atlanta Hawks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/A-hTZAnBVrk/hqdefault.jpg",
+      "publishedAt": "2026-11-08T07:27:50.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "ATL"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "Bu8DtnIF8II",
+      "title": "Highlights: SPURS CONTINUE WIN STREAK WITH EIGHT STRAIGHT!",
+      "channelId": "UCEZHE-0CoHqeL1LGFa2EmQw",
+      "channelTitle": "San Antonio Spurs",
+      "thumbnailUrl": "https://i.ytimg.com/vi/Bu8DtnIF8II/hqdefault.jpg",
+      "publishedAt": "2026-11-08T06:21:30.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "SAS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "bTxDT4GB3eE",
+      "title": "Micah Nori Postgame Interview | Portland Trail Blazers 103, San Antonio Spurs 125 | Nov. 7, 2026",
+      "channelId": "UCXk66yyzXo7-2M1BMqLhltQ",
+      "channelTitle": "Portland Trail Blazers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/bTxDT4GB3eE/hqdefault.jpg",
+      "publishedAt": "2026-11-08T06:11:47.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "POR"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "R9HslIlHYmQ",
+      "title": "Stephen Curry Recaps 41-Point Performance vs. Magic",
+      "channelId": "UCeYc_OjHs3QNxIjti2whKzg",
+      "channelTitle": "Golden State Warriors",
+      "thumbnailUrl": "https://i.ytimg.com/vi/R9HslIlHYmQ/hqdefault.jpg",
+      "publishedAt": "2026-11-08T05:49:18.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "OFFICIAL_BASKETBALL_INTERVIEW",
+        "gamePhase": null,
+        "teamIds": [
+          "GSW"
+        ],
+        "playerNames": [],
+        "reason": "talk-verb"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "4O6QSwTPG4g",
+      "title": "POSTGAME SOUND: ORLANDO MAGIC VS. GOLDEN STATE WARRIORS | COACH SWEENEY, CAIN & WAGNER",
+      "channelId": "UCxHFH-yfbhUrsWY4prPx3oQ",
+      "channelTitle": "Orlando Magic",
+      "thumbnailUrl": "https://i.ytimg.com/vi/4O6QSwTPG4g/hqdefault.jpg",
+      "publishedAt": "2026-11-08T05:09:29.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "ORL"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "DzJnKXGqH8I",
+      "title": "FULL GAME HIGHLIGHTS: ORLANDO MAGIC VS. GOLDEN STATE WARRIORS 11.07.26",
+      "channelId": "UCxHFH-yfbhUrsWY4prPx3oQ",
+      "channelTitle": "Orlando Magic",
+      "thumbnailUrl": "https://i.ytimg.com/vi/DzJnKXGqH8I/hqdefault.jpg",
+      "publishedAt": "2026-11-08T05:00:02.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "ORL"
+        ],
+        "playerNames": [],
+        "reason": "highlights-full-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "H4i1wHpfwCc",
+      "title": "POSTGAME HIGHLIGHTS: ORLANDO MAGIC VS. GOLDEN STATE WARRIORS 11.07.26 PRESENTED BY PLANET FITNESS",
+      "channelId": "UCxHFH-yfbhUrsWY4prPx3oQ",
+      "channelTitle": "Orlando Magic",
+      "thumbnailUrl": "https://i.ytimg.com/vi/H4i1wHpfwCc/hqdefault.jpg",
+      "publishedAt": "2026-11-08T04:55:17.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "ORL"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "WbK5x3Wn_h4",
+      "title": "Jared McCain on Teammates and Enjoying the Work | Postgame Media | November 7, 2026",
+      "channelId": "UCpXdQhy6kb5CTD8hKlmOL3w",
+      "channelTitle": "Oklahoma City Thunder",
+      "thumbnailUrl": "https://i.ytimg.com/vi/WbK5x3Wn_h4/hqdefault.jpg",
+      "publishedAt": "2026-11-08T04:35:06.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "OKC"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "G3mVC-aV2gw",
+      "title": "Kenrich Williams on Winning Effort | Postgame Media | November 7, 2026",
+      "channelId": "UCpXdQhy6kb5CTD8hKlmOL3w",
+      "channelTitle": "Oklahoma City Thunder",
+      "thumbnailUrl": "https://i.ytimg.com/vi/G3mVC-aV2gw/hqdefault.jpg",
+      "publishedAt": "2026-11-08T04:31:45.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "OKC"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "JjF5fdfh31w",
+      "title": "Coach Daigneault on Team’s Effort in Win Over Wizards | Postgame Media | November 7, 2026",
+      "channelId": "UCpXdQhy6kb5CTD8hKlmOL3w",
+      "channelTitle": "Oklahoma City Thunder",
+      "thumbnailUrl": "https://i.ytimg.com/vi/JjF5fdfh31w/hqdefault.jpg",
+      "publishedAt": "2026-11-08T04:28:32.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "COACH_PRESS_CONFERENCE",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "OKC"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session-coach"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "ePrfZObKTXY",
+      "title": "Hawks vs. Nets Postgame Press Conference: Aaron Wiggins",
+      "channelId": "UCpfcwELvR1wtcRJ0UxNXHYw",
+      "channelTitle": "Atlanta Hawks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/ePrfZObKTXY/hqdefault.jpg",
+      "publishedAt": "2026-11-08T04:20:26.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "ATL"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "_6pcscjyln0",
+      "title": "Jalen Johnson drops 30 Points in return from injury in Hawks Win over Nets",
+      "channelId": "UCpfcwELvR1wtcRJ0UxNXHYw",
+      "channelTitle": "Atlanta Hawks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/_6pcscjyln0/hqdefault.jpg",
+      "publishedAt": "2026-11-08T04:04:00.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "ATL"
+        ],
+        "playerNames": [],
+        "reason": "stat-line-title"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "gyA63chiwGo",
+      "title": "Karl-Anthony Towns HIGHLIGHT REEL vs Cleveland | November 7, 2026",
+      "channelId": "UC0hb8f0OXHEzDrJDUq-YVVw",
+      "channelTitle": "New York Knicks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/gyA63chiwGo/hqdefault.jpg",
+      "publishedAt": "2026-11-08T04:00:15.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "NYK"
+        ],
+        "playerNames": [],
+        "reason": "highlights-player-words"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "xiokZx4FZ74",
+      "title": "Hawks vs. Nets Postgame Press Conference: Head Coach Quin Snyder",
+      "channelId": "UCpfcwELvR1wtcRJ0UxNXHYw",
+      "channelTitle": "Atlanta Hawks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/xiokZx4FZ74/hqdefault.jpg",
+      "publishedAt": "2026-11-08T03:59:04.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "COACH_PRESS_CONFERENCE",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "ATL"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session-coach"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "NrKuUsfm86c",
+      "title": "Cavs vs Knicks | Kenny Atkinson Post Game | 11.07.2026",
+      "channelId": "UCOdS-I1sYkKWhtTjMUWP_TA",
+      "channelTitle": "Cleveland Cavaliers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/NrKuUsfm86c/hqdefault.jpg",
+      "publishedAt": "2026-11-08T03:45:30.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "CLE"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "6IRcFvL8V3c",
+      "title": "Highlights: Washington Wizards at Oklahoma City Thunder",
+      "channelId": "UChvzoBPvORuNGtHTMzjUsIQ",
+      "channelTitle": "Washington Wizards",
+      "thumbnailUrl": "https://i.ytimg.com/vi/6IRcFvL8V3c/hqdefault.jpg",
+      "publishedAt": "2026-11-08T03:44:10.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "WAS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "f24kO2A1C1k",
+      "title": "OKC Thunder vs Washington Wizards | Game Highlights | November 7, 2026",
+      "channelId": "UCpXdQhy6kb5CTD8hKlmOL3w",
+      "channelTitle": "Oklahoma City Thunder",
+      "thumbnailUrl": "https://i.ytimg.com/vi/f24kO2A1C1k/hqdefault.jpg",
+      "publishedAt": "2026-11-08T03:43:24.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "OKC"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "vbSsgjlH9_s",
+      "title": "Full Denver Nuggets Postgame Media Availability Mexico City vs. IND 🎙",
+      "channelId": "UCl8hzdP5wVlhuzNG3WCJa1w",
+      "channelTitle": "Denver Nuggets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/vbSsgjlH9_s/hqdefault.jpg",
+      "publishedAt": "2026-11-08T02:40:02.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "DEN"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "Vp9hzrmvKyI",
+      "title": "Pascal Siakam & Larry Nance Jr. Postgame Media Availability vs. Nuggets | November 7, 2026",
+      "channelId": "UCUQDCnAwU-35cOo8WCzg6zA",
+      "channelTitle": "Indiana Pacers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/Vp9hzrmvKyI/hqdefault.jpg",
+      "publishedAt": "2026-11-08T01:49:25.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "IND"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "11Ih3Ix499o",
+      "title": "Joker Takes Over Mexico City | Nikola Jokić Game Highlights DEN vs. IND",
+      "channelId": "UCl8hzdP5wVlhuzNG3WCJa1w",
+      "channelTitle": "Denver Nuggets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/11Ih3Ix499o/hqdefault.jpg",
+      "publishedAt": "2026-11-08T01:37:17.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "DEN"
+        ],
+        "playerNames": [],
+        "reason": "highlights-named-player"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "LU4VFEqxuCo",
+      "title": "Denver Nuggets vs. Indiana Pacers | Mexico City 🇲🇽 Full Game Highlights 📺",
+      "channelId": "UCl8hzdP5wVlhuzNG3WCJa1w",
+      "channelTitle": "Denver Nuggets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/LU4VFEqxuCo/hqdefault.jpg",
+      "publishedAt": "2026-11-08T01:36:08.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "DEN"
+        ],
+        "playerNames": [],
+        "reason": "highlights-full-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "QSvQdMSqP5A",
+      "title": "Media Availability: Brian Keefe and Trae Young | 11.6.26",
+      "channelId": "UChvzoBPvORuNGtHTMzjUsIQ",
+      "channelTitle": "Washington Wizards",
+      "thumbnailUrl": "https://i.ytimg.com/vi/QSvQdMSqP5A/hqdefault.jpg",
+      "publishedAt": "2026-11-07T17:40:03.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "WAS"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "RWJ1N-AUOkE",
+      "title": "Highlights: SPURS WIN SEVEN STRAIGHT, START NBA CUP GROUP PLAY 1-0",
+      "channelId": "UCEZHE-0CoHqeL1LGFa2EmQw",
+      "channelTitle": "San Antonio Spurs",
+      "thumbnailUrl": "https://i.ytimg.com/vi/RWJ1N-AUOkE/hqdefault.jpg",
+      "publishedAt": "2026-11-07T06:25:52.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "SAS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "0nLDQHgTD7E",
+      "title": "Trendon Watford | Pelicans vs. Timberwolves Postgame Interview 11/6/26",
+      "channelId": "UCHvG7tf62PwI04ZRfoptRSw",
+      "channelTitle": "New Orleans Pelicans",
+      "thumbnailUrl": "https://i.ytimg.com/vi/0nLDQHgTD7E/hqdefault.jpg",
+      "publishedAt": "2026-11-07T05:46:41.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "NOP"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "jkUS2XdseBo",
+      "title": "Coach Daigneault on Team's Tenacity and Energy | Postgame Media | November 6, 2026",
+      "channelId": "UCpXdQhy6kb5CTD8hKlmOL3w",
+      "channelTitle": "Oklahoma City Thunder",
+      "thumbnailUrl": "https://i.ytimg.com/vi/jkUS2XdseBo/hqdefault.jpg",
+      "publishedAt": "2026-11-07T05:38:45.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "COACH_PRESS_CONFERENCE",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "OKC"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session-coach"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "8xx6aCPq0zc",
+      "title": "Toronto Raptors Full Media Availability | Post Game at Milwaukee Bucks | November 06, 2026",
+      "channelId": "UCYBFE432C2AmNRDGEXE4uVg",
+      "channelTitle": "Toronto Raptors",
+      "thumbnailUrl": "https://i.ytimg.com/vi/8xx6aCPq0zc/hqdefault.jpg",
+      "publishedAt": "2026-11-07T05:01:51.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "TOR"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "Cg-GTNEoXOM",
+      "title": "Brayden Burries Postgame Media Availability | 11.6.26",
+      "channelId": "UCRZDEVva3Z8h_Q0VetTgDUA",
+      "channelTitle": "Milwaukee Bucks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/Cg-GTNEoXOM/hqdefault.jpg",
+      "publishedAt": "2026-11-07T05:00:01.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "MIL"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "xQXyoSTmdEI",
+      "title": "Alijah Martin | Post Game at Milwaukee Bucks | November 06, 2026",
+      "channelId": "UCYBFE432C2AmNRDGEXE4uVg",
+      "channelTitle": "Toronto Raptors",
+      "thumbnailUrl": "https://i.ytimg.com/vi/xQXyoSTmdEI/hqdefault.jpg",
+      "publishedAt": "2026-11-07T04:47:34.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "TOR"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "_uupgzUP4ak",
+      "title": "Jamal Shead | Post Game at Milwaukee Bucks | November 06, 2026",
+      "channelId": "UCYBFE432C2AmNRDGEXE4uVg",
+      "channelTitle": "Toronto Raptors",
+      "thumbnailUrl": "https://i.ytimg.com/vi/_uupgzUP4ak/hqdefault.jpg",
+      "publishedAt": "2026-11-07T04:46:38.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "TOR"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "fDVVL95ejHQ",
+      "title": "Will Hardy talks on Darryn Peterson's patience, the path forward vs. Dallas",
+      "channelId": "UCv9iSdeI9IzWfV8yTDsMYWA",
+      "channelTitle": "Utah Jazz",
+      "thumbnailUrl": "https://i.ytimg.com/vi/fDVVL95ejHQ/hqdefault.jpg",
+      "publishedAt": "2026-11-07T04:13:51.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "OFFICIAL_BASKETBALL_INTERVIEW",
+        "gamePhase": null,
+        "teamIds": [
+          "UTA"
+        ],
+        "playerNames": [],
+        "reason": "talk-verb"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "udYCFQER0i4",
+      "title": "Cavs vs 76ers | Donovan Mitchell & Evan Mobley Post Game | 11.06.2026",
+      "channelId": "UCOdS-I1sYkKWhtTjMUWP_TA",
+      "channelTitle": "Cleveland Cavaliers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/udYCFQER0i4/hqdefault.jpg",
+      "publishedAt": "2026-11-07T04:00:10.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "CLE"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "ypqKNoyzqDs",
+      "title": "Tuomas Iisalo Press Conference | Grizzlies vs. Thunder",
+      "channelId": "UCCK5EpWKYrAmILfaZThCV-Q",
+      "channelTitle": "Memphis Grizzlies",
+      "thumbnailUrl": "https://i.ytimg.com/vi/ypqKNoyzqDs/hqdefault.jpg",
+      "publishedAt": "2026-11-07T03:56:33.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "MEM"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "68Hn9lgCXAE",
+      "title": "Cavs vs 76ers | Game Highlights | 11.06.2026",
+      "channelId": "UCOdS-I1sYkKWhtTjMUWP_TA",
+      "channelTitle": "Cleveland Cavaliers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/68Hn9lgCXAE/hqdefault.jpg",
+      "publishedAt": "2026-11-07T03:54:02.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "CLE"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "E56zgCok3QE",
+      "title": "Cavs vs 76ers | Donovan Mitchell Highlights | 11.06.2026",
+      "channelId": "UCOdS-I1sYkKWhtTjMUWP_TA",
+      "channelTitle": "Cleveland Cavaliers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/E56zgCok3QE/hqdefault.jpg",
+      "publishedAt": "2026-11-07T03:51:59.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "CLE"
+        ],
+        "playerNames": [],
+        "reason": "highlights-named-player"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "mGzYJnnyrY4",
+      "title": "Cavs vs 76ers | Kenny Atkinson Post Game | 11.06.2026",
+      "channelId": "UCOdS-I1sYkKWhtTjMUWP_TA",
+      "channelTitle": "Cleveland Cavaliers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/mGzYJnnyrY4/hqdefault.jpg",
+      "publishedAt": "2026-11-07T03:39:31.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "CLE"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "X81IvSJG2UM",
+      "title": "Memphis Grizzlies Highlights vs Oklahoma City Thunder",
+      "channelId": "UCCK5EpWKYrAmILfaZThCV-Q",
+      "channelTitle": "Memphis Grizzlies",
+      "thumbnailUrl": "https://i.ytimg.com/vi/X81IvSJG2UM/hqdefault.jpg",
+      "publishedAt": "2026-11-07T03:34:52.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "MEM"
+        ],
+        "playerNames": [],
+        "reason": "highlights-team"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "tyrJ66Bi84Q",
+      "title": "DP scores career high 21 pts on the road against Mavericks 🎥",
+      "channelId": "UCv9iSdeI9IzWfV8yTDsMYWA",
+      "channelTitle": "Utah Jazz",
+      "thumbnailUrl": "https://i.ytimg.com/vi/tyrJ66Bi84Q/hqdefault.jpg",
+      "publishedAt": "2026-11-07T03:31:27.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "UTA"
+        ],
+        "playerNames": [],
+        "reason": "stat-line-title"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "NYxPxPKUNSI",
+      "title": "Hawks vs. Wizards Postgame Press Conference: Onyeka Okongwu and Dyson Daniels",
+      "channelId": "UCpfcwELvR1wtcRJ0UxNXHYw",
+      "channelTitle": "Atlanta Hawks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/NYxPxPKUNSI/hqdefault.jpg",
+      "publishedAt": "2026-11-07T03:18:05.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "ATL"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "-EEgyeocL8g",
+      "title": "Hornets vs Celtics: Hannes Steinbach Postgame Media Availability | 11/6/2026",
+      "channelId": "UCPhFI5lIFnSggz7HgY9UuuQ",
+      "channelTitle": "Charlotte Hornets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/-EEgyeocL8g/hqdefault.jpg",
+      "publishedAt": "2026-11-07T03:15:59.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "CHA"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "iN_Dik_yF-8",
+      "title": "Highlights: Tre Johnson scores 23 points against Atlanta Hawks",
+      "channelId": "UChvzoBPvORuNGtHTMzjUsIQ",
+      "channelTitle": "Washington Wizards",
+      "thumbnailUrl": "https://i.ytimg.com/vi/iN_Dik_yF-8/hqdefault.jpg",
+      "publishedAt": "2026-11-07T03:12:54.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "WAS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-stat-line"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "5Z2Cg_NcwFM",
+      "title": "Hornets vs Celtics: Coach Charles Lee Postgame Media Availability | 11/6/2026",
+      "channelId": "UCPhFI5lIFnSggz7HgY9UuuQ",
+      "channelTitle": "Charlotte Hornets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/5Z2Cg_NcwFM/hqdefault.jpg",
+      "publishedAt": "2026-11-07T03:10:25.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "COACH_PRESS_CONFERENCE",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "CHA"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session-coach"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "kcl4C6tWn3Y",
+      "title": "Denver Nuggets Full Practice Media Availability Before Mexico City Game | 11.6.26",
+      "channelId": "UCl8hzdP5wVlhuzNG3WCJa1w",
+      "channelTitle": "Denver Nuggets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/kcl4C6tWn3Y/hqdefault.jpg",
+      "publishedAt": "2026-11-07T01:14:27.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "DEN"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "Xgr2uxqu_R0",
+      "title": "Brandon Ingram - Media Availability (11/6/26) | LA Clippers",
+      "channelId": "UCoK6pw3iIVF9WAWnQd3hj-g",
+      "channelTitle": "LA Clippers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/Xgr2uxqu_R0/hqdefault.jpg",
+      "publishedAt": "2026-11-06T22:52:40.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "LAC"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "nGL9QJFNd2c",
+      "title": "Indiana Pacers Mexico City Practice Media Availability | November 6, 2026",
+      "channelId": "UCUQDCnAwU-35cOo8WCzg6zA",
+      "channelTitle": "Indiana Pacers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/nGL9QJFNd2c/hqdefault.jpg",
+      "publishedAt": "2026-11-06T20:55:50.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "IND"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "QS6LpXHiNng",
+      "title": "Mikel Brown Jr. Breaks Down His INSANE No-Look Pass, Big-Time Buckets & More in Win vs. Charlotte",
+      "channelId": "UCTenKHt0h3VjdMvRWP6Lbvw",
+      "channelTitle": "Brooklyn Nets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/QS6LpXHiNng/hqdefault.jpg",
+      "publishedAt": "2026-11-06T17:48:27.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "OFFICIAL_BASKETBALL_INTERVIEW",
+        "gamePhase": null,
+        "teamIds": [
+          "BKN"
+        ],
+        "playerNames": [],
+        "reason": "talk-verb"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "WkBqWDnZn0U",
+      "title": "HIGHLIGHTS: Michael Porter Jr.'s ELITE Shotmaking + 4Q TAKEOVER 🔥",
+      "channelId": "UCTenKHt0h3VjdMvRWP6Lbvw",
+      "channelTitle": "Brooklyn Nets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/WkBqWDnZn0U/hqdefault.jpg",
+      "publishedAt": "2026-11-05T22:29:03.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "BKN"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "fazaqrKlolY",
+      "title": "Postgame Interview (11/04/26) | LA Clippers",
+      "channelId": "UCoK6pw3iIVF9WAWnQd3hj-g",
+      "channelTitle": "LA Clippers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/fazaqrKlolY/hqdefault.jpg",
+      "publishedAt": "2026-11-05T20:55:13.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "LAC"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "VRfBzxcoT10",
+      "title": "HIGHLIGHTS: Mikel Brown Jr. Did a Little Bit of EVERYTHING in Win Over Charlotte!",
+      "channelId": "UCTenKHt0h3VjdMvRWP6Lbvw",
+      "channelTitle": "Brooklyn Nets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/VRfBzxcoT10/hqdefault.jpg",
+      "publishedAt": "2026-11-05T19:46:41.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "BKN"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "yBjZ5xDcNqY",
+      "title": "Philadelphia 76ers Postgame Media Availability 🎙️ | Coach Nurse | 11.04.26",
+      "channelId": "UC5qJUyng_ezl0TVjVJFqtfQ",
+      "channelTitle": "Philadelphia 76ers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/yBjZ5xDcNqY/hqdefault.jpg",
+      "publishedAt": "2026-11-05T17:09:56.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "COACH_PRESS_CONFERENCE",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "PHI"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session-coach"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "sibLze1uEWI",
+      "title": "Highlights: WEMBY HAS HISTORIC NIGHT IN SPURS WIN OVER DALLAS MAVERICKS",
+      "channelId": "UCEZHE-0CoHqeL1LGFa2EmQw",
+      "channelTitle": "San Antonio Spurs",
+      "thumbnailUrl": "https://i.ytimg.com/vi/sibLze1uEWI/hqdefault.jpg",
+      "publishedAt": "2026-11-05T06:47:40.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "SAS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "CokXDvIWwnQ",
+      "title": "Full Denver Nuggets Postgame Media Availability vs. TOR 🎙",
+      "channelId": "UCl8hzdP5wVlhuzNG3WCJa1w",
+      "channelTitle": "Denver Nuggets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/CokXDvIWwnQ/hqdefault.jpg",
+      "publishedAt": "2026-11-05T06:25:48.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "DEN"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "cUaZfvIBnzU",
+      "title": "Jalen Brunson and Dalton Knecht Postgame Media | November 4, 2026",
+      "channelId": "UC0hb8f0OXHEzDrJDUq-YVVw",
+      "channelTitle": "New York Knicks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/cUaZfvIBnzU/hqdefault.jpg",
+      "publishedAt": "2026-11-05T05:25:11.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "NYK"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "RnrBbzCRmTk",
+      "title": "HIGHLIGHTS: Michael Porter Jr.'s BIG 4TH + Danny Wolf Provides Spark Off the Bench in Win vs Hornets",
+      "channelId": "UCTenKHt0h3VjdMvRWP6Lbvw",
+      "channelTitle": "Brooklyn Nets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/RnrBbzCRmTk/hqdefault.jpg",
+      "publishedAt": "2026-11-05T05:18:51.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "BKN"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "GubPMrRhZZc",
+      "title": "Will Hardy reflects on team effort, toughness, and focus vs. Pelicans",
+      "channelId": "UCv9iSdeI9IzWfV8yTDsMYWA",
+      "channelTitle": "Utah Jazz",
+      "thumbnailUrl": "https://i.ytimg.com/vi/GubPMrRhZZc/hqdefault.jpg",
+      "publishedAt": "2026-11-05T04:55:47.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "OFFICIAL_BASKETBALL_INTERVIEW",
+        "gamePhase": null,
+        "teamIds": [
+          "UTA"
+        ],
+        "playerNames": [],
+        "reason": "talk-verb"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "dY-zNnVmtmQ",
+      "title": "Jalen Brunson HIGHLIGHT REEL vs Chicago | November 4, 2026",
+      "channelId": "UC0hb8f0OXHEzDrJDUq-YVVw",
+      "channelTitle": "New York Knicks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/dY-zNnVmtmQ/hqdefault.jpg",
+      "publishedAt": "2026-11-05T04:50:06.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "NYK"
+        ],
+        "playerNames": [],
+        "reason": "highlights-player-words"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "O42X7BZAGn0",
+      "title": "Rick Carlisle and Braden Smith Postgame Media Availability | November 4, 2026",
+      "channelId": "UCUQDCnAwU-35cOo8WCzg6zA",
+      "channelTitle": "Indiana Pacers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/O42X7BZAGn0/hqdefault.jpg",
+      "publishedAt": "2026-11-05T04:36:04.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "IND"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "tTHB5rEPkWA",
+      "title": "Derrick White & Paul George propel Celtics to 109-102 win over Milwaukee Bucks | Extended Highlights",
+      "channelId": "UCMfT9dr6xC_RIWoA9hI0meQ",
+      "channelTitle": "Boston Celtics",
+      "thumbnailUrl": "https://i.ytimg.com/vi/tTHB5rEPkWA/hqdefault.jpg",
+      "publishedAt": "2026-11-05T04:14:22.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "BOS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-full-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "K_PoegcebTA",
+      "title": "Andrew Nembhard Leads the Way in Gritty Win Over Grizzlies | Full Game Highlights",
+      "channelId": "UCUQDCnAwU-35cOo8WCzg6zA",
+      "channelTitle": "Indiana Pacers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/K_PoegcebTA/hqdefault.jpg",
+      "publishedAt": "2026-11-05T04:06:56.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "IND"
+        ],
+        "playerNames": [],
+        "reason": "highlights-full-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "Rep4PD--Wfs",
+      "title": "Cavs at Thunder | Sam Merrill Post Game | 11.04.2026",
+      "channelId": "UCOdS-I1sYkKWhtTjMUWP_TA",
+      "channelTitle": "Cleveland Cavaliers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/Rep4PD--Wfs/hqdefault.jpg",
+      "publishedAt": "2026-11-05T04:00:04.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "CLE"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "ZRWlI4qwM7I",
+      "title": "Post Game Press Conference l Ausar Thompson l Pistons at Hornets   11.04.26 #NBA",
+      "channelId": "UCtcSBo9EzOtXHxiPhU6RN8A",
+      "channelTitle": "Detroit Pistons",
+      "thumbnailUrl": "https://i.ytimg.com/vi/ZRWlI4qwM7I/hqdefault.jpg",
+      "publishedAt": "2026-11-05T03:51:42.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "DET"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "Bw88tJmjEJs",
+      "title": "Jaylen Brown Shines with Season-High 30 Points In Win Over Pistons",
+      "channelId": "UC5qJUyng_ezl0TVjVJFqtfQ",
+      "channelTitle": "Philadelphia 76ers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/Bw88tJmjEJs/hqdefault.jpg",
+      "publishedAt": "2026-11-05T03:47:44.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "PHI"
+        ],
+        "playerNames": [],
+        "reason": "stat-line-title"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "REepGD9nSfQ",
+      "title": "Cavs at Thunder | Kenny Atkinson Post Game | 11.04.2026",
+      "channelId": "UCOdS-I1sYkKWhtTjMUWP_TA",
+      "channelTitle": "Cleveland Cavaliers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/REepGD9nSfQ/hqdefault.jpg",
+      "publishedAt": "2026-11-05T03:47:39.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "CLE"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "0gsyhDvxrRs",
+      "title": "Game Highlights: Sixers Take Down Detroit in Battle Atop the East",
+      "channelId": "UC5qJUyng_ezl0TVjVJFqtfQ",
+      "channelTitle": "Philadelphia 76ers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/0gsyhDvxrRs/hqdefault.jpg",
+      "publishedAt": "2026-11-05T03:43:33.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "PHI"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "91tK-9s_vjw",
+      "title": "Philadelphia 76ers Practice Media Availability 🎙️ | Anfernee Simons | 11.04.26",
+      "channelId": "UC5qJUyng_ezl0TVjVJFqtfQ",
+      "channelTitle": "Philadelphia 76ers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/91tK-9s_vjw/hqdefault.jpg",
+      "publishedAt": "2026-11-04T22:15:31.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "PHI"
+        ],
+        "playerNames": [],
+        "reason": "availability"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "6TjB-RG4VyY",
+      "title": "New York Knicks Top Plays: October 2026 Recap 🏀",
+      "channelId": "UC0hb8f0OXHEzDrJDUq-YVVw",
+      "channelTitle": "New York Knicks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/6TjB-RG4VyY/hqdefault.jpg",
+      "publishedAt": "2026-11-04T19:37:05.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "TOP_PLAYS",
+        "gamePhase": null,
+        "teamIds": [
+          "NYK"
+        ],
+        "playerNames": [],
+        "reason": "top-plays"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "7HcRG7qPhuA",
+      "title": "Landry Shamet, OG Anunoby and Tyler Kolek Postgame Media | November 2, 2026",
+      "channelId": "UC0hb8f0OXHEzDrJDUq-YVVw",
+      "channelTitle": "New York Knicks",
+      "thumbnailUrl": "https://i.ytimg.com/vi/7HcRG7qPhuA/hqdefault.jpg",
+      "publishedAt": "2026-11-03T16:30:52.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "NYK"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "QVOwzm4j5-c",
+      "title": "Philadelphia 76ers Postgame Media Availability 🎙️ | Coach Nurse | 11.02.26",
+      "channelId": "UC5qJUyng_ezl0TVjVJFqtfQ",
+      "channelTitle": "Philadelphia 76ers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/QVOwzm4j5-c/hqdefault.jpg",
+      "publishedAt": "2026-11-03T05:07:24.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "COACH_PRESS_CONFERENCE",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "PHI"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session-coach"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "8Ptzn0ShOL8",
+      "title": "Highlights: Spurs Extend Win Streak to FIVE with Home Win vs. Jazz",
+      "channelId": "UCEZHE-0CoHqeL1LGFa2EmQw",
+      "channelTitle": "San Antonio Spurs",
+      "thumbnailUrl": "https://i.ytimg.com/vi/8Ptzn0ShOL8/hqdefault.jpg",
+      "publishedAt": "2026-11-03T04:27:58.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "SAS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "xVALBvT64pk",
+      "title": "Celtics fall to Rockets 109-93 in Houston | Extended Highlights",
+      "channelId": "UCMfT9dr6xC_RIWoA9hI0meQ",
+      "channelTitle": "Boston Celtics",
+      "thumbnailUrl": "https://i.ytimg.com/vi/xVALBvT64pk/hqdefault.jpg",
+      "publishedAt": "2026-11-03T04:14:58.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "BOS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-full-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "8_rJJTVEf0I",
+      "title": "Rick Carlisle, Braden Smith & Quenton Jackson Postgame Media Availability | November 2, 2026",
+      "channelId": "UCUQDCnAwU-35cOo8WCzg6zA",
+      "channelTitle": "Indiana Pacers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/8_rJJTVEf0I/hqdefault.jpg",
+      "publishedAt": "2026-11-03T03:56:21.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "IND"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "zs0MNDsHBng",
+      "title": "Braden Smith Shines in Tough Battle Against Hawks | Full Game Highlights",
+      "channelId": "UCUQDCnAwU-35cOo8WCzg6zA",
+      "channelTitle": "Indiana Pacers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/zs0MNDsHBng/hqdefault.jpg",
+      "publishedAt": "2026-11-03T03:27:41.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "IND"
+        ],
+        "playerNames": [],
+        "reason": "highlights-full-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "A-hNJumKDNM",
+      "title": "Golden State Warriors Plays of the Week | Week 2 (2026-27 NBA Season)",
+      "channelId": "UCeYc_OjHs3QNxIjti2whKzg",
+      "channelTitle": "Golden State Warriors",
+      "thumbnailUrl": "https://i.ytimg.com/vi/A-hNJumKDNM/hqdefault.jpg",
+      "publishedAt": "2026-11-02T22:39:17.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "TOP_PLAYS",
+        "gamePhase": null,
+        "teamIds": [
+          "GSW"
+        ],
+        "playerNames": [],
+        "reason": "top-plays"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "Jshctpwx2vI",
+      "title": "Postgame Interview (11/01/26) | LA Clippers",
+      "channelId": "UCoK6pw3iIVF9WAWnQd3hj-g",
+      "channelTitle": "LA Clippers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/Jshctpwx2vI/hqdefault.jpg",
+      "publishedAt": "2026-11-02T17:41:26.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "LAC"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "CIxUXah7BIM",
+      "title": "Yaxel Lendeborg Recaps Career-High 37-Point Night After Defeating Clippers | Nov. 1 2026",
+      "channelId": "UCeYc_OjHs3QNxIjti2whKzg",
+      "channelTitle": "Golden State Warriors",
+      "thumbnailUrl": "https://i.ytimg.com/vi/CIxUXah7BIM/hqdefault.jpg",
+      "publishedAt": "2026-11-02T05:21:49.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "OFFICIAL_BASKETBALL_INTERVIEW",
+        "gamePhase": null,
+        "teamIds": [
+          "GSW"
+        ],
+        "playerNames": [],
+        "reason": "talk-verb"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "UUl-kMs_CfA",
+      "title": "HIGHLIGHTS: Michael Porter Jr. & Julius Randle Lead the Way in Nets’ Road Victory Over Pacers",
+      "channelId": "UCTenKHt0h3VjdMvRWP6Lbvw",
+      "channelTitle": "Brooklyn Nets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/UUl-kMs_CfA/hqdefault.jpg",
+      "publishedAt": "2026-11-02T02:46:24.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "BKN"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "HfRcFQwF6Dk",
+      "title": "Celtics secure win against the Orlando Magic 108 - 97 | Extended Highlights",
+      "channelId": "UCMfT9dr6xC_RIWoA9hI0meQ",
+      "channelTitle": "Boston Celtics",
+      "thumbnailUrl": "https://i.ytimg.com/vi/HfRcFQwF6Dk/hqdefault.jpg",
+      "publishedAt": "2026-11-01T23:23:09.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "BOS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-full-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "UttBesCck2s",
+      "title": "Highlights: Spurs Win Their Fourth Straight With Halloween Victory vs. Minnesota",
+      "channelId": "UCEZHE-0CoHqeL1LGFa2EmQw",
+      "channelTitle": "San Antonio Spurs",
+      "thumbnailUrl": "https://i.ytimg.com/vi/UttBesCck2s/hqdefault.jpg",
+      "publishedAt": "2026-11-01T03:17:51.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "SAS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "JWK2E2Vcey8",
+      "title": "Postgame Interview (10/30/26) | LA Clippers",
+      "channelId": "UCoK6pw3iIVF9WAWnQd3hj-g",
+      "channelTitle": "LA Clippers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/JWK2E2Vcey8/hqdefault.jpg",
+      "publishedAt": "2026-10-31T18:19:15.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "POSTGAME_INTERVIEW",
+        "gamePhase": "postgame",
+        "teamIds": [
+          "LAC"
+        ],
+        "playerNames": [],
+        "reason": "postgame-session"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "bFLm7sD1LtY",
+      "title": "Steph Curry Breaks Down Insane Shot Over Luka, Warriors Win vs. Lakers | Oct. 30, 2026",
+      "channelId": "UCeYc_OjHs3QNxIjti2whKzg",
+      "channelTitle": "Golden State Warriors",
+      "thumbnailUrl": "https://i.ytimg.com/vi/bFLm7sD1LtY/hqdefault.jpg",
+      "publishedAt": "2026-10-31T07:28:43.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "OFFICIAL_BASKETBALL_INTERVIEW",
+        "gamePhase": null,
+        "teamIds": [
+          "GSW"
+        ],
+        "playerNames": [],
+        "reason": "talk-verb"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "RV7rhB-aALE",
+      "title": "Highlights: Spurs Secure OVERTIME WIN On the Road Against Utah Jazz",
+      "channelId": "UCEZHE-0CoHqeL1LGFa2EmQw",
+      "channelTitle": "San Antonio Spurs",
+      "thumbnailUrl": "https://i.ytimg.com/vi/RV7rhB-aALE/hqdefault.jpg",
+      "publishedAt": "2026-10-29T04:05:40.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "SAS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "TsrBGDTuE0g",
+      "title": "Mikel Brown Jr. Hits Clutch 3 to Force OT vs. Boston | 16 Points in 4Q & OT",
+      "channelId": "UCTenKHt0h3VjdMvRWP6Lbvw",
+      "channelTitle": "Brooklyn Nets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/TsrBGDTuE0g/hqdefault.jpg",
+      "publishedAt": "2026-10-28T04:05:22.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "PLAYER_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "BKN"
+        ],
+        "playerNames": [],
+        "reason": "stat-line-title"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "6xR7OQ1KJ8g",
+      "title": "Highlights: Spurs Deliver BIG-TIME WIN Over Sacramento to Secure First Home Victory of the Season!",
+      "channelId": "UCEZHE-0CoHqeL1LGFa2EmQw",
+      "channelTitle": "San Antonio Spurs",
+      "thumbnailUrl": "https://i.ytimg.com/vi/6xR7OQ1KJ8g/hqdefault.jpg",
+      "publishedAt": "2026-10-28T03:02:50.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "SAS"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "YwX6hZba5wg",
+      "title": "Caleb Wilson is READY | Chicago Bulls Preseason Highlights",
+      "channelId": "UCvZi1jVVZ2yq0k5kkjzmuGw",
+      "channelTitle": "Chicago Bulls",
+      "thumbnailUrl": "https://i.ytimg.com/vi/YwX6hZba5wg/hqdefault.jpg",
+      "publishedAt": "2026-10-17T04:56:00.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "CHI"
+        ],
+        "playerNames": [],
+        "reason": "highlights-team"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "MBsRL6YbLzc",
+      "title": "HIGHLIGHTS | Nets Stay Undefeated in Preseason with 131-122 Win Over Wizards",
+      "channelId": "UCTenKHt0h3VjdMvRWP6Lbvw",
+      "channelTitle": "Brooklyn Nets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/MBsRL6YbLzc/hqdefault.jpg",
+      "publishedAt": "2026-10-13T02:12:58.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "BKN"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "qdrAFLdz-hg",
+      "title": "Caleb Wilson hits five threes vs. Grizzlies | Chicago Bulls Preseason Highlights",
+      "channelId": "UCvZi1jVVZ2yq0k5kkjzmuGw",
+      "channelTitle": "Chicago Bulls",
+      "thumbnailUrl": "https://i.ytimg.com/vi/qdrAFLdz-hg/hqdefault.jpg",
+      "publishedAt": "2026-10-10T03:36:40.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "CHI"
+        ],
+        "playerNames": [],
+        "reason": "highlights-team"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "t-tQ8M79Ozs",
+      "title": "HIGHLIGHTS | Brooklyn Nets Improve to 2-0 in Preseason with Win Over 76ers",
+      "channelId": "UCTenKHt0h3VjdMvRWP6Lbvw",
+      "channelTitle": "Brooklyn Nets",
+      "thumbnailUrl": "https://i.ytimg.com/vi/t-tQ8M79Ozs/hqdefault.jpg",
+      "publishedAt": "2026-10-09T02:57:18.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "GAME_HIGHLIGHTS",
+        "gamePhase": null,
+        "teamIds": [
+          "BKN"
+        ],
+        "playerNames": [],
+        "reason": "highlights-game"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "y8xZ4v8yUDE",
+      "title": "Luka, Austin and the Squad Discuss the Season | Lakers Media Day 2026",
+      "channelId": "UC8CSt-oVqy8pUAoKSApTxQw",
+      "channelTitle": "Los Angeles Lakers",
+      "thumbnailUrl": "https://i.ytimg.com/vi/y8xZ4v8yUDE/hqdefault.jpg",
+      "publishedAt": "2026-09-28T22:19:23.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "LAL"
+        ],
+        "playerNames": [],
+        "reason": "media-day"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    },
+    {
+      "youtubeId": "POC_ahnYHUk",
+      "title": "Bryson Graham & Tiago Splitter speak at Media Day!",
+      "channelId": "UCvZi1jVVZ2yq0k5kkjzmuGw",
+      "channelTitle": "Chicago Bulls",
+      "thumbnailUrl": "https://i.ytimg.com/vi/POC_ahnYHUk/hqdefault.jpg",
+      "publishedAt": "2026-09-28T21:22:58.000Z",
+      "durationSeconds": null,
+      "embeddable": true,
+      "labels": {
+        "contentType": "MEDIA_AVAILABILITY",
+        "gamePhase": null,
+        "teamIds": [
+          "CHI"
+        ],
+        "playerNames": [],
+        "reason": "media-day"
+      },
+      "provenance": {
+        "publisherType": "team",
+        "discoveryMethod": "channel-feed",
+        "verificationStatus": "verified-publisher",
+        "metadataCheckedAt": "2026-11-11T19:59:58.156Z"
+      }
+    }
+  ]
+}
