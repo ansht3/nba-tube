@@ -1,0 +1,439 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "channelId": "UCWJ2lWNubArHWmf3FIHbfcQ",
+      "name": "NBA",
+      "handle": "@NBA",
+      "publisherType": "league",
+      "status": "approved",
+      "teamId": null,
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "youtube-badge-and-activity",
+        "evidence": "https://www.youtube.com/@NBA",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCpfcwELvR1wtcRJ0UxNXHYw",
+      "name": "Atlanta Hawks",
+      "handle": "@ATLHawks",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "ATL",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/hawks",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCMfT9dr6xC_RIWoA9hI0meQ",
+      "name": "Boston Celtics",
+      "handle": "@Celtics",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "BOS",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/celtics",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCTenKHt0h3VjdMvRWP6Lbvw",
+      "name": "Brooklyn Nets",
+      "handle": "@brooklynnets",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "BKN",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "youtube-badge-and-activity",
+        "evidence": "https://www.youtube.com/@brooklynnets",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCPhFI5lIFnSggz7HgY9UuuQ",
+      "name": "Charlotte Hornets",
+      "handle": "@hornets",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "CHA",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/hornets",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCvZi1jVVZ2yq0k5kkjzmuGw",
+      "name": "Chicago Bulls",
+      "handle": "@ChicagoBulls",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "CHI",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/bulls",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCOdS-I1sYkKWhtTjMUWP_TA",
+      "name": "Cleveland Cavaliers",
+      "handle": "@cavs",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "CLE",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/cavaliers",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCZywaCS_y9YOSSAC9z3dIeg",
+      "name": "Dallas Mavericks",
+      "handle": "@mavericks",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "DAL",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.mavs.com/news/",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCl8hzdP5wVlhuzNG3WCJa1w",
+      "name": "Denver Nuggets",
+      "handle": "@DenverNuggets",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "DEN",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/nuggets",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCtcSBo9EzOtXHxiPhU6RN8A",
+      "name": "Detroit Pistons",
+      "handle": "@PistonsTV",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "DET",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/pistons",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCeYc_OjHs3QNxIjti2whKzg",
+      "name": "Golden State Warriors",
+      "handle": "@warriors",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "GSW",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "youtube-badge-and-activity",
+        "evidence": "https://www.youtube.com/@warriors",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCVD7l69MVGFq_wzQvbk9HbQ",
+      "name": "Houston Rockets",
+      "handle": "@OfficialRockets",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "HOU",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "youtube-badge-and-activity",
+        "evidence": "https://www.youtube.com/@OfficialRockets",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCUQDCnAwU-35cOo8WCzg6zA",
+      "name": "Indiana Pacers",
+      "handle": "@pacers",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "IND",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "youtube-badge-and-activity",
+        "evidence": "https://www.youtube.com/@pacers",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCoK6pw3iIVF9WAWnQd3hj-g",
+      "name": "LA Clippers",
+      "handle": "@laclippers",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "LAC",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/clippers",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UC8CSt-oVqy8pUAoKSApTxQw",
+      "name": "Los Angeles Lakers",
+      "handle": "@lakers",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "LAL",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/lakers",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCCK5EpWKYrAmILfaZThCV-Q",
+      "name": "Memphis Grizzlies",
+      "handle": "@MemphisGrizzlies",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "MEM",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/grizzlies",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UC8bZbiKoPNRi3taABIaFeBw",
+      "name": "Miami HEAT",
+      "handle": "@MiamiHEAT",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "MIA",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/heat",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCRZDEVva3Z8h_Q0VetTgDUA",
+      "name": "Milwaukee Bucks",
+      "handle": "@bucks",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "MIL",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "youtube-badge-and-activity",
+        "evidence": "https://www.youtube.com/@bucks",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCXWDN5NKVFgnPt25CMh98Cg",
+      "name": "Minnesota Timberwolves",
+      "handle": "@timberwolves",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "MIN",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/timberwolves",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCHvG7tf62PwI04ZRfoptRSw",
+      "name": "New Orleans Pelicans",
+      "handle": "@NBAPelicans",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "NOP",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/pelicans",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UC0hb8f0OXHEzDrJDUq-YVVw",
+      "name": "New York Knicks",
+      "handle": "@NYKnicks",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "NYK",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/knicks",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCpXdQhy6kb5CTD8hKlmOL3w",
+      "name": "Oklahoma City Thunder",
+      "handle": "@okcthunder",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "OKC",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/thunder",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCxHFH-yfbhUrsWY4prPx3oQ",
+      "name": "Orlando Magic",
+      "handle": "@OrlandoMagic",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "ORL",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/magic",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UC5qJUyng_ezl0TVjVJFqtfQ",
+      "name": "Philadelphia 76ers",
+      "handle": "@sixers",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "PHI",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/sixers",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCLxlWVVHz2a8SdCfxzVXzQw",
+      "name": "Phoenix Suns",
+      "handle": "@suns",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "PHX",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/suns",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCXk66yyzXo7-2M1BMqLhltQ",
+      "name": "Portland Trail Blazers",
+      "handle": "@trailblazers",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "POR",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/blazers",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCSgFigczGdNMilV1K23JgUQ",
+      "name": "Sacramento Kings",
+      "handle": "@SacramentoKings",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "SAC",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/kings",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCEZHE-0CoHqeL1LGFa2EmQw",
+      "name": "San Antonio Spurs",
+      "handle": "@spurs",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "SAS",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/spurs",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCYBFE432C2AmNRDGEXE4uVg",
+      "name": "Toronto Raptors",
+      "handle": "@TorontoRaptors",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "TOR",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/raptors",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UCv9iSdeI9IzWfV8yTDsMYWA",
+      "name": "Utah Jazz",
+      "handle": "@utahjazz",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "UTA",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/jazz",
+        "verifiedAt": "2026-11-11"
+      }
+    },
+    {
+      "channelId": "UChvzoBPvORuNGtHTMzjUsIQ",
+      "name": "Washington Wizards",
+      "handle": "@WashingtonWizards",
+      "publisherType": "team",
+      "status": "approved",
+      "teamId": "WAS",
+      "allowedContentTypes": ["GAME_HIGHLIGHTS", "PLAYER_HIGHLIGHTS", "TOP_PLAYS", "PREGAME_INTERVIEW", "POSTGAME_INTERVIEW", "COACH_PRESS_CONFERENCE", "MEDIA_AVAILABILITY", "OFFICIAL_BASKETBALL_INTERVIEW"],
+      "verification": {
+        "method": "official-site-link",
+        "evidence": "https://www.nba.com/wizards",
+        "verifiedAt": "2026-11-11"
+      }
+    }
+  ]
+}
