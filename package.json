@@ -12,7 +12,9 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "sync": "tsx scripts/sync.ts",
+    "seed": "tsx scripts/sync.ts --seed"
   },
   "dependencies": {
     "next": "16.4.6",
