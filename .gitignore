@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# local environment (never commit keys)
+.env
+.env.*
+!.env.example
+
+# generated catalog data: YouTube API metadata must stay refreshable, so it is
+# rebuilt by `npm run sync` and never committed (see docs/DECISIONS.md)
+data/catalog.json
+data/sync-report.json
+
+# test output
+coverage/
+playwright-report/
+test-results/
+
+# misc
+.DS_Store
+*.log
+.vercel
