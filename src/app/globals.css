@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+/* Dark mode follows the data-theme attribute that the inline script in the
+   root layout sets before first paint, not the media query alone, so a saved
+   preference can override the system setting. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --bg: #f6f4f0;
+  --surface: #ffffff;
+  --surface-2: #ece8e1;
+  --text: #1b1917;
+  --muted: #655f57;
+  --line: #ddd7cd;
+  --accent: #b8430c;
+  --accent-text: #ffffff;
+  --focus: #1d5fd1;
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg: #0d0e10;
+  --surface: #16181b;
+  --surface-2: #212428;
+  --text: #f1eee9;
+  --muted: #a39d94;
+  --line: #2b2e33;
+  --accent: #f08c4f;
+  --accent-text: #1a0d05;
+  --focus: #7fb0ff;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-focus: var(--focus);
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
