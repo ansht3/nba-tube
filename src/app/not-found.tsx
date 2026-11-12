@@ -3,7 +3,7 @@ import { EmptyState } from "@/components/EmptyState";
 
 export default function NotFound() {
   return (
-    <div className="mx-auto max-w-xl py-10">
+    <main id="main" className="mx-auto max-w-xl px-4 py-16">
       <EmptyState title="That page isn't here">
         <p>
           If you followed a link to a video, it has probably left the catalog: videos drop out once they are older than
@@ -18,6 +18,6 @@ export default function NotFound() {
           </Link>
         </p>
       </EmptyState>
-    </div>
+    </main>
   );
 }

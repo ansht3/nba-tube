@@ -9,4 +9,5 @@ export const STORAGE_KEYS = {
   history: `${PREFIX}:history`,
   playlists: `${PREFIX}:playlists`,
   settings: `${PREFIX}:settings`,
+  sidebar: `${PREFIX}:sidebar`,
 } as const;

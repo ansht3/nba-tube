@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, type FormEvent } from "react";
 import { SITE_NAME } from "@/lib/site";
 import { settingsStore } from "@/lib/storage/settings";
+import { applySidebar, sidebarStore } from "@/lib/storage/sidebar";
 import { CloseIcon, MenuIcon, MoonIcon, SearchIcon, SunIcon } from "./icons";
 import { NavLinks } from "./nav";
 
@@ -94,30 +95,51 @@ function ThemeToggle() {
   );
 }
 
-function MobileMenu() {
+/**
+ * The menu button. On wide screens it collapses the sidebar to an icon rail and
+ * back. On narrow screens, and on the watch page (which has no sidebar), it
+ * opens the navigation as a drawer.
+ */
+function Menu() {
   const dialog = useRef<HTMLDialogElement>(null);
+  const pathname = usePathname();
   const close = () => dialog.current?.close();
+
+  useEffect(() => {
+    const apply = () => applySidebar(sidebarStore.get(), document.documentElement);
+    apply();
+    return sidebarStore.subscribe(apply);
+  }, []);
+
+  function onClick() {
+    const hasSidebar = !pathname.startsWith("/watch");
+    if (hasSidebar && window.matchMedia("(min-width: 1024px)").matches) {
+      sidebarStore.update((mode) => (mode === "mini" ? "full" : "mini"));
+    } else {
+      dialog.current?.showModal();
+    }
+  }
 
   return (
     <>
-      <button type="button" onClick={() => dialog.current?.showModal()} aria-label="Open menu" className="grid size-11 shrink-0 cursor-pointer place-items-center rounded-full hover:bg-surface-2 lg:hidden">
+      <button type="button" onClick={onClick} aria-label="Menu" title="Menu" className="grid size-11 shrink-0 cursor-pointer place-items-center rounded-full hover:bg-surface-2">
         <MenuIcon />
       </button>
       {/* A native modal dialog traps focus, closes on Escape and returns focus to the button. */}
       <dialog
         ref={dialog}
         className="drawer"
-        aria-label="Menu"
+        aria-label="Navigation"
         onClick={(event) => {
           // A click on the dialog element itself is a click on the backdrop.
           if (event.target === event.currentTarget) close();
         }}
       >
-        <div className="flex h-14 items-center justify-between border-b border-line pl-4 pr-2">
-          <Brand />
+        <div className="flex h-14 items-center gap-2 border-b border-line px-2">
           <button type="button" onClick={close} aria-label="Close menu" className="grid size-11 cursor-pointer place-items-center rounded-full hover:bg-surface-2">
             <CloseIcon />
           </button>
+          <Brand />
         </div>
         <NavLinks onNavigate={close} />
       </dialog>
@@ -129,8 +151,8 @@ export function Header() {
   return (
     // Fixed, like the sidebar beside it, so the two never move relative to each other.
     <header className="fixed inset-x-0 top-0 z-30 flex h-14 items-center gap-2 border-b border-line bg-bg px-2 sm:gap-4 sm:px-4">
-      <MobileMenu />
-      <div className="shrink-0 max-sm:hidden lg:w-52">
+      <Menu />
+      <div className="shrink-0 max-sm:hidden lg:w-44">
         <Brand />
       </div>
       <Suspense fallback={<SearchForm initialQuery="" currentParams="" />}>

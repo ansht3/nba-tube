@@ -71,7 +71,7 @@ export function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
       {NAV_GROUPS.map((group, index) => (
         <div key={index}>
           {group.title && (
-            <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">{group.title}</p>
+            <p className="nav-group-title px-3 pb-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">{group.title}</p>
           )}
           <ul>
             {group.items.map((item) => {
@@ -82,7 +82,7 @@ export function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
                     href={item.href}
                     onClick={onNavigate}
                     aria-current={current ? "page" : undefined}
-                    className={`flex h-11 items-center gap-3 rounded-lg px-3 text-sm ${
+                    className={`nav-link flex h-11 items-center gap-3 rounded-lg px-3 text-sm ${
                       current ? "bg-surface-2 font-semibold" : "hover:bg-surface-2"
                     }`}
                   >

@@ -1,10 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { NavLinks } from "@/components/nav";
 import { SettingsSync } from "@/components/SettingsSync";
 import { SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 import { SETTINGS_BOOT_SCRIPT } from "@/lib/storage/settings";
+import { SIDEBAR_BOOT_SCRIPT } from "@/lib/storage/sidebar";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -23,11 +22,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    // The boot script sets data attributes on <html> before React hydrates,
+    // The boot scripts set data attributes on <html> before React hydrates,
     // which is the mismatch suppressHydrationWarning is there to allow.
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: SETTINGS_BOOT_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: [SETTINGS_BOOT_SCRIPT, SIDEBAR_BOOT_SCRIPT].join(";") }} />
       </head>
       <body className="min-h-screen pt-14 antialiased">
         <a href="#main" className="skip-link">
@@ -35,15 +34,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <SettingsSync />
         <Header />
-        <aside className="fixed bottom-0 left-0 top-14 hidden w-56 overflow-y-auto border-r border-line lg:block">
-          <NavLinks />
-        </aside>
-        <div className="lg:pl-56">
-          <main id="main" className="mx-auto max-w-[1680px] px-4 py-6 sm:px-6">
-            {children}
-          </main>
-          <Footer />
-        </div>
+        {children}
       </body>
     </html>
   );
