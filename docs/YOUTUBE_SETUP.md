@@ -38,12 +38,16 @@ full report to `data/sync-report.json`.
 The default quota is 10,000 units per day and the API is free within it. A full
 sync of 31 channels uses about 31 + (videos ÷ 50) + 1 units, typically under 100.
 Running it every three hours uses well under 1,000 units a day. The sync never
-calls `search.list`. If the quota runs out mid-run, the previous catalog is kept
-and the report says so.
+calls `search.list`. If the quota runs out mid-run, the sync stops asking for
+more, keeps every stored video it could not re-check (nothing is removed on a
+failed request) and records `stoppedEarly` in the report.
 
 ## Storage rules
 
 YouTube's Developer Policies allow API metadata to be stored for at most 30 days
-before it is refreshed or deleted. The sync refreshes every stored video on each
-run, and drops any record whose metadata is older than 30 days. `data/catalog.json`
+before it is refreshed or deleted. In API mode the sync re-fetches every stored
+video on each run. In feed mode it re-checks stored videos once their last check
+is more than 24 hours old. In both modes a record whose metadata is older than
+30 days is dropped, and videos published more than 45 days ago leave the
+catalog. `data/catalog.json`
 is git-ignored for the same reason: a commit cannot be refreshed.
