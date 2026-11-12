@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { CONTENT_TYPE_LABELS, SECTIONS } from "@/catalog/content-types";
 import type { Video } from "@/catalog/schema";
 import { getTeam, teamFullName } from "@/catalog/teams";
@@ -18,14 +18,25 @@ import {
 } from "@/lib/browse";
 import { pluralize } from "@/lib/format";
 import { BEST_FIRST_EXPLANATION } from "@/lib/rank";
+import { SITE_NAME } from "@/lib/site";
 import { useCatalog } from "@/lib/use-catalog";
 import { EmptyState } from "./EmptyState";
 import { FilterPanel } from "./FilterPanel";
+import { PageHeader } from "./PageHeader";
 import { CloseIcon, SettingsIcon } from "./icons";
 import { SearchResult } from "./SearchResult";
 import { VideoGrid } from "./VideoCard";
 
 const PAGE_SIZE = 48;
+const TITLE = "Browse all videos";
+
+function DefaultHeader() {
+  return (
+    <PageHeader title={TITLE}>
+      <p>Every video in the catalog, newest first. Search from the top bar, or open Filters.</p>
+    </PageHeader>
+  );
+}
 
 interface Props {
   /** The newest videos, rendered on the server and shown until the full catalog has loaded. */
@@ -46,6 +57,16 @@ function BrowseContent({ initial, total, sources }: Props) {
   const index = useMemo(() => (catalog.videos ? buildSearchIndex(catalog.videos) : null), [catalog.videos]);
   const results = useMemo(() => (index ? filterVideos(index, filters) : null), [index, filters]);
   const hasDurations = useMemo(() => catalog.videos?.some((video) => video.durationSeconds !== null) ?? false, [catalog.videos]);
+
+  // While searching, the heading and the tab title name the search, as on YouTube.
+  useEffect(() => {
+    if (!filters.query) return;
+    const previous = document.title;
+    document.title = `${filters.query} · Search · ${SITE_NAME}`;
+    return () => {
+      document.title = previous;
+    };
+  }, [filters.query]);
 
   const [panelOpen, setPanelOpen] = useState(false);
   // How many results are shown. Tied to the query, so a new filter starts from the first page again.
@@ -82,6 +103,7 @@ function BrowseContent({ initial, total, sources }: Props) {
 
   return (
     <>
+      {filters.query ? <PageHeader title={`Results for “${filters.query}”`} /> : <DefaultHeader />}
       <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
@@ -168,7 +190,14 @@ export function BrowseView(props: Props) {
   return (
     // Reading the URL in a statically exported page needs a Suspense boundary.
     // Its fallback is the same grid the page starts with, so nothing jumps.
-    <Suspense fallback={<VideoGrid videos={props.initial} />}>
+    <Suspense
+      fallback={
+        <>
+          <DefaultHeader />
+          <VideoGrid videos={props.initial} />
+        </>
+      }
+    >
       <BrowseContent {...props} />
     </Suspense>
   );
