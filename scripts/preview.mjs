@@ -7,7 +7,7 @@
  * It honours NEXT_PUBLIC_BASE_PATH, so a build made for a sub-path (such as a
  * GitHub Pages project site) is served from that same sub-path.
  */
-import { createReadStream, existsSync, statSync } from "node:fs";
+import { createReadStream, existsSync, readFileSync, statSync } from "node:fs";
 import { createServer } from "node:http";
 import path from "node:path";
 
@@ -26,6 +26,14 @@ const CONTENT_TYPES = {
   ".png": "image/png",
   ".woff2": "font/woff2",
 };
+
+// The site-wide headers from vercel.json, so local runs and tests see the same
+// security policy as production.
+const SITE_HEADERS = Object.fromEntries(
+  (JSON.parse(readFileSync("vercel.json", "utf8")).headers ?? [])
+    .filter((rule) => rule.source === "/(.*)")
+    .flatMap((rule) => rule.headers.map((header) => [header.key, header.value])),
+);
 
 function resolveFile(urlPath) {
   const relative = decodeURIComponent(urlPath).replace(/^\/+/, "");
@@ -68,7 +76,7 @@ createServer((request, response) => {
   const served = file ?? path.join(ROOT, "404.html");
   const type = CONTENT_TYPES[path.extname(served)] ?? "application/octet-stream";
 
-  response.writeHead(status, { "content-type": type, "cache-control": "no-cache" });
+  response.writeHead(status, { ...SITE_HEADERS, "content-type": type, "cache-control": "no-cache" });
   createReadStream(served).pipe(response);
 }).listen(PORT, () => {
   console.log(`Serving out/ at http://localhost:${PORT}${BASE_PATH}/`);
