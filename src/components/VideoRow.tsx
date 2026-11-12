@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { Video } from "@/catalog/schema";
 import { formatDuration, formatShortDate } from "@/lib/format";
+import { watchPath } from "@/lib/paths";
 import { Thumbnail } from "./Thumbnail";
-import { watchPath } from "./VideoCard";
 import { VideoLabels } from "./VideoLabels";
 
 /** A compact horizontal card, used for the related list beside the player. */

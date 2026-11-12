@@ -13,6 +13,7 @@ import { contentLabel } from "@/components/VideoLabels";
 import { VideoRow } from "@/components/VideoRow";
 import { WatchLaterButton } from "@/components/WatchLaterButton";
 import { formatDuration, formatLongDate } from "@/lib/format";
+import { teamPath } from "@/lib/paths";
 import { SITE_NAME } from "@/lib/site";
 import { channelUrl, watchUrl } from "@/lib/youtube";
 
@@ -88,7 +89,7 @@ export default async function WatchPage({ params }: PageProps<"/watch/[id]">) {
           <ul className="mt-5 flex flex-wrap gap-2" aria-label="Teams">
             {teams.map((team) => (
               <li key={team.id}>
-                <Link href={`/teams/${team.id.toLowerCase()}/`} className="inline-flex h-9 items-center rounded-md border border-line px-3 text-sm hover:bg-surface-2">
+                <Link href={teamPath(team.id)} className="inline-flex h-9 items-center rounded-md border border-line px-3 text-sm hover:bg-surface-2">
                   {teamFullName(team)}
                 </Link>
               </li>

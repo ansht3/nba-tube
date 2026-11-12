@@ -1,13 +1,10 @@
 import Link from "next/link";
 import type { Video } from "@/catalog/schema";
 import { formatDuration, formatShortDate } from "@/lib/format";
+import { watchPath } from "@/lib/paths";
 import { Thumbnail } from "./Thumbnail";
 import { VideoLabels } from "./VideoLabels";
 import { WatchLaterButton } from "./WatchLaterButton";
-
-export function watchPath(youtubeId: string): string {
-  return `/watch/${youtubeId}/`;
-}
 
 export function VideoCard({ video }: { video: Video }) {
   const duration = formatDuration(video.durationSeconds);
