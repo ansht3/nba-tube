@@ -22,8 +22,9 @@ after the full check suite passes.
 | CI | `.github/workflows/ci.yml` (lint, types, unit, build, e2e) |
 | Audits A (content), B (visual), C (code and security) | Findings and fixes in docs/QUALITY.md |
 | HackerTube-style browsing: filter panel, Best first, list search, icon rail, YouTube-style watch layout | Playwright on desktop and Pixel 7; screenshots compared with hackertube.org |
+| Keyboard shortcuts (`/`, `j`/`k`, `Enter`, `l`, `w`, `h`, `?`) and a search heading ("Results for …") | tests/e2e/shortcuts.spec.ts on desktop and Pixel 7 |
 
-## Production refresh status (checked 2026-11-12)
+## Production refresh status (re-checked 2026-11-12, 16:50 UTC run still failed)
 
 The site is live at https://nba-tube.vercel.app and Vercel deploys every push
 to `main` (each build syncs the latest videos). The every-10-minutes refresh is
@@ -50,8 +51,6 @@ from the Actions tab to confirm it, and then runs on its own.
    titles omit "Coach" (KNOWN_ISSUES.md).
 2. Run one live Data API sync once a key exists, and compare its rejection
    report with the feed sync.
-3. Keyboard shortcuts (`j`/`k`/`l`/`w`), as on HackerTube. Only `/` exists now.
-4. A search-specific page heading (the browse page keeps its title while searching).
 
 ## Resume
 
