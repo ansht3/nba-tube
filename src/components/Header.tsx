@@ -53,8 +53,8 @@ function SearchForm({ initialQuery, currentParams }: { initialQuery: string; cur
 
   return (
     <form role="search" onSubmit={onSubmit} className="flex min-w-0 flex-1 justify-center">
-      <div className="relative w-full max-w-xl">
-        <SearchIcon className="pointer-events-none absolute left-3 top-1/2 size-[18px] -translate-y-1/2 text-muted" />
+      {/* YouTube's search: a rounded field joined to a grey search button. */}
+      <div className="flex w-full max-w-[600px]">
         <input
           ref={input}
           // Remount when the URL's query changes, so Back and "Clear filters" update the box.
@@ -63,11 +63,19 @@ function SearchForm({ initialQuery, currentParams }: { initialQuery: string; cur
           type="search"
           name="q"
           maxLength={100}
-          placeholder="Search videos, teams, players"
-          aria-label="Search videos"
+          placeholder="Search"
+          aria-label="Search videos, teams, players"
           autoComplete="off"
-          className="h-10 w-full rounded-full border border-line bg-surface pl-10 pr-4 text-[15px] placeholder:text-muted"
+          className="h-10 min-w-0 flex-1 rounded-l-full border border-line bg-surface pl-4 pr-3 text-[15px] placeholder:text-muted focus:border-accent"
         />
+        <button
+          type="submit"
+          aria-label="Search"
+          title="Search"
+          className="grid h-10 w-14 shrink-0 cursor-pointer place-items-center rounded-r-full border border-l-0 border-line bg-surface-2 hover:bg-line sm:w-16"
+        >
+          <SearchIcon className="size-5" />
+        </button>
       </div>
     </form>
   );
