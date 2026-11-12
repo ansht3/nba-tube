@@ -15,7 +15,8 @@
     "test:watch": "vitest",
     "sync": "tsx scripts/sync.ts",
     "seed": "tsx scripts/sync.ts --seed",
-    "preview": "node scripts/preview.mjs"
+    "preview": "node scripts/preview.mjs",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "next": "16.4.6",
