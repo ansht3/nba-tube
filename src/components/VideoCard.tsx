@@ -11,8 +11,8 @@ export function VideoCard({ video }: { video: Video }) {
 
   return (
     <article className="group relative min-w-0">
-      <Link href={watchPath(video.youtubeId)} className="block rounded-lg">
-        <div className="relative aspect-video overflow-hidden rounded-lg bg-surface-2">
+      <Link href={watchPath(video.youtubeId)} className="block rounded-xl">
+        <div className="relative aspect-video overflow-hidden rounded-xl bg-surface-2">
           <Thumbnail src={video.thumbnailUrl} />
           {duration && (
             <span className="absolute bottom-1.5 right-1.5 rounded bg-black/80 px-1.5 py-0.5 text-xs font-medium tabular-nums text-white">
@@ -21,7 +21,7 @@ export function VideoCard({ video }: { video: Video }) {
           )}
         </div>
         <VideoLabels labels={video.labels} className="mt-2.5" />
-        <h3 className="mt-1 line-clamp-2 text-[15px] font-medium leading-snug group-hover:underline">{video.title}</h3>
+        <h3 className="mt-1 line-clamp-2 text-base font-medium leading-snug group-hover:underline">{video.title}</h3>
         <p className="mt-1 text-[13px] text-muted">
           {video.channelTitle}
           <span aria-hidden="true"> · </span>
