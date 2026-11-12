@@ -29,7 +29,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: SETTINGS_BOOT_SCRIPT }} />
       </head>
-      <body className="min-h-screen antialiased">
+      <body className="min-h-screen pt-14 antialiased">
         <a href="#main" className="skip-link">
           Skip to content
         </a>

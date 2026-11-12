@@ -46,6 +46,19 @@
     Arial, sans-serif;
 }
 
+html {
+  background: var(--bg);
+  /* Leave room for the fixed header when jumping to an in-page anchor. */
+  scroll-padding-top: 4.5rem;
+}
+
+html,
+body {
+  /* Stop the elastic overscroll that lets the page, and with it the header
+     area, bounce away from the edges of the window. */
+  overscroll-behavior-y: none;
+}
+
 body {
   background: var(--bg);
   color: var(--text);

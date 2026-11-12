@@ -127,7 +127,8 @@ function MobileMenu() {
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-line bg-bg px-2 sm:gap-4 sm:px-4">
+    // Fixed, like the sidebar beside it, so the two never move relative to each other.
+    <header className="fixed inset-x-0 top-0 z-30 flex h-14 items-center gap-2 border-b border-line bg-bg px-2 sm:gap-4 sm:px-4">
       <MobileMenu />
       <div className="shrink-0 max-sm:hidden lg:w-52">
         <Brand />
