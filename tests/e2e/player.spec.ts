@@ -35,3 +35,39 @@ test("the mobile menu opens, navigates and closes", async ({ page, isMobile }) =
   await expect(page.getByRole("heading", { level: 1, name: "Teams" })).toBeVisible();
   await expect(dialog).toBeHidden();
 });
+
+test("the player is in the page HTML and loads without JavaScript", async ({ browser }) => {
+  const id = builtCatalog()[0].youtubeId;
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.route(/youtube-nocookie\.com/, (route) => route.fulfill({ body: "<html><body>player</body></html>", contentType: "text/html" }));
+  await page.goto(`/watch/${id}/`);
+  await expect(page.locator("iframe")).toHaveAttribute("src", new RegExp(`/embed/${id}\\?`));
+  await context.close();
+});
+
+test("moving to a related video swaps in that video's player", async ({ page }) => {
+  await page.goto(`/watch/${builtCatalog()[0].youtubeId}/`);
+  const related = page.locator("aside[aria-labelledby=related-heading] a").first();
+  const target = (await related.getAttribute("href"))!.split("/").filter(Boolean).pop()!;
+  await related.click();
+  await expect(page).toHaveURL(new RegExp(`/watch/${target}/`));
+  await expect(page.locator("iframe")).toHaveCount(1);
+  await expect(page.locator("iframe")).toHaveAttribute("src", new RegExp(`/embed/${target}\\?`));
+  await page.goBack();
+  await expect(page.locator("iframe")).toHaveCount(1);
+});
+
+test("the header stays pinned to the top while the page scrolls", async ({ page }) => {
+  await page.goto("/highlights/");
+  const header = page.locator("body > header");
+  await page.mouse.wheel(0, 1500);
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(500);
+  const box = (await header.boundingBox())!;
+  expect(box.y).toBe(0);
+  expect(await header.evaluate((element) => getComputedStyle(element).position)).toBe("fixed");
+  // Content starts below the header instead of underneath it.
+  await page.evaluate(() => window.scrollTo(0, 0));
+  const heading = (await page.getByRole("heading", { level: 1 }).boundingBox())!;
+  expect(heading.y).toBeGreaterThanOrEqual(box.height);
+});
