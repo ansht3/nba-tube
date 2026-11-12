@@ -21,6 +21,7 @@ describe("parseSavedList", () => {
       { ...saved("x"), id: "<script>" },
       { ...saved("y"), title: 42 },
       { ...saved("z"), savedAt: "yesterday" },
+      { ...saved("big"), savedAt: 1e300 },
       { id: saved("w").id },
       null,
       "string",

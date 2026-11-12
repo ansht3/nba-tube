@@ -27,7 +27,8 @@ function isSavedVideo(value: unknown): value is SavedVideo {
     typeof entry.title === "string" &&
     typeof entry.channelTitle === "string" &&
     typeof entry.savedAt === "number" &&
-    Number.isFinite(entry.savedAt)
+    // The range a Date can hold. Anything else would throw when formatted.
+    Math.abs(entry.savedAt) <= 8.64e15
   );
 }
 
