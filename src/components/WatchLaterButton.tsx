@@ -13,7 +13,6 @@ interface Props {
 export function WatchLaterButton({ video, variant }: Props) {
   const list = useStore(watchLaterStore);
   const saved = isSaved(list, video.youtubeId);
-  const label = saved ? "Remove from Watch later" : "Save to Watch later";
 
   function toggle() {
     watchLaterStore.update((current) => toggleSaved(current, toSavedVideo(video, Date.now())));
@@ -23,7 +22,7 @@ export function WatchLaterButton({ video, variant }: Props) {
     return (
       <button type="button" onClick={toggle} aria-pressed={saved} className="pill">
         {saved ? <CheckIcon /> : <ClockIcon />}
-        {saved ? "Saved" : "Watch later"}
+        Watch later
       </button>
     );
   }
@@ -33,8 +32,8 @@ export function WatchLaterButton({ video, variant }: Props) {
       type="button"
       onClick={toggle}
       aria-pressed={saved}
-      aria-label={`${label}: ${video.title}`}
-      title={label}
+      aria-label={`Watch later: ${video.title}`}
+      title={saved ? "Saved to Watch later" : "Watch later"}
       data-on={saved}
       className="thumb-action"
     >

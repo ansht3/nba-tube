@@ -15,7 +15,7 @@ export function LikeButton({ video }: { video: { youtubeId: string; title: strin
       className="pill"
     >
       <HeartIcon filled={liked} />
-      {liked ? "Liked" : "Like"}
+      Like
     </button>
   );
 }
