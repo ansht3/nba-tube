@@ -38,14 +38,41 @@ function writeJson(file: string, value: unknown) {
   renameSync(temporary, file);
 }
 
-function readPreviousCatalog(): Catalog | null {
-  if (!existsSync(CATALOG_PATH)) return null;
-  const parsed = catalogSchema.safeParse(readJson(CATALOG_PATH));
-  if (!parsed.success) {
+/**
+ * Where the last published catalog can be downloaded from. A build server
+ * starts from a clean checkout with no data/catalog.json, so without this
+ * every build would start over and forget videos that have scrolled out of
+ * the channel feeds. On Vercel the production URL is provided automatically.
+ */
+function previousCatalogUrl(): string | null {
+  if (process.env.PREVIOUS_CATALOG_URL) return process.env.PREVIOUS_CATALOG_URL;
+  const production = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  return production ? `https://${production}/catalog.json` : null;
+}
+
+async function readPreviousCatalog(): Promise<Catalog | null> {
+  if (existsSync(CATALOG_PATH)) {
+    const parsed = catalogSchema.safeParse(readJson(CATALOG_PATH));
+    if (parsed.success) return parsed.data;
     console.warn("The existing data/catalog.json is not valid and will be rebuilt from scratch.");
     return null;
   }
-  return parsed.data;
+
+  const url = previousCatalogUrl();
+  if (!url) return null;
+  try {
+    const response = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const parsed = catalogSchema.safeParse(await response.json());
+    // The seed is a sample, not a sync, so it is never carried forward.
+    if (!parsed.success || parsed.data.mode === "seed") return null;
+    console.log(`Continuing from the published catalog (${parsed.data.videos.length} videos).`);
+    return parsed.data;
+  } catch (error) {
+    // First deploy, or the site is down: start fresh rather than fail the build.
+    console.warn(`Could not read the published catalog (${error instanceof Error ? error.message : error}). Starting fresh.`);
+    return null;
+  }
 }
 
 function printReport(report: SyncReport, target: string, dryRun: boolean) {
@@ -89,7 +116,7 @@ async function main() {
   let result: SyncResult;
   if (mode === "api") {
     const api = createYouTubeApi({ apiKey: apiKey!, fetch });
-    result = await runSync({ ...common, mode: "api", api, previous: readPreviousCatalog() });
+    result = await runSync({ ...common, mode: "api", api, previous: await readPreviousCatalog() });
   } else {
     result = await runSync({
       ...common,
@@ -97,7 +124,7 @@ async function main() {
       fetchFeed: (source) => fetchChannelFeed(source, fetch),
       checkEmbed: (youtubeId) => checkEmbed(youtubeId, fetch),
       // A seed always starts clean so that it only contains what was verified in this run.
-      previous: values.seed ? null : readPreviousCatalog(),
+      previous: values.seed ? null : await readPreviousCatalog(),
       catalogMode: values.seed ? "seed" : "feed",
       limits: values.seed ? { perSourceLimit: SEED_VIDEOS_PER_CHANNEL } : undefined,
     });
