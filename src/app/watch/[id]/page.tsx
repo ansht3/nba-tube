@@ -1,0 +1,140 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { loadCatalog } from "@/catalog/load";
+import { findVideo, relatedVideos } from "@/catalog/select";
+import { getTeam, teamFullName } from "@/catalog/teams";
+import { AddToPlaylist } from "@/components/AddToPlaylist";
+import { HistoryRecorder } from "@/components/HistoryRecorder";
+import { ExternalIcon } from "@/components/icons";
+import { LikeButton } from "@/components/LikeButton";
+import { Player } from "@/components/Player";
+import { contentLabel } from "@/components/VideoLabels";
+import { VideoRow } from "@/components/VideoRow";
+import { WatchLaterButton } from "@/components/WatchLaterButton";
+import { formatDuration, formatLongDate } from "@/lib/format";
+import { SITE_NAME } from "@/lib/site";
+import { channelUrl, watchUrl } from "@/lib/youtube";
+
+const RELATED_COUNT = 12;
+
+// Only videos in the catalog have a page. Any other id is a 404.
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return loadCatalog().videos.map((video) => ({ id: video.youtubeId }));
+}
+
+export async function generateMetadata({ params }: PageProps<"/watch/[id]">): Promise<Metadata> {
+  const { id } = await params;
+  const video = findVideo(loadCatalog().videos, id);
+  if (!video) return { title: "Video not found" };
+  return { title: video.title, description: `${contentLabel(video.labels)} from ${video.channelTitle}.` };
+}
+
+const PUBLISHER_DESCRIPTIONS = {
+  league: "the league's official channel",
+  team: "an official team channel",
+} as const;
+
+export default async function WatchPage({ params }: PageProps<"/watch/[id]">) {
+  const { id } = await params;
+  const { videos } = loadCatalog();
+  const video = findVideo(videos, id);
+  if (!video) notFound();
+
+  const related = relatedVideos(video, videos, RELATED_COUNT);
+  const teams = video.labels.teamIds.map(getTeam).filter((team) => team !== undefined);
+  const duration = formatDuration(video.durationSeconds);
+  const manual = video.provenance.verificationStatus === "manual-review";
+
+  return (
+    <div className="mx-auto grid max-w-[1500px] gap-x-8 gap-y-10 xl:grid-cols-[minmax(0,1fr)_23rem]">
+      <article className="min-w-0">
+        <HistoryRecorder youtubeId={video.youtubeId} title={video.title} channelTitle={video.channelTitle} />
+        {/* Full-bleed on phones, where every pixel of width matters for video. */}
+        <div className="max-sm:-mx-4 max-sm:[&>div]:rounded-none">
+          <Player youtubeId={video.youtubeId} title={video.title} />
+        </div>
+
+        <p className="mt-4 text-xs font-semibold uppercase tracking-[0.08em] text-accent">{contentLabel(video.labels)}</p>
+        <h1 className="mt-1 text-xl font-bold leading-snug tracking-tight sm:text-2xl">{video.title}</h1>
+
+        <p className="mt-2 text-sm text-muted">
+          <a href={channelUrl(video.channelId)} target="_blank" rel="noopener noreferrer" className="font-medium text-text hover:underline">
+            {video.channelTitle}
+          </a>
+          <span aria-hidden="true"> · </span>
+          <time dateTime={video.publishedAt}>{formatLongDate(video.publishedAt)}</time>
+          {duration && (
+            <>
+              <span aria-hidden="true"> · </span>
+              {duration}
+            </>
+          )}
+        </p>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          <LikeButton video={video} />
+          <WatchLaterButton video={video} variant="pill" />
+          <AddToPlaylist video={video} />
+          <a href={watchUrl(video.youtubeId)} target="_blank" rel="noopener noreferrer" className="pill">
+            <ExternalIcon />
+            Open on YouTube
+          </a>
+        </div>
+
+        {teams.length > 0 && (
+          <ul className="mt-5 flex flex-wrap gap-2" aria-label="Teams">
+            {teams.map((team) => (
+              <li key={team.id}>
+                <Link href={`/teams/${team.id.toLowerCase()}/`} className="inline-flex h-9 items-center rounded-md border border-line px-3 text-sm hover:bg-surface-2">
+                  {teamFullName(team)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <details className="mt-6 rounded-lg border border-line bg-surface px-4 py-3 text-sm">
+          <summary className="cursor-pointer font-medium">Why this video is on {SITE_NAME}</summary>
+          <div className="mt-3 space-y-2 text-muted">
+            <p>
+              It was published by {video.channelTitle}, {PUBLISHER_DESCRIPTIONS[video.provenance.publisherType]}, which
+              is on the{" "}
+              <Link href="/about/#sources" className="link">
+                list of verified sources
+              </Link>
+              .
+            </p>
+            <p>
+              {manual
+                ? "A person reviewed it and added it to the catalog by hand."
+                : `Its title matched the “${video.labels.reason}” rule, which labels it as ${contentLabel(video.labels).toLowerCase()}.`}{" "}
+              The label and team tags are {SITE_NAME}&apos;s own. The title, thumbnail and video come from YouTube
+              unchanged.
+            </p>
+          </div>
+        </details>
+      </article>
+
+      <aside aria-labelledby="related-heading">
+        <h2 id="related-heading" className="text-base font-bold tracking-tight">
+          Related
+        </h2>
+        <p className="mt-0.5 text-xs text-muted">Same team, same kind of video or same channel. Newest first.</p>
+        {related.length === 0 ? (
+          <p className="mt-4 text-sm text-muted">Nothing related in the catalog right now.</p>
+        ) : (
+          <ul className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
+            {related.map((other) => (
+              <li key={other.youtubeId}>
+                <VideoRow video={other} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </aside>
+    </div>
+  );
+}
