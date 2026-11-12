@@ -3,6 +3,28 @@
 `npm run build` writes a static site to `out/`. Any static host works. Nothing
 runs on a server.
 
+## Vercel (recommended)
+
+`vercel.json` makes every Vercel build sync the catalog from the official
+channels first, then build the static site. If the sync fails, the build falls
+back to the committed seed instead of failing.
+
+1. Import the repository in the Vercel dashboard, or run `npx vercel` and then
+   `npx vercel --prod` from the project folder.
+2. Optional: add `YOUTUBE_API_KEY` under Project Settings > Environment
+   Variables for durations and deeper history. It is used only during the
+   build and never reaches the browser.
+3. Pushes to `main` deploy to production. Pushes to other branches get preview
+   URLs.
+
+The catalog only refreshes when Vercel builds. To refresh on a schedule,
+create a Deploy Hook (Project Settings > Git > Deploy Hooks) and call it from
+any scheduler, for example a GitHub Actions cron job that runs
+`curl -X POST "$VERCEL_DEPLOY_HOOK"`.
+
+Cost: the Hobby plan is free for personal, non-commercial projects. A
+commercial site needs the Pro plan.
+
 ## GitHub Pages (included workflow)
 
 `.github/workflows/deploy.yml` syncs the catalog, builds with the right base
