@@ -18,7 +18,7 @@ import {
 import { pluralize } from "@/lib/format";
 import { useCatalog } from "@/lib/use-catalog";
 import { EmptyState } from "./EmptyState";
-import { CloseIcon } from "./icons";
+import { CloseIcon, SettingsIcon } from "./icons";
 import { VideoGrid } from "./VideoCard";
 
 const PAGE_SIZE = 48;
@@ -63,6 +63,8 @@ function BrowseContent({ initial, total, sources }: Props) {
 
   // How many results are shown. Tied to the query, so a new filter starts from the first page again.
   const [paging, setPaging] = useState({ query, count: PAGE_SIZE });
+  // On a phone the filters fold away so results start on the first screen. From sm up they are always shown.
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const visibleCount = paging.query === query ? paging.count : PAGE_SIZE;
 
   function setFilter<Key extends keyof BrowseFilters>(key: Key, value: BrowseFilters[Key]) {
@@ -84,9 +86,21 @@ function BrowseContent({ initial, total, sources }: Props) {
   const videos = results ?? (showingInitial ? initial : null);
   const count = results ? results.length : showingInitial ? total : null;
 
+  const filterCount = chips.length - (filters.query ? 1 : 0);
+
   return (
     <>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
+      <button
+        type="button"
+        onClick={() => setFiltersOpen((open) => !open)}
+        aria-expanded={filtersOpen}
+        aria-controls="browse-filters"
+        className="pill mb-3 sm:hidden"
+      >
+        <SettingsIcon />
+        {filtersOpen ? "Hide filters" : filterCount > 0 ? `Filters (${filterCount})` : "Filters"}
+      </button>
+      <div id="browse-filters" className={`grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6 ${filtersOpen ? "" : "max-sm:hidden"}`}>
         <FilterSelect label="Section" value={filters.section} onChange={(value) => setFilter("section", value as BrowseFilters["section"])}>
           <option value="">All sections</option>
           {SECTIONS.map((section) => (

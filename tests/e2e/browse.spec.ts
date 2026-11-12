@@ -24,11 +24,19 @@ test("a search with no match says so", async ({ page }) => {
   await expect(page.getByText("No videos match")).toBeVisible();
 });
 
+async function showFilters(page: import("@playwright/test").Page) {
+  const toggle = page.getByRole("button", { name: /^Filters/ });
+  if (await toggle.isVisible()) await toggle.click();
+}
+
 test("filters narrow the list, stay in the URL and survive a reload", async ({ page }) => {
   await page.goto("/browse/");
+  await showFilters(page);
   await page.getByLabel("Section").selectOption("postgame");
   await expect(page).toHaveURL(/section=postgame/);
   await page.reload();
+  await expect(page.getByRole("button", { name: "Remove filter: Postgame" })).toBeVisible();
+  await showFilters(page);
   await expect(page.getByLabel("Section")).toHaveValue("postgame");
 
   const labels = await page.locator("article p.uppercase span:first-child").allTextContents();
@@ -38,6 +46,7 @@ test("filters narrow the list, stay in the URL and survive a reload", async ({ p
 
 test("the team filter shows only that team's videos", async ({ page }) => {
   await page.goto("/browse/?team=BOS");
+  await showFilters(page);
   await expect(page.getByLabel("Team")).toHaveValue("BOS");
   const tags = await page.locator("article p.uppercase").allTextContents();
   for (const tag of tags) expect(tag).toContain("BOS");
@@ -45,7 +54,16 @@ test("the team filter shows only that team's videos", async ({ page }) => {
 
 test("unknown filter values in a link are ignored", async ({ page, consoleErrors }) => {
   await page.goto("/browse/?team=SEA&section=nope&type=<script>");
+  await showFilters(page);
   await expect(page.getByLabel("Team")).toHaveValue("");
   expect(await page.locator("article").count()).toBeGreaterThan(0);
   expect(consoleErrors).toEqual([]);
+});
+
+test("on a phone the filters start folded and open on request", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "Filters are always visible on wider screens");
+  await page.goto("/browse/?team=LAL");
+  await expect(page.getByLabel("Team")).toBeHidden();
+  await page.getByRole("button", { name: "Filters (1)" }).click();
+  await expect(page.getByLabel("Team")).toHaveValue("LAL");
 });
