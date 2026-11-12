@@ -65,7 +65,16 @@ describe("classifyTitle accepts", () => {
     ]);
   });
 
+  it("game recaps that state a result instead of saying highlights", () => {
+    expectAccepted([
+      ["New York Knicks Defeat the Milwaukee Bucks at Madison Square Garden | November 10, 2026", "GAME_HIGHLIGHTS", null], // Knicks
+      ["New York Knicks Take On the Philadelphia 76ers | October 30, 2026", "GAME_HIGHLIGHTS", null], // Knicks
+      ["Payton Pritchard & Jayson Tatum lead Celtics to 125-111 win over Bulls in NBA Cup play", "GAME_HIGHLIGHTS", null], // Celtics
+    ]);
+  });
+
   it("official compilations", () => {
+
     expectAccepted([
       ["NBA's Top 10 Plays of the Night | November 10, 2026", "TOP_PLAYS", null], // NBA
       ["NBA's Nightly Recap | November 10, 2026", "TOP_PLAYS", null], // NBA
@@ -154,6 +163,7 @@ describe("classifyTitle rejects", () => {
       ["How Walker Kessler & Luka Dončić Are Setting the Tone for the 2026 Lakers | Mic'd Up", "UNRELATED_CONTENT"], // Lakers
       ["Isaiah Thomas Sounds Off On Paul George's 36-PT Performance In Philly! | The Association", "UNRELATED_CONTENT"], // NBA
       ["Kobe Brown Joins Quinn Buckner for Pacers Playroom Season 2", "UNRELATED_CONTENT"], // Pacers
+      ["The 2008 Celtics: A Documentary | Full Game Highlights", "UNRELATED_CONTENT"], // (synthetic)
     ]);
   });
 
@@ -200,13 +210,18 @@ describe("classifyTitle rejects", () => {
 
   it("official uploads whose kind the title does not establish", () => {
     expectRejected([
-      ["New York Knicks Defeat the Milwaukee Bucks at Madison Square Garden | November 10, 2026", "LOW_CONFIDENCE"], // Knicks
+      ["They Started 11-30… Then Everything Changed", "LOW_CONFIDENCE"], // Heat: a record, not a final score
+      ["Knicks fans defeat the cold to see the parade", "LOW_CONFIDENCE"], // (synthetic) not two team names
       ["Stephen Curry on Facing Klay Thompson & Warriors' Young Core | Nov. 6, 2026", "LOW_CONFIDENCE"], // Warriors
       ["Caleb Wilson: My First Media Day", "LOW_CONFIDENCE"], // Bulls
       ["The Skelly Celly Is Always Ready | Practice Report", "LOW_CONFIDENCE"], // Timberwolves
       ["Buddy Hield shares his love for Bahamian food & answers your questions", "LOW_CONFIDENCE"], // Bulls
       ["They Started 11-30… Then Everything Changed", "LOW_CONFIDENCE"], // Heat
     ]);
+  });
+
+  it("a hosted show that borrows the word shootaround", () => {
+    expectRejected([["THE SHOOTAROUND with Derek Cornelius and WatsWitAndy | Raptors vs Celtics Nov 11", "LOW_CONFIDENCE"]]); // Raptors
   });
 
   it("studio shows that borrow the word postgame", () => {

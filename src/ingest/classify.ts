@@ -95,7 +95,7 @@ const TITLE_REJECT_RULES: TitleRejectRule[] = [
     id: "show-or-feature",
     rejection: "UNRELATED_CONTENT",
     pattern:
-      /\bpodcast\b|\b(ep|episode)\.? ?\d+\b|\bs\d+,? ?e\d+\b|\bseason \d\b|\ball[- ]access\b|\bmini[- ]movie\b|\bhype video\b|\bmic'?d up\b|\bbehind the scenes\b|\bvlog\b|\bday in the life\b|\bhalftime\b/i,
+      /\bpodcast\b|\b(ep|episode)\.? ?\d+\b|\bs\d+,? ?e\d+\b|\bseason \d\b|\ball[- ]access\b|\bmini[- ]movie\b|\bdocumentar(y|ies)\b|\bhype video\b|\bmic'?d up\b|\bbehind the scenes\b|\bvlog\b|\bday in the life\b|\bhalftime\b/i,
   },
 ];
 
@@ -112,6 +112,10 @@ const STAT_LINE =
 const SESSION_WORD = /\b(press conferences?|presser|media availability|availability|interviews?|media|sound)\b/i;
 
 const SHOOTAROUND = /\bshootaround\b/i;
+// "THE SHOOTAROUND with ..." is a hosted show, not the morning media session.
+const SHOOTAROUND_SHOW = /\bthe shootaround\b/i;
+// "Herb Jones on Warriors loss | Pelicans-Nets Shootaround": a person speaking about something.
+const PERSON_SPEAKING = /^\p{Lu}[\p{L}.'-]*(?: \p{Lu}[\p{L}.'-]*){1,3} on /u;
 const PREGAME = /\bpre[- ]?game\b/i;
 const POSTGAME = /\bpost[- ]?game\b|\bwalk[- ]?off interview\b|\bon[- ]court interview\b/i;
 // A studio show is not a media session, even when it is called "Postgame Live".
@@ -158,6 +162,17 @@ function highlightSubject(title: string): "player" | "team" | "unknown" {
   const matchup = /^(.+?) (?:vs\.?|at) (.+)$/.exec(lower);
   if (matchup && isTeamReference(matchup[1]) && isTeamReference(matchup[2])) return "team";
   return PERSON_NAME.test(subject) ? "player" : "unknown";
+}
+
+const FINAL_SCORE = /\b\d{2,3}\s?-\s?\d{2,3}\b/;
+const RESULT_WORD = /\b(?:win|victory|loss) (?:over|against|to)\b|\b(?:defeats?|beats?|falls? to|tops?)\b/i;
+const TEAM_RESULT = /^(.+?) (?:defeats?|beats?|takes? on|falls? to) (?:the )?(.+?)(?: at .+)?$/i;
+
+/** "New York Knicks Defeat the Milwaukee Bucks at Madison Square Garden | November 10, 2026" */
+function isTeamResult(title: string): boolean {
+  const main = title.split(/\s*\|\s*/)[0].toLowerCase();
+  const match = TEAM_RESULT.exec(main);
+  return match !== null && isTeamReference(match[1]) && isTeamReference(match[2]);
 }
 
 /**
@@ -207,7 +222,9 @@ export function classifyTitle(rawTitle: string): Classification {
   if (HIGHLIGHT_WORD.test(title) && !isSession) return classifyHighlights(title);
   if (TOP_PLAYS.test(title)) return accept("TOP_PLAYS", null, "top-plays");
 
-  if (SHOOTAROUND.test(title)) return classifySession(title, "pregame", "shootaround");
+  if (SHOOTAROUND.test(title) && !SHOOTAROUND_SHOW.test(title) && (isSession || PERSON_SPEAKING.test(title))) {
+    return classifySession(title, "pregame", "shootaround");
+  }
   if (PREGAME.test(title) && isSession) return classifySession(title, "pregame", "pregame-session");
   if (POSTGAME.test(title) && !STUDIO_SHOW.test(title)) return classifySession(title, "postgame", "postgame-session");
 
@@ -219,6 +236,11 @@ export function classifyTitle(rawTitle: string): Classification {
   // Official channels title single-player highlight clips with the stat line
   // and nothing else: "Kyrie Irving (35 points) vs. Brooklyn Nets".
   if (STAT_LINE.test(title)) return accept("PLAYER_HIGHLIGHTS", null, "stat-line-title");
+
+  // Game recaps that never say "highlights": a final score next to a result
+  // word, or two exact team names joined by a result verb.
+  if (FINAL_SCORE.test(title) && RESULT_WORD.test(title)) return accept("GAME_HIGHLIGHTS", null, "game-result-score");
+  if (isTeamResult(title)) return accept("GAME_HIGHLIGHTS", null, "game-result-teams");
 
   return reject("LOW_CONFIDENCE", "no-rule-matched");
 }
