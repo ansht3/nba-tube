@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
+  "framework": null,
   "installCommand": "npm ci",
   "buildCommand": "(npm run sync || echo 'Sync failed: building from the committed seed catalog') && npm run build",
   "outputDirectory": "out",
