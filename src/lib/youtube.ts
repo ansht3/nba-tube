@@ -20,3 +20,14 @@ export function embedUrl(youtubeId: string, origin?: string): string {
   if (origin) params.set("origin", origin);
   return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(youtubeId)}?${params}`;
 }
+
+/** The thumbnail YouTube serves for every video. Used when only the id is known. */
+export function defaultThumbnail(youtubeId: string): string {
+  return `https://i.ytimg.com/vi/${encodeURIComponent(youtubeId)}/hqdefault.jpg`;
+}
+
+/** YouTube's own "play these in order" link. It accepts at most 50 ids. */
+export function playAllUrl(youtubeIds: string[]): string {
+  const ids = youtubeIds.slice(0, 50).map(encodeURIComponent).join(",");
+  return `https://www.youtube.com/watch_videos?video_ids=${ids}`;
+}
