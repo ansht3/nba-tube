@@ -23,14 +23,14 @@ test("the player keeps the minimum size YouTube requires", async ({ page }) => {
 });
 
 test("the mobile menu opens, navigates and closes", async ({ page, isMobile }) => {
-  test.skip(!isMobile, "The menu button only exists on narrow screens");
+  test.skip(!isMobile, "On desktop the menu button collapses the sidebar instead");
   await page.goto("/");
-  await page.getByRole("button", { name: "Open menu" }).click();
-  const dialog = page.getByRole("dialog", { name: "Menu" });
+  await page.getByRole("button", { name: "Menu", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "Navigation" });
   await expect(dialog).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
-  await page.getByRole("button", { name: "Open menu" }).click();
+  await page.getByRole("button", { name: "Menu", exact: true }).click();
   await dialog.getByRole("link", { name: "Teams" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Teams" })).toBeVisible();
   await expect(dialog).toBeHidden();
@@ -70,4 +70,37 @@ test("the header stays pinned to the top while the page scrolls", async ({ page 
   await page.evaluate(() => window.scrollTo(0, 0));
   const heading = (await page.getByRole("heading", { level: 1 }).boundingBox())!;
   expect(heading.y).toBeGreaterThanOrEqual(box.height);
+});
+
+test("on desktop the menu button collapses the sidebar to a rail and remembers it", async ({ page, isMobile }) => {
+  test.skip(isMobile, "The sidebar only exists on wide screens");
+  await page.goto("/");
+  const sidebar = page.locator(".site-sidebar");
+  expect((await sidebar.boundingBox())!.width).toBeGreaterThan(200);
+  await page.getByRole("button", { name: "Menu", exact: true }).click();
+  await expect.poll(async () => (await sidebar.boundingBox())!.width).toBeLessThan(80);
+  // Every link is still reachable in the rail.
+  await page.locator(".site-sidebar").getByRole("link", { name: "Watch later" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Watch later" })).toBeVisible();
+  await page.reload();
+  expect((await sidebar.boundingBox())!.width).toBeLessThan(80);
+});
+
+test("the watch page shows related videos in a right-hand column on desktop", async ({ page, isMobile }) => {
+  test.skip(isMobile, "On phones related videos follow the player");
+  for (const width of [1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`/watch/${builtCatalog()[0].youtubeId}/`);
+    const player = (await page.locator("main iframe").boundingBox())!;
+    const related = (await page.locator("aside[aria-labelledby=related-heading]").boundingBox())!;
+    expect(related.x, `at ${width}px`).toBeGreaterThan(player.x + player.width);
+    expect(related.y, `at ${width}px`).toBeLessThan(player.y + player.height);
+    expect(await page.locator("aside[aria-labelledby=related-heading] li").count()).toBeGreaterThan(5);
+  }
+});
+
+test("the watch page menu opens the navigation drawer", async ({ page }) => {
+  await page.goto(`/watch/${builtCatalog()[0].youtubeId}/`);
+  await page.getByRole("button", { name: "Menu", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "Navigation" })).toBeVisible();
 });

@@ -22,7 +22,7 @@ test("hiding a home section removes its shelf", async ({ page }) => {
   await page.getByRole("group", { name: "Home sections" }).getByLabel("Postgame").uncheck();
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 2, name: "Postgame" })).toBeHidden();
-  await expect(page.getByRole("heading", { level: 2, name: "Highlights" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 2, name: "Latest game highlights" })).toBeVisible();
 });
 
 test("picking a team adds its shelf to home", async ({ page }) => {

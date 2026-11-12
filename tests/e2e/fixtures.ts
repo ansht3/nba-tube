@@ -33,7 +33,13 @@ export const test = base.extend<{ consoleErrors: string[] }>({
 
 export { expect };
 
+/** On narrow screens the navigation lives in a drawer behind the menu button. */
 export async function openMenuIfMobile(page: Page) {
-  const menu = page.getByRole("button", { name: "Open menu" });
-  if (await menu.isVisible()) await menu.click();
+  if ((page.viewportSize()?.width ?? 0) < 1024) await page.getByRole("button", { name: "Menu", exact: true }).click();
+}
+
+/** Opens the filter panel on the browse page. */
+export async function openFilters(page: Page) {
+  const toggle = page.getByRole("button", { name: /^Filters/ });
+  if ((await toggle.getAttribute("aria-expanded")) !== "true") await toggle.click();
 }

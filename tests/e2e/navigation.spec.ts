@@ -2,8 +2,12 @@ import { builtCatalog, expect, openMenuIfMobile, test } from "./fixtures";
 
 test("home shows official videos in labelled sections without errors", async ({ page, consoleErrors }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 2, name: "Highlights" })).toBeVisible();
-  await expect(page.getByRole("heading", { level: 2, name: "Postgame" })).toBeVisible();
+  // Game highlights lead the page, postgame comes next.
+  const shelves = await page.locator("main section h2").allTextContents();
+  expect(shelves.slice(0, 2)).toEqual(["Latest game highlights", "Postgame"]);
+  for (const label of await page.locator("section[aria-labelledby=shelf-games] article p.uppercase span:first-child").allTextContents()) {
+    expect(label).toBe("Game highlights");
+  }
   expect(await page.locator("article").count()).toBeGreaterThan(8);
   expect(consoleErrors).toEqual([]);
 });
@@ -63,7 +67,7 @@ test("team pages list only that team's videos", async ({ page }) => {
 });
 
 test("the page never scrolls sideways", async ({ page }) => {
-  for (const path of ["/", "/browse/", "/teams/", "/settings/", `/watch/${builtCatalog()[0].youtubeId}/`]) {
+  for (const path of ["/", "/browse/?sort=best", "/browse/?q=celtics", "/teams/", "/settings/", `/watch/${builtCatalog()[0].youtubeId}/`]) {
     await page.goto(path);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow, path).toBeLessThanOrEqual(0);
