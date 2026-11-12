@@ -4,6 +4,7 @@ import { CONTENT_TYPES, CONTENT_TYPE_LABELS } from "@/catalog/content-types";
 import { loadCatalog, loadSources } from "@/catalog/load";
 import { approvedSources } from "@/catalog/sources";
 import { formatLongDate, pluralize } from "@/lib/format";
+import { KIND_WEIGHTS, LEAGUE_RECAP_BONUS } from "@/lib/rank";
 import { REPOSITORY_URL, SITE_NAME } from "@/lib/site";
 import { channelUrl } from "@/lib/youtube";
 
@@ -58,6 +59,20 @@ export default function AboutPage() {
         The labels and team tags are {SITE_NAME}&apos;s own. Titles, thumbnails and the videos themselves come from
         YouTube unchanged, and every video plays in YouTube&apos;s official player.
       </p>
+
+      <h2>How “Best first” sorts</h2>
+      <p>
+        There is no recommendation algorithm and no view or like counts. Best first is a fixed formula: each kind of
+        video has a weight, and every day since upload subtracts one point. Recaps from the league channel, which cover
+        both teams, get {LEAGUE_RECAP_BONUS} extra. Ties go to the newer video.
+      </p>
+      <ul className="mt-3 list-disc pl-6">
+        {CONTENT_TYPES.map((type) => (
+          <li key={type}>
+            {CONTENT_TYPE_LABELS[type]}: {KIND_WEIGHTS[type]}
+          </li>
+        ))}
+      </ul>
 
       <h2>This catalog</h2>
       <p>
