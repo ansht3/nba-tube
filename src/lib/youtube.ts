@@ -14,10 +14,12 @@ export function channelUrl(channelId: string): string {
  * The official embedded player on YouTube's privacy-enhanced domain.
  * rel=0 keeps the end-of-video suggestions to the same official channel.
  * There is no autoplay parameter: playback starts when the viewer presses play.
+ *
+ * The URL deliberately does not depend on the page's origin, so the frame can
+ * be written into the static HTML and plays even if no script ever runs.
  */
-export function embedUrl(youtubeId: string, origin?: string): string {
+export function embedUrl(youtubeId: string): string {
   const params = new URLSearchParams({ rel: "0", enablejsapi: "1", playsinline: "1" });
-  if (origin) params.set("origin", origin);
   return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(youtubeId)}?${params}`;
 }
 

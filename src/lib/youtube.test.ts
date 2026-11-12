@@ -8,11 +8,11 @@ describe("YouTube URLs", () => {
   });
 
   it("embeds from the privacy-enhanced domain without autoplay", () => {
-    const url = new URL(embedUrl("_7TMNmEtbBk", "https://example.test"));
+    const url = new URL(embedUrl("_7TMNmEtbBk"));
     expect(url.origin).toBe("https://www.youtube-nocookie.com");
     expect(url.pathname).toBe("/embed/_7TMNmEtbBk");
     expect(url.searchParams.get("rel")).toBe("0");
-    expect(url.searchParams.get("origin")).toBe("https://example.test");
+    expect(url.searchParams.has("origin")).toBe(false);
     expect(url.searchParams.has("autoplay")).toBe(false);
   });
 

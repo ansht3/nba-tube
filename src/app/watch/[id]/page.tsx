@@ -55,7 +55,7 @@ export default async function WatchPage({ params }: PageProps<"/watch/[id]">) {
         <HistoryRecorder youtubeId={video.youtubeId} title={video.title} channelTitle={video.channelTitle} />
         {/* Full-bleed on phones, where every pixel of width matters for video. */}
         <div className="max-sm:-mx-4 max-sm:[&>div]:rounded-none">
-          <Player youtubeId={video.youtubeId} title={video.title} />
+          <Player key={video.youtubeId} youtubeId={video.youtubeId} title={video.title} />
         </div>
 
         <p className="mt-4 text-xs font-semibold uppercase tracking-[0.08em] text-accent">{contentLabel(video.labels)}</p>

@@ -1,15 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import { embedUrl, watchUrl } from "@/lib/youtube";
 import { ExternalIcon } from "./icons";
 
 // The few parts of YouTube's IFrame Player API that this component uses.
-interface YouTubePlayer {
-  destroy(): void;
-}
 interface YouTubeNamespace {
-  Player: new (element: HTMLIFrameElement, options: { events: { onError: (event: { data: number }) => void } }) => YouTubePlayer;
+  Player: new (element: HTMLIFrameElement, options: { events: { onError: (event: { data: number }) => void } }) => unknown;
 }
 declare global {
   interface Window {
@@ -46,32 +43,31 @@ function loadPlayerApi(): Promise<YouTubeNamespace> {
 // (100), embedding disabled by the owner (101, 150), and a bad id (2).
 const UNPLAYABLE = new Set([2, 100, 101, 150]);
 
-const subscribeToNothing = () => () => {};
-
 /**
  * YouTube's own embedded player, unmodified and never covered by anything.
- * The Player API is attached only to hear about errors, so that a video that
- * was removed or restricted after the last sync gets a plain explanation and a
- * link out instead of a dead frame.
+ *
+ * The iframe is part of the server-rendered HTML, so the video shows and plays
+ * without waiting for this component's script. The Player API is attached
+ * afterwards only to hear about errors, so that a video that was removed or
+ * restricted after the last sync gets a plain explanation and a link out
+ * instead of a dead frame.
  */
 export function Player({ youtubeId, title }: { youtubeId: string; title: string }) {
   const frame = useRef<HTMLIFrameElement>(null);
   const [unplayable, setUnplayable] = useState(false);
-  // The embed needs the page's origin, which only the browser knows.
-  const origin = useSyncExternalStore(subscribeToNothing, () => window.location.origin, () => null);
 
   useEffect(() => {
-    if (!origin || !frame.current) return;
-    let player: YouTubePlayer | null = null;
     let cancelled = false;
 
     loadPlayerApi().then(
       (api) => {
         if (cancelled || !frame.current) return;
-        player = new api.Player(frame.current, {
+        // Never call destroy() on this player: it deletes the iframe, which
+        // React owns. The cancelled flag is enough to ignore late events.
+        new api.Player(frame.current, {
           events: {
             onError: (event) => {
-              if (UNPLAYABLE.has(event.data)) setUnplayable(true);
+              if (!cancelled && UNPLAYABLE.has(event.data)) setUnplayable(true);
             },
           },
         });
@@ -82,9 +78,8 @@ export function Player({ youtubeId, title }: { youtubeId: string; title: string 
 
     return () => {
       cancelled = true;
-      player?.destroy();
     };
-  }, [origin, youtubeId]);
+  }, [youtubeId]);
 
   if (unplayable) {
     return (
@@ -106,22 +101,14 @@ export function Player({ youtubeId, title }: { youtubeId: string; title: string 
 
   return (
     <div className="aspect-video overflow-hidden rounded-xl bg-black">
-      {origin && (
-        <iframe
-          ref={frame}
-          src={embedUrl(youtubeId, origin)}
-          title={title}
-          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-          allowFullScreen
-          referrerPolicy="strict-origin-when-cross-origin"
-          className="h-full w-full border-0"
-        />
-      )}
-      <noscript>
-        <a href={watchUrl(youtubeId)} className="grid h-full place-items-center text-white underline">
-          Watch this video on YouTube
-        </a>
-      </noscript>
+      <iframe
+        ref={frame}
+        src={embedUrl(youtubeId)}
+        title={title}
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+        referrerPolicy="strict-origin-when-cross-origin"
+        className="h-full w-full border-0"
+      />
     </div>
   );
 }
