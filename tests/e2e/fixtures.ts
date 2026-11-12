@@ -18,7 +18,7 @@ export function builtCatalog(): CatalogVideo[] {
 }
 
 export const test = base.extend<{ consoleErrors: string[] }>({
-  consoleErrors: async ({ page }, use) => {
+  consoleErrors: async ({ page }, provide) => {
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
     page.on("console", (message) => {
@@ -27,7 +27,7 @@ export const test = base.extend<{ consoleErrors: string[] }>({
     await page.route(/ytimg\.com/, (route) => route.fulfill({ body: PIXEL, contentType: "image/gif" }));
     await page.route(/youtube\.com\/iframe_api/, (route) => route.fulfill({ body: "", contentType: "text/javascript" }));
     await page.route(/youtube-nocookie\.com/, (route) => route.fulfill({ body: "<html><body>player</body></html>", contentType: "text/html" }));
-    await use(errors);
+    await provide(errors);
   },
 });
 
