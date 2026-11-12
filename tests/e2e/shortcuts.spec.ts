@@ -5,8 +5,11 @@ test("j and k move between videos, Enter opens one, l and w save it, h goes home
   const links = page.locator("[data-video-link]");
   await expect(links.first()).toBeVisible();
 
-  await page.keyboard.press("j");
-  await expect(links.nth(0)).toBeFocused();
+  // The first press retries until the page has hydrated and is listening.
+  await expect(async () => {
+    await page.keyboard.press("j");
+    await expect(links.nth(0)).toBeFocused({ timeout: 500 });
+  }).toPass();
   await page.keyboard.press("j");
   await expect(links.nth(1)).toBeFocused();
   await page.keyboard.press("k");
@@ -33,9 +36,11 @@ test("j and k move between videos, Enter opens one, l and w save it, h goes home
 
 test("? lists the shortcuts, and letters typed into search are not shortcuts", async ({ page }) => {
   await page.goto("/");
-  await page.keyboard.press("?");
   const dialog = page.getByRole("dialog", { name: "Keyboard shortcuts" });
-  await expect(dialog).toBeVisible();
+  await expect(async () => {
+    await page.keyboard.press("?");
+    await expect(dialog).toBeVisible({ timeout: 500 });
+  }).toPass();
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
 
