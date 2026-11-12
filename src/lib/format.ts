@@ -36,3 +36,24 @@ export function formatLongDate(iso: string): string {
 export function pluralize(count: number, singular: string, plural = `${singular}s`): string {
   return `${count.toLocaleString("en-US")} ${count === 1 ? singular : plural}`;
 }
+
+const RELATIVE_UNITS: [unit: string, seconds: number][] = [
+  ["year", 365 * 86400],
+  ["month", 30 * 86400],
+  ["week", 7 * 86400],
+  ["day", 86400],
+  ["hour", 3600],
+  ["minute", 60],
+];
+
+/** "7 hours ago", as YouTube writes it. Anything under a minute old is "just now". */
+export function formatRelative(iso: string, now: number): string {
+  const time = new Date(iso).getTime();
+  if (Number.isNaN(time)) return "";
+  const elapsed = Math.max(0, (now - time) / 1000);
+  for (const [unit, seconds] of RELATIVE_UNITS) {
+    const count = Math.floor(elapsed / seconds);
+    if (count >= 1) return `${count} ${unit}${count === 1 ? "" : "s"} ago`;
+  }
+  return "just now";
+}

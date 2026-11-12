@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { Video } from "@/catalog/schema";
-import { formatDuration, formatShortDate } from "@/lib/format";
+import { formatDuration } from "@/lib/format";
 import { watchPath } from "@/lib/paths";
+import { RelativeTime } from "./RelativeTime";
 import { Thumbnail } from "./Thumbnail";
 import { VideoLabels } from "./VideoLabels";
 
@@ -23,7 +24,7 @@ export function SearchResult({ video }: { video: Video }) {
         <div className="min-w-0 sm:py-1">
           <h3 className="line-clamp-2 text-lg font-medium leading-snug group-hover:underline">{video.title}</h3>
           <p className="mt-1 text-[13px] text-muted">
-            <time dateTime={video.publishedAt}>{formatShortDate(video.publishedAt)}</time>
+            <RelativeTime iso={video.publishedAt} />
           </p>
           <p className="mt-3 text-sm text-muted">{video.channelTitle}</p>
           <VideoLabels labels={video.labels} className="mt-2" />

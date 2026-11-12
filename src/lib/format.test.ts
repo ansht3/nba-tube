@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDuration, formatLongDate, formatShortDate, pluralize } from "./format";
+import { formatDuration, formatLongDate, formatRelative, formatShortDate, pluralize } from "./format";
 
 describe("formatDuration", () => {
   it("formats minutes and hours", () => {
@@ -41,5 +41,24 @@ describe("pluralize", () => {
     expect(pluralize(0, "video")).toBe("0 videos");
     expect(pluralize(1234, "video")).toBe("1,234 videos");
     expect(pluralize(2, "entry", "entries")).toBe("2 entries");
+  });
+});
+
+describe("formatRelative", () => {
+  const now = Date.parse("2026-11-12T20:00:00Z");
+  it.each([
+    ["2026-11-12T19:59:30Z", "just now"],
+    ["2026-11-12T19:59:00Z", "1 minute ago"],
+    ["2026-11-12T13:00:00Z", "7 hours ago"],
+    ["2026-11-11T20:00:00Z", "1 day ago"],
+    ["2026-10-29T20:00:00Z", "2 weeks ago"],
+    ["2025-11-01T20:00:00Z", "1 year ago"],
+    ["2026-11-13T00:00:00Z", "just now"],
+  ])("%s is %s", (iso, expected) => {
+    expect(formatRelative(iso, now)).toBe(expected);
+  });
+
+  it("returns an empty string for a bad date", () => {
+    expect(formatRelative("not a date", now)).toBe("");
   });
 });

@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { Video } from "@/catalog/schema";
-import { formatDuration, formatShortDate } from "@/lib/format";
+import { formatDuration } from "@/lib/format";
 import { watchPath } from "@/lib/paths";
+import { RelativeTime } from "./RelativeTime";
 import { Thumbnail } from "./Thumbnail";
 import { VideoLabels } from "./VideoLabels";
 import { WatchLaterButton } from "./WatchLaterButton";
@@ -22,10 +23,10 @@ export function VideoCard({ video }: { video: Video }) {
         </div>
         <VideoLabels labels={video.labels} className="mt-2.5" />
         <h3 className="mt-1 line-clamp-2 text-base font-medium leading-snug group-hover:underline">{video.title}</h3>
-        <p className="mt-1 text-[13px] text-muted">
+        <p className="mt-1 text-sm text-muted">
           {video.channelTitle}
           <span aria-hidden="true"> · </span>
-          <time dateTime={video.publishedAt}>{formatShortDate(video.publishedAt)}</time>
+          <RelativeTime iso={video.publishedAt} />
         </p>
       </Link>
       {/* A sibling of the link, not a child: a button may not sit inside an anchor. */}

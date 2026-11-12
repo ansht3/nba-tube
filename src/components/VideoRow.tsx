@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { Video } from "@/catalog/schema";
-import { formatDuration, formatShortDate } from "@/lib/format";
+import { formatDuration } from "@/lib/format";
 import { watchPath } from "@/lib/paths";
+import { RelativeTime } from "./RelativeTime";
 import { Thumbnail } from "./Thumbnail";
 import { VideoLabels } from "./VideoLabels";
 
@@ -25,7 +26,7 @@ export function VideoRow({ video }: { video: Video }) {
         <p className="mt-0.5 text-xs text-muted">
           {video.channelTitle}
           <span aria-hidden="true"> · </span>
-          <time dateTime={video.publishedAt}>{formatShortDate(video.publishedAt)}</time>
+          <RelativeTime iso={video.publishedAt} />
         </p>
       </div>
     </Link>
