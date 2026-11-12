@@ -1,4 +1,4 @@
-import type { Video } from "@/catalog/schema";
+import { videoSchema, type Video } from "@/catalog/schema";
 import type { Source } from "@/catalog/sources";
 import { findTeamByMatchupName } from "@/catalog/teams";
 import type { CandidateVideo } from "./candidate";
@@ -95,12 +95,23 @@ export function decide(
         teamIds: inclusion.teamIds,
         reason: "manual-inclusion",
       };
-      return { accepted: true, video: buildVideo(candidate, source, labels, "manual-review", checkedAt) };
+      return validated(buildVideo(candidate, source, labels, "manual-review", checkedAt));
     }
   }
 
   if (!result.accepted) return reject(result);
   // classify() only accepts when the source exists and is approved.
   const labels = { contentType: result.contentType, gamePhase: result.gamePhase, reason: result.ruleId };
-  return { accepted: true, video: buildVideo(candidate, source!, labels, "verified-publisher", checkedAt) };
+  return validated(buildVideo(candidate, source!, labels, "verified-publisher", checkedAt));
+}
+
+/**
+ * Every record is checked against the catalog schema before it is stored, so
+ * one odd value from YouTube (say, a thumbnail on an unexpected host) drops
+ * that video instead of producing a catalog the site refuses to build from.
+ */
+function validated(video: Video): Decision {
+  return videoSchema.safeParse(video).success
+    ? { accepted: true, video }
+    : { accepted: false, rejection: "INVALID_METADATA", ruleId: "schema-check" };
 }
