@@ -22,7 +22,7 @@ export default function BrowsePage() {
   return (
     <>
       <PageHeader title="Browse all videos">
-        <p>Every video in the catalog. Search with the box at the top, or narrow the list with the filters.</p>
+        <p>Every video in the catalog, newest first. Search from the top bar, or open Filters.</p>
       </PageHeader>
       <BrowseView initial={videos.slice(0, INITIAL_COUNT)} total={videos.length} sources={sources} />
     </>

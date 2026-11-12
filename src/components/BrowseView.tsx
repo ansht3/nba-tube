@@ -1,13 +1,14 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useMemo, useState, type ReactNode } from "react";
-import { CONTENT_TYPES, CONTENT_TYPE_LABELS, SECTIONS } from "@/catalog/content-types";
+import { Suspense, useMemo, useState } from "react";
+import { CONTENT_TYPE_LABELS, SECTIONS } from "@/catalog/content-types";
 import type { Video } from "@/catalog/schema";
-import { TEAMS, teamFullName } from "@/catalog/teams";
+import { getTeam, teamFullName } from "@/catalog/teams";
 import {
   DURATION_BUCKETS,
   NO_FILTERS,
+  UPLOAD_WINDOWS,
   buildSearchIndex,
   filterVideos,
   filtersToQuery,
@@ -16,9 +17,12 @@ import {
   type BrowseFilters,
 } from "@/lib/browse";
 import { pluralize } from "@/lib/format";
+import { BEST_FIRST_EXPLANATION } from "@/lib/rank";
 import { useCatalog } from "@/lib/use-catalog";
 import { EmptyState } from "./EmptyState";
+import { FilterPanel } from "./FilterPanel";
 import { CloseIcon, SettingsIcon } from "./icons";
+import { SearchResult } from "./SearchResult";
 import { VideoGrid } from "./VideoCard";
 
 const PAGE_SIZE = 48;
@@ -29,24 +33,6 @@ interface Props {
   total: number;
   /** Channels that currently have videos, for the source filter. */
   sources: { channelId: string; name: string }[];
-}
-
-interface SelectProps {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  children: ReactNode;
-}
-
-function FilterSelect({ label, value, onChange, children }: SelectProps) {
-  return (
-    <label className="flex min-w-0 flex-col gap-1 text-xs font-medium text-muted">
-      {label}
-      <select value={value} onChange={(event) => onChange(event.target.value)} className="field w-full min-w-0 pr-8">
-        {children}
-      </select>
-    </label>
-  );
 }
 
 function BrowseContent({ initial, total, sources }: Props) {
@@ -61,111 +47,79 @@ function BrowseContent({ initial, total, sources }: Props) {
   const results = useMemo(() => (index ? filterVideos(index, filters) : null), [index, filters]);
   const hasDurations = useMemo(() => catalog.videos?.some((video) => video.durationSeconds !== null) ?? false, [catalog.videos]);
 
+  const [panelOpen, setPanelOpen] = useState(false);
   // How many results are shown. Tied to the query, so a new filter starts from the first page again.
   const [paging, setPaging] = useState({ query, count: PAGE_SIZE });
-  // On a phone the filters fold away so results start on the first screen. From sm up they are always shown.
-  const [filtersOpen, setFiltersOpen] = useState(false);
   const visibleCount = paging.query === query ? paging.count : PAGE_SIZE;
 
-  function setFilter<Key extends keyof BrowseFilters>(key: Key, value: BrowseFilters[Key]) {
-    const next = filtersToQuery({ ...filters, [key]: value });
-    router.replace(next ? `/browse/?${next}` : "/browse/", { scroll: false });
+  function navigate(next: BrowseFilters) {
+    const search = filtersToQuery(next);
+    router.replace(search ? `/browse/?${search}` : "/browse/", { scroll: false });
   }
 
-  const active = hasActiveFilters(filters);
-  const chips: { label: string; clear: () => void }[] = [];
-  if (filters.query) chips.push({ label: `“${filters.query}”`, clear: () => setFilter("query", "") });
-  if (filters.section) chips.push({ label: SECTIONS.find((section) => section.id === filters.section)!.title, clear: () => setFilter("section", "") });
-  if (filters.type) chips.push({ label: CONTENT_TYPE_LABELS[filters.type], clear: () => setFilter("type", "") });
-  if (filters.team) chips.push({ label: teamFullName(TEAMS.find((team) => team.id === filters.team)!), clear: () => setFilter("team", "") });
-  if (filters.source) chips.push({ label: sources.find((source) => source.channelId === filters.source)?.name ?? "Source", clear: () => setFilter("source", "") });
-  if (filters.duration) chips.push({ label: DURATION_BUCKETS.find((bucket) => bucket.id === filters.duration)!.label, clear: () => setFilter("duration", "") });
+  function setFilter(key: keyof BrowseFilters, value: string) {
+    // Choosing an option closes the panel, as on YouTube, so the results are in view.
+    setPanelOpen(false);
+    navigate({ ...filters, [key]: key === "sort" && value === "" ? "latest" : value });
+  }
 
+  const chips: { label: string; key: keyof BrowseFilters }[] = [];
+  if (filters.query) chips.push({ key: "query", label: `“${filters.query}”` });
+  if (filters.date) chips.push({ key: "date", label: UPLOAD_WINDOWS.find((window) => window.id === filters.date)!.label });
+  if (filters.section) chips.push({ key: "section", label: SECTIONS.find((section) => section.id === filters.section)!.title });
+  if (filters.type) chips.push({ key: "type", label: CONTENT_TYPE_LABELS[filters.type] });
+  if (filters.team) chips.push({ key: "team", label: teamFullName(getTeam(filters.team)!) });
+  if (filters.source) chips.push({ key: "source", label: sources.find((source) => source.channelId === filters.source)?.name ?? "Source" });
+  if (filters.duration) chips.push({ key: "duration", label: DURATION_BUCKETS.find((bucket) => bucket.id === filters.duration)!.label });
+  if (filters.sort !== "latest") chips.push({ key: "sort", label: filters.sort === "best" ? "Best first" : "Oldest first" });
+
+  const active = hasActiveFilters(filters);
   // Before the catalog arrives there is still something true to show when no filter is set.
-  const showingInitial = results === null && !active && filters.sort === "newest";
+  const showingInitial = results === null && !active && filters.sort === "latest";
   const videos = results ?? (showingInitial ? initial : null);
   const count = results ? results.length : showingInitial ? total : null;
-
-  const filterCount = chips.length - (filters.query ? 1 : 0);
+  const filterCount = chips.filter((chip) => chip.key !== "query").length;
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setFiltersOpen((open) => !open)}
-        aria-expanded={filtersOpen}
-        aria-controls="browse-filters"
-        className="pill mb-3 sm:hidden"
-      >
-        <SettingsIcon />
-        {filtersOpen ? "Hide filters" : filterCount > 0 ? `Filters (${filterCount})` : "Filters"}
-      </button>
-      <div id="browse-filters" className={`grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6 ${filtersOpen ? "" : "max-sm:hidden"}`}>
-        <FilterSelect label="Section" value={filters.section} onChange={(value) => setFilter("section", value as BrowseFilters["section"])}>
-          <option value="">All sections</option>
-          {SECTIONS.map((section) => (
-            <option key={section.id} value={section.id}>
-              {section.title}
-            </option>
-          ))}
-        </FilterSelect>
-        <FilterSelect label="Type" value={filters.type} onChange={(value) => setFilter("type", value as BrowseFilters["type"])}>
-          <option value="">All types</option>
-          {CONTENT_TYPES.map((type) => (
-            <option key={type} value={type}>
-              {CONTENT_TYPE_LABELS[type]}
-            </option>
-          ))}
-        </FilterSelect>
-        <FilterSelect label="Team" value={filters.team} onChange={(value) => setFilter("team", value)}>
-          <option value="">All teams</option>
-          {TEAMS.map((team) => (
-            <option key={team.id} value={team.id}>
-              {teamFullName(team)}
-            </option>
-          ))}
-        </FilterSelect>
-        <FilterSelect label="Source" value={filters.source} onChange={(value) => setFilter("source", value)}>
-          <option value="">All sources</option>
-          {sources.map((source) => (
-            <option key={source.channelId} value={source.channelId}>
-              {source.name}
-            </option>
-          ))}
-        </FilterSelect>
-        {/* Durations exist only in catalogs built with the Data API. Offering a filter that always returns nothing would be a dead control. */}
-        {(hasDurations || filters.duration) && (
-          <FilterSelect label="Length" value={filters.duration} onChange={(value) => setFilter("duration", value as BrowseFilters["duration"])}>
-            <option value="">Any length</option>
-            {DURATION_BUCKETS.map((bucket) => (
-              <option key={bucket.id} value={bucket.id}>
-                {bucket.label}
-              </option>
-            ))}
-          </FilterSelect>
-        )}
-        <FilterSelect label="Order" value={filters.sort} onChange={(value) => setFilter("sort", value as BrowseFilters["sort"])}>
-          <option value="newest">Newest first</option>
-          <option value="oldest">Oldest first</option>
-        </FilterSelect>
-      </div>
-
-      <div className="mb-5 mt-4 flex min-h-11 flex-wrap items-center gap-2">
-        <p className="mr-2 text-sm text-muted" role="status" aria-live="polite">
-          {count === null ? "Loading the catalog…" : pluralize(count, "video")}
-        </p>
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={() => setPanelOpen((open) => !open)}
+          aria-expanded={panelOpen}
+          aria-controls="filter-panel"
+          className={`pill ${panelOpen ? "bg-line" : ""}`}
+        >
+          <SettingsIcon />
+          Filters{filterCount > 0 && ` (${filterCount})`}
+        </button>
         {chips.map((chip) => (
-          <button key={chip.label} type="button" onClick={chip.clear} aria-label={`Remove filter: ${chip.label}`} className="inline-flex h-9 cursor-pointer items-center gap-1 rounded-full bg-surface-2 pl-3 pr-2 text-sm hover:bg-line">
+          <button
+            key={chip.key}
+            type="button"
+            onClick={() => navigate({ ...filters, [chip.key]: NO_FILTERS[chip.key] })}
+            aria-label={`Remove filter: ${chip.label}`}
+            className="inline-flex h-9 cursor-pointer items-center gap-1 rounded-lg bg-text pl-3 pr-2 text-sm font-medium text-bg hover:opacity-85"
+          >
             {chip.label}
             <CloseIcon className="size-4" />
           </button>
         ))}
-        {(active || filters.sort !== NO_FILTERS.sort) && (
-          <button type="button" onClick={() => router.replace("/browse/", { scroll: false })} className="h-9 cursor-pointer rounded-full px-3 text-sm text-accent underline underline-offset-2 hover:no-underline">
-            Clear filters
+        {chips.length > 0 && (
+          <button type="button" onClick={() => navigate(NO_FILTERS)} className="h-9 cursor-pointer rounded-full px-3 text-sm text-accent underline underline-offset-2 hover:no-underline">
+            Clear all
           </button>
         )}
       </div>
+
+      <div id="filter-panel" hidden={!panelOpen}>
+        <FilterPanel filters={filters} sources={sources} hasDurations={hasDurations} onChange={setFilter} />
+      </div>
+
+      <p className="mb-5 mt-4 text-sm text-muted" role="status" aria-live="polite">
+        {count === null ? "Loading the catalog…" : pluralize(count, "video")}
+        {filters.sort === "best" && count !== null && <span className="max-sm:block"> · {BEST_FIRST_EXPLANATION}</span>}
+      </p>
 
       {catalog.status === "error" && (
         <div role="alert" className="mb-5 rounded-lg border border-line bg-surface px-4 py-3 text-sm">
@@ -176,7 +130,17 @@ function BrowseContent({ initial, total, sources }: Props) {
         </div>
       )}
 
-      {videos && videos.length > 0 && <VideoGrid videos={videos.slice(0, visibleCount)} />}
+      {videos && videos.length > 0 &&
+        (filters.query ? (
+          // Search results read like YouTube's: a list with large thumbnails.
+          <ul className="flex max-w-5xl flex-col gap-6 sm:gap-4">
+            {videos.slice(0, visibleCount).map((video) => (
+              <SearchResult key={video.youtubeId} video={video} />
+            ))}
+          </ul>
+        ) : (
+          <VideoGrid videos={videos.slice(0, visibleCount)} />
+        ))}
 
       {results && results.length === 0 && (
         <EmptyState title="No videos match">
