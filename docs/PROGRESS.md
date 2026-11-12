@@ -24,10 +24,13 @@ after the full check suite passes.
 
 ## Not done, needs the owner
 
-- **Turn on GitHub Pages** if a public site is wanted: see docs/DEPLOYMENT.md.
-  The workflow is in place and gated by the `PAGES_ENABLED` variable.
-- **Add `YOUTUBE_API_KEY`** (locally in `.env`, and as a repository secret for
-  the scheduled deploy) for durations and deeper history. Everything works
+- **Deploy on Vercel and connect the refresh:** import the repo, create a Deploy
+  Hook, and add `VERCEL_DEPLOY_HOOK` (secret) and `SITE_URL` (variable) on
+  GitHub. See docs/DEPLOYMENT.md.
+- **Clear the GitHub billing lock.** Actions jobs currently fail with "account
+  is locked due to a billing issue", which stops CI and the refresh schedule.
+- **Add `YOUTUBE_API_KEY`** (locally in `.env`, and in Vercel's environment
+  variables) for durations and deeper history. Everything works
   without it.
 - **Review the "NBATube" name** for trademark issues before a public launch.
 

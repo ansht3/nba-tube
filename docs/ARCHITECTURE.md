@@ -92,7 +92,8 @@ the cases the rules get wrong.
 
 ## Deployment
 
-`npm run build` writes `out/`. Any static host works. A GitHub Actions workflow
-can rebuild the catalog on a schedule and publish to GitHub Pages. It needs
-`YOUTUBE_API_KEY` as a repository secret for the full catalog and falls back to
-the feeds without it.
+`npm run build` writes `out/`, hosted on Vercel. Each Vercel build syncs first
+and continues from the live `/catalog.json`, so no commit is needed to update
+videos. A scheduled GitHub Actions job checks the channel feeds every 10 minutes
+and calls a Vercel Deploy Hook only when there is a new video to publish. See
+docs/DEPLOYMENT.md.

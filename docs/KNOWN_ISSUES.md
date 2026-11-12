@@ -32,9 +32,12 @@ the top.
 
 ## Not verified
 
-- The GitHub Pages workflow (`.github/workflows/deploy.yml`) has not run: Pages
-  is not enabled on the repository. The same build was checked locally with
-  `NEXT_PUBLIC_BASE_PATH=/nba-tube`.
+- The scheduled refresh (`.github/workflows/refresh.yml`) has not run on GitHub:
+  the account's Actions are locked by a billing issue. Its two parts were run
+  locally: `npm run check-updates` against a served build, and a sync that
+  continues from a published catalog.
+- Vercel has not built the site yet. `vercel.json`'s build command and headers
+  were run locally.
 - The Data API path is covered by unit tests with recorded response shapes, but
   has not been run against the live API because no key was available.
 - Browser tests run in Chromium only (desktop and Pixel 7 emulation). Safari and

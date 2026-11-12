@@ -1,50 +1,52 @@
 # Deployment
 
-`npm run build` writes a static site to `out/`. Any static host works. Nothing
-runs on a server.
+The site is a static export hosted on Vercel. Nothing runs on a server.
 
-## Vercel (recommended)
+## How it works
 
-`vercel.json` makes every Vercel build sync the catalog from the official
-channels first, then build the static site. If the sync fails, the build falls
-back to the committed seed instead of failing.
+- **Every Vercel build syncs first.** `vercel.json` runs `npm run sync` and
+  then `npm run build`. If the sync fails, the build falls back to the
+  committed seed instead of failing.
+- **Builds carry the catalog forward without commits.** A build server has no
+  `data/catalog.json`, so the sync downloads the live site's `/catalog.json`
+  (from `VERCEL_PROJECT_PRODUCTION_URL`, which Vercel sets) and continues from
+  it. Videos are kept for 45 days even after they scroll out of a channel's feed.
+- **A scheduled check triggers rebuilds.** `.github/workflows/refresh.yml` runs
+  every 10 minutes. `npm run check-updates` reads the 31 channel feeds (no API
+  key, no quota) and compares them with the live catalog. Only when an official
+  channel has posted a video the site would publish does it call the Vercel
+  Deploy Hook. New videos appear about 10 to 15 minutes after upload, and Vercel
+  only builds when something changed.
+- **Security headers** (Content-Security-Policy, no framing, nosniff) are set in
+  `vercel.json`. `npm run preview` applies the same headers locally.
 
-1. Import the repository in the Vercel dashboard, or run `npx vercel` and then
-   `npx vercel --prod` from the project folder.
-2. Optional: add `YOUTUBE_API_KEY` under Project Settings > Environment
-   Variables for durations and deeper history. It is used only during the
-   build and never reaches the browser.
-3. Pushes to `main` deploy to production. Pushes to other branches get preview
-   URLs.
+## One-time setup
 
-The catalog only refreshes when Vercel builds. To refresh on a schedule,
-create a Deploy Hook (Project Settings > Git > Deploy Hooks) and call it from
-any scheduler, for example a GitHub Actions cron job that runs
-`curl -X POST "$VERCEL_DEPLOY_HOOK"`.
+1. Import `ansht3/nba-tube` in Vercel and deploy with the default settings.
+2. In Vercel: Project > Settings > Git > **Deploy Hooks**. Create one named
+   `refresh` for branch `main`. Copy its URL.
+3. In GitHub: Settings > Secrets and variables > Actions:
+   - **Secret** `VERCEL_DEPLOY_HOOK` = the hook URL. Treat it like a password:
+     anyone with it can start builds.
+   - **Variable** `SITE_URL` = the production URL, for example
+     `https://nba-tube.vercel.app`.
+4. Optional: in Vercel, add the environment variable `YOUTUBE_API_KEY` for
+   durations and deeper history. It is only read during the build.
 
-Cost: the Hobby plan is free for personal, non-commercial projects. A
-commercial site needs the Pro plan.
+GitHub Actions must be able to run on the account. If a job says "account is
+locked due to a billing issue", fix that under GitHub Settings > Billing first.
 
-## GitHub Pages (included workflow)
+## Without GitHub Actions
 
-`.github/workflows/deploy.yml` syncs the catalog, builds with the right base
-path and publishes to Pages: on every push to `main`, every three hours, and on
-demand. It is off until you turn it on:
+Any scheduler that can send an HTTP POST can trigger the hook, for example a
+free cron service. It cannot tell whether anything changed, so keep it to every
+30 or 60 minutes: each call is a full build (about 1 to 2 minutes).
 
-1. Repository Settings > Pages > Source: **GitHub Actions**.
-2. Settings > Secrets and variables > Actions > Variables: add `PAGES_ENABLED` = `true`.
-3. Optional: add the secret `YOUTUBE_API_KEY` for the full catalog.
-4. Run the workflow from the Actions tab, or push to `main`.
+## Limits and cost
 
-The site will be public even if the repository is private.
-
-## Other hosts
-
-Run `npm run sync && npm run build` on a schedule and upload `out/`. For a
-sub-path, set `NEXT_PUBLIC_BASE_PATH` (for example `/nba-tube`) at build time.
-
-## What costs money
-
-Nothing by default: GitHub Pages, Actions minutes on a public repo and the
-YouTube Data API within its free quota. A private repository uses Actions
-minutes from your plan's allowance (about 2 to 3 minutes per run).
+- Vercel Hobby is free for personal, non-commercial projects and allows a limited
+  number of deployments per day. With change detection, rebuilds happen only
+  when a team posts, typically a few dozen times a day in season.
+- GitHub Actions is free for public repositories.
+- The YouTube Data API is free within the 10,000 unit daily quota. A sync uses
+  under 100 units.
