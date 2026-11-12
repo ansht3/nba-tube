@@ -10,3 +10,10 @@ export const SITE_TAGLINE = "Official NBA highlights and press conferences. No a
 export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export const REPOSITORY_URL = "https://github.com/ansht3/nba-tube";
+
+/**
+ * Videos per page on long lists. It lives in a plain module on purpose: a
+ * constant exported from a "use client" file reaches server components as a
+ * client reference, not as a number.
+ */
+export const LIST_PAGE_SIZE = 48;

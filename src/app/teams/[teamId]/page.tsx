@@ -8,8 +8,9 @@ import { TEAMS, getTeam, teamFullName } from "@/catalog/teams";
 import { EmptyState } from "@/components/EmptyState";
 import { ExternalIcon } from "@/components/icons";
 import { PageHeader } from "@/components/PageHeader";
-import { LIST_PAGE_SIZE, VideoList } from "@/components/VideoList";
+import { VideoList } from "@/components/VideoList";
 import { pluralize } from "@/lib/format";
+import { LIST_PAGE_SIZE } from "@/lib/site";
 import { channelUrl } from "@/lib/youtube";
 
 export const dynamicParams = false;

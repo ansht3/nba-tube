@@ -4,7 +4,8 @@ import { videosInSection } from "@/catalog/select";
 import { pluralize } from "@/lib/format";
 import { EmptyState } from "./EmptyState";
 import { PageHeader } from "./PageHeader";
-import { LIST_PAGE_SIZE, VideoList } from "./VideoList";
+import { LIST_PAGE_SIZE } from "@/lib/site";
+import { VideoList } from "./VideoList";
 
 /** The page behind /highlights, /pregame, /postgame and /interviews. */
 export function SectionPage({ sectionId }: { sectionId: SectionId }) {

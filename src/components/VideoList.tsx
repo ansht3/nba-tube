@@ -4,10 +4,9 @@ import { useState } from "react";
 import type { SectionId } from "@/catalog/content-types";
 import type { Video } from "@/catalog/schema";
 import { videosForTeam, videosInSection } from "@/catalog/select";
+import { LIST_PAGE_SIZE } from "@/lib/site";
 import { fetchCatalog } from "@/lib/use-catalog";
 import { VideoGrid } from "./VideoCard";
-
-export const LIST_PAGE_SIZE = 48;
 
 interface Props {
   /** The first page, rendered on the server so the list is there before any script runs. */
