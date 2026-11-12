@@ -20,6 +20,20 @@ function readCatalog(file: string): Catalog {
   return parsed.data;
 }
 
+/** YouTube's Developer Policies: stored API data must be refreshed or deleted within 30 days. */
+export const MAX_API_METADATA_AGE_DAYS = 30;
+
+/**
+ * Drops API-derived records whose metadata is past the storage limit. The sync
+ * already does this, but a build can run long after the last sync, so the site
+ * enforces it too. Feed and seed catalogs hold no API data and pass through.
+ */
+export function withinStorageLimit(catalog: Catalog, now: Date): Catalog {
+  if (catalog.mode !== "api") return catalog;
+  const oldest = now.getTime() - MAX_API_METADATA_AGE_DAYS * 86_400_000;
+  return { ...catalog, videos: catalog.videos.filter((video) => Date.parse(video.provenance.metadataCheckedAt) >= oldest) };
+}
+
 let cached: { file: string; modifiedAt: number; catalog: Catalog } | null = null;
 
 /**
@@ -34,7 +48,7 @@ export function loadCatalog(): Catalog {
     const modifiedAt = statSync(file).mtimeMs;
     if (cached?.file === file && cached.modifiedAt === modifiedAt) return cached.catalog;
 
-    const catalog = readCatalog(file);
+    const catalog = withinStorageLimit(readCatalog(file), new Date());
     // An empty sync (say, every feed was down) should not blank the site while a seed is available.
     if (catalog.videos.length === 0 && file !== candidates[candidates.length - 1]) continue;
 
