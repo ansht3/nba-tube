@@ -1,0 +1,51 @@
+name: Refresh videos
+
+# Every 10 minutes, checks the official channels for videos the live site does
+# not have yet, and if there are any, asks Vercel to rebuild. The rebuild runs
+# the sync, so the site picks up the new videos without any commit.
+#
+# Setup (Settings > Secrets and variables > Actions):
+#   secret   VERCEL_DEPLOY_HOOK  the Deploy Hook URL from Vercel (Project > Settings > Git)
+#   variable SITE_URL            the production URL, e.g. https://nba-tube.vercel.app
+# Until VERCEL_DEPLOY_HOOK exists the job does nothing.
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HAS_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK != '' }}
+    steps:
+      - if: env.HAS_HOOK != 'true'
+        run: echo "::notice::VERCEL_DEPLOY_HOOK is not set, so no refresh is triggered. See docs/DEPLOYMENT.md."
+      - if: env.HAS_HOOK == 'true'
+        uses: actions/checkout@v4
+      - if: env.HAS_HOOK == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - if: env.HAS_HOOK == 'true'
+        run: npm ci
+      - if: env.HAS_HOOK == 'true'
+        id: check
+        run: npm run --silent check-updates
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+      - if: env.HAS_HOOK == 'true' && steps.check.outputs.changed == 'true'
+        # The hook URL is a secret: GitHub masks it in logs.
+        run: curl --fail --silent --show-error -X POST "$HOOK" > /dev/null && echo "Rebuild requested."
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
