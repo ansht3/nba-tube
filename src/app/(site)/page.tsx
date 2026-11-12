@@ -32,7 +32,6 @@ const SHELVES: Shelf[] = [
 ];
 
 const QUICK_LINKS = [
-  { label: "All videos", href: "/browse/" },
   { label: "Best first", href: "/browse/?sort=best" },
   { label: "Last 24 hours", href: "/browse/?date=day" },
   { label: "Game highlights", href: "/browse/?type=GAME_HIGHLIGHTS" },
@@ -50,10 +49,15 @@ export default function HomePage() {
       <h1 className="sr-only">{SITE_NAME}: official NBA videos</h1>
 
       <nav aria-label="Quick filters" className="-mx-4 mb-6 overflow-x-auto px-4 sm:-mx-6 sm:px-6">
-        <ul className="flex w-max gap-2">
+        <ul className="flex w-max gap-3">
+          <li>
+            <Link href="/" aria-current="page" className="chip">
+              All
+            </Link>
+          </li>
           {QUICK_LINKS.map((link) => (
             <li key={link.href}>
-              <Link href={link.href} className="inline-flex h-9 items-center whitespace-nowrap rounded-lg bg-surface-2 px-3 text-sm font-medium hover:bg-line">
+              <Link href={link.href} className="chip">
                 {link.label}
               </Link>
             </li>

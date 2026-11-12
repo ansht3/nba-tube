@@ -2,8 +2,7 @@
 
 import { CONTENT_TYPES, CONTENT_TYPE_LABELS, SECTIONS } from "@/catalog/content-types";
 import { TEAMS } from "@/catalog/teams";
-import { DURATION_BUCKETS, SORT_OPTIONS, UPLOAD_WINDOWS, type BrowseFilters } from "@/lib/browse";
-import { BEST_FIRST_EXPLANATION } from "@/lib/rank";
+import { DURATION_BUCKETS, UPLOAD_WINDOWS, type BrowseFilters } from "@/lib/browse";
 
 interface Option {
   value: string;
@@ -29,8 +28,8 @@ interface Props {
 
 /**
  * The expanded filter panel: one column per filter, every option a toggle.
- * Choosing the active option again clears it, except for the order, which
- * always has a value.
+ * Choosing the active option again clears it. The order is a chip row
+ * beside the panel, not part of it.
  */
 export function FilterPanel({ filters, sources, hasDurations, onChange }: Props) {
   const groups: Group[] = [
@@ -40,17 +39,16 @@ export function FilterPanel({ filters, sources, hasDurations, onChange }: Props)
     ...(hasDurations || filters.duration
       ? [{ key: "duration" as const, title: "Duration", options: DURATION_BUCKETS.map((bucket) => ({ value: bucket.id, label: bucket.label })) }]
       : []),
-    {
-      key: "sort",
-      title: "Sort by",
-      options: SORT_OPTIONS.map((option) => ({ value: option.id, label: option.label, title: option.id === "best" ? BEST_FIRST_EXPLANATION : undefined })),
-    },
     { key: "team", title: "Team", long: "columns", options: TEAMS.map((team) => ({ value: team.id, label: `${team.city} ${team.name}` })) },
     { key: "source", title: "Source", long: "scroll", options: sources.map((source) => ({ value: source.channelId, label: source.name })) },
   ];
 
   return (
-    <div className="grid grid-cols-2 gap-x-8 gap-y-6 border-b border-line pb-6 pt-4 sm:grid-cols-3 lg:grid-cols-[repeat(5,minmax(8.5rem,auto))_1fr]">
+    <div
+      // On wide screens every filter gets a column and the last (Source) takes the rest of the row.
+      style={{ "--columns": groups.length - 1 } as React.CSSProperties}
+      className="grid grid-cols-2 gap-x-8 gap-y-6 border-b border-line pb-6 pt-4 sm:grid-cols-3 lg:grid-cols-[repeat(var(--columns),minmax(8.5rem,auto))_1fr]"
+    >
       {groups.map((group) => (
         <fieldset key={group.key} className={group.long === "columns" ? "col-span-2 sm:col-span-3 lg:col-span-1" : ""}>
           <legend className="mb-2 w-full border-b border-line pb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
@@ -67,7 +65,8 @@ export function FilterPanel({ filters, sources, hasDurations, onChange }: Props)
           >
             {group.options.map((option) => {
               const active = filters[group.key] === option.value;
-              const clears = active && group.key !== "sort";
+              // Choosing the active option again removes that filter.
+              const clears = active;
               return (
                 <li key={option.value} className="break-inside-avoid">
                   <button

@@ -8,6 +8,7 @@ import { getTeam, teamFullName } from "@/catalog/teams";
 import {
   DURATION_BUCKETS,
   NO_FILTERS,
+  SORT_OPTIONS,
   UPLOAD_WINDOWS,
   buildSearchIndex,
   filterVideos,
@@ -59,12 +60,22 @@ function BrowseContent({ initial, total, sources }: Props) {
   const hasDurations = useMemo(() => catalog.videos?.some((video) => video.durationSeconds !== null) ?? false, [catalog.videos]);
 
   // While searching, the heading and the tab title name the search, as on YouTube.
+  // Next.js writes the page's own title after a client-side navigation, so the
+  // search title is put back whenever the title changes while a search is shown.
   useEffect(() => {
     if (!filters.query) return;
+    const title = `${filters.query} · Search · ${SITE_NAME}`;
     const previous = document.title;
-    document.title = `${filters.query} · Search · ${SITE_NAME}`;
+    const apply = () => {
+      if (document.title !== title) document.title = title;
+    };
+    apply();
+    const observer = new MutationObserver(apply);
+    observer.observe(document.head, { childList: true, subtree: true, characterData: true });
     return () => {
-      document.title = previous;
+      observer.disconnect();
+      // Clearing the search stays on this page, which keeps its own title. Leaving it is Next's to title.
+      if (window.location.pathname.startsWith("/browse")) document.title = previous;
     };
   }, [filters.query]);
 
@@ -92,18 +103,32 @@ function BrowseContent({ initial, total, sources }: Props) {
   if (filters.team) chips.push({ key: "team", label: teamFullName(getTeam(filters.team)!) });
   if (filters.source) chips.push({ key: "source", label: sources.find((source) => source.channelId === filters.source)?.name ?? "Source" });
   if (filters.duration) chips.push({ key: "duration", label: DURATION_BUCKETS.find((bucket) => bucket.id === filters.duration)!.label });
-  if (filters.sort !== "latest") chips.push({ key: "sort", label: filters.sort === "best" ? "Best first" : "Oldest first" });
 
   const active = hasActiveFilters(filters);
   // Before the catalog arrives there is still something true to show when no filter is set.
   const showingInitial = results === null && !active && filters.sort === "latest";
   const videos = results ?? (showingInitial ? initial : null);
   const count = results ? results.length : showingInitial ? total : null;
-  const filterCount = chips.filter((chip) => chip.key !== "query").length;
+  const filterCount = chips.filter((chip) => chip.key !== "query").length + (filters.sort !== "latest" ? 1 : 0);
 
   return (
     <>
       {filters.query ? <PageHeader title={`Results for “${filters.query}”`} /> : <DefaultHeader />}
+      {/* The order, as chips the way a YouTube channel offers Latest, Popular and Oldest. */}
+      <div role="group" aria-label="Sort by" className="mb-3 flex gap-3">
+        {SORT_OPTIONS.map((option) => (
+          <button
+            key={option.id}
+            type="button"
+            aria-pressed={filters.sort === option.id}
+            onClick={() => navigate({ ...filters, sort: option.id })}
+            title={option.id === "best" ? BEST_FIRST_EXPLANATION : undefined}
+            className="chip"
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
       <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
@@ -127,7 +152,7 @@ function BrowseContent({ initial, total, sources }: Props) {
             <CloseIcon className="size-4" />
           </button>
         ))}
-        {chips.length > 0 && (
+        {(chips.length > 0 || filters.sort !== "latest") && (
           <button type="button" onClick={() => navigate(NO_FILTERS)} className="h-9 cursor-pointer rounded-full px-3 text-sm text-accent underline underline-offset-2 hover:no-underline">
             Clear all
           </button>

@@ -150,6 +150,16 @@ body {
     @apply bg-accent text-accent-text;
   }
 
+  /* YouTube's category chips: grey, and solid text-coloured when selected. */
+  .chip {
+    @apply inline-flex h-8 cursor-pointer items-center whitespace-nowrap rounded-lg bg-surface-2 px-3 text-sm font-medium transition-colors hover:bg-line;
+  }
+
+  .chip[aria-pressed="true"],
+  .chip[aria-current="page"] {
+    @apply bg-text text-bg hover:bg-text;
+  }
+
   .field {
     @apply h-11 rounded-lg border border-line bg-surface px-3 text-[15px] text-text;
   }

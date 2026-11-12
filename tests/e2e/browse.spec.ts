@@ -61,13 +61,13 @@ test("the team filter shows only that team's videos", async ({ page }) => {
 test("sorting: best first explains itself, oldest first reverses latest", async ({ page }) => {
   await page.goto("/browse/");
   const latest = await page.locator("article h3").first().textContent();
-  await openFilters(page);
+  // Sorting is a row of chips, always in view, as on a YouTube channel.
   await page.getByRole("group", { name: "Sort by" }).getByRole("button", { name: "Oldest first" }).click();
   await expect(page).toHaveURL(/sort=oldest/);
   await expect(page.locator("article h3").first()).not.toHaveText(latest!);
 
-  await openFilters(page);
   await page.getByRole("group", { name: "Sort by" }).getByRole("button", { name: "Best first" }).click();
+  await expect(page.getByRole("button", { name: "Best first" })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText(/Game recaps first/)).toBeVisible();
   await expect(page.locator("article p.uppercase span:first-child").first()).toHaveText("Game highlights");
 });

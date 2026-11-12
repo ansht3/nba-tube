@@ -82,6 +82,8 @@ test("every home quick link opens a populated page", async ({ page, consoleError
   for (let index = 0; index < count; index++) {
     await page.goto("/");
     const link = links.nth(index);
+    // "All" is the home page itself.
+    if (await link.getAttribute("aria-current")) continue;
     const label = await link.textContent();
     await link.click();
     await expect(page.getByRole("heading", { level: 1 }), label!).toBeVisible();
