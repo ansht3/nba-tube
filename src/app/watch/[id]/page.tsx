@@ -17,7 +17,7 @@ import { teamPath } from "@/lib/paths";
 import { SITE_NAME } from "@/lib/site";
 import { channelUrl, watchUrl } from "@/lib/youtube";
 
-const RELATED_COUNT = 12;
+const RELATED_COUNT = 20;
 
 // Only videos in the catalog have a page. Any other id is a 404.
 export const dynamicParams = false;
@@ -50,7 +50,8 @@ export default async function WatchPage({ params }: PageProps<"/watch/[id]">) {
   const manual = video.provenance.verificationStatus === "manual-review";
 
   return (
-    <div className="mx-auto grid max-w-[1500px] gap-x-8 gap-y-10 xl:grid-cols-[minmax(0,1fr)_23rem]">
+    // Player and details on the left, related videos down the right, as on YouTube.
+    <div className="grid gap-x-6 gap-y-10 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,25rem)]">
       <article className="min-w-0">
         <HistoryRecorder youtubeId={video.youtubeId} title={video.title} channelTitle={video.channelTitle} />
         {/* Full-bleed on phones, where every pixel of width matters for video. */}
@@ -58,47 +59,41 @@ export default async function WatchPage({ params }: PageProps<"/watch/[id]">) {
           <Player key={video.youtubeId} youtubeId={video.youtubeId} title={video.title} />
         </div>
 
-        <p className="mt-4 text-xs font-semibold uppercase tracking-[0.08em] text-accent">{contentLabel(video.labels)}</p>
-        <h1 className="mt-1 text-xl font-bold leading-snug tracking-tight sm:text-2xl">{video.title}</h1>
+        <h1 className="mt-3 text-xl font-bold leading-snug tracking-tight">{video.title}</h1>
 
-        <p className="mt-2 text-sm text-muted">
-          <a href={channelUrl(video.channelId)} target="_blank" rel="noopener noreferrer" className="font-medium text-text hover:underline">
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+          <a href={channelUrl(video.channelId)} target="_blank" rel="noopener noreferrer" className="rounded-md font-semibold hover:underline">
             {video.channelTitle}
           </a>
-          <span aria-hidden="true"> · </span>
-          <time dateTime={video.publishedAt}>{formatLongDate(video.publishedAt)}</time>
-          {duration && (
-            <>
-              <span aria-hidden="true"> · </span>
-              {duration}
-            </>
-          )}
-        </p>
-
-        <div className="mt-4 flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2">
           <LikeButton video={video} />
           <WatchLaterButton video={video} variant="pill" />
           <AddToPlaylist video={video} />
-          <a href={watchUrl(video.youtubeId)} target="_blank" rel="noopener noreferrer" className="pill">
-            <ExternalIcon />
-            Open on YouTube
-          </a>
+            <a href={watchUrl(video.youtubeId)} target="_blank" rel="noopener noreferrer" aria-label="Open on YouTube" className="pill">
+              <ExternalIcon />
+              YouTube
+            </a>
+          </div>
         </div>
 
-        {teams.length > 0 && (
-          <ul className="mt-5 flex flex-wrap gap-2" aria-label="Teams">
-            {teams.map((team) => (
-              <li key={team.id}>
-                <Link href={teamPath(team.id)} className="inline-flex h-9 items-center rounded-md border border-line px-3 text-sm hover:bg-surface-2">
-                  {teamFullName(team)}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        <details className="mt-6 rounded-lg border border-line bg-surface px-4 py-3 text-sm">
-          <summary className="cursor-pointer font-medium">Why this video is on {SITE_NAME}</summary>
+        {/* The description box: what kind of video this is, when, which teams, and why it is here. */}
+        <section aria-label="About this video" className="mt-4 rounded-xl bg-surface-2 p-4 text-sm">
+          <p className="font-semibold">
+            <time dateTime={video.publishedAt}>{formatLongDate(video.publishedAt)}</time>
+            {duration && <> · {duration}</>}
+            <span className="text-accent"> · {contentLabel(video.labels)}</span>
+          </p>
+          {teams.length > 0 && (
+            <ul className="mt-3 flex flex-wrap gap-2" aria-label="Teams">
+              {teams.map((team) => (
+                <li key={team.id}>
+                  <Link href={teamPath(team.id)} className="inline-flex h-8 items-center rounded-md bg-bg px-3 text-[13px] font-medium hover:bg-line">
+                    {teamFullName(team)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
           <div className="mt-3 space-y-2 text-muted">
             <p>
               It was published by {video.channelTitle}, {PUBLISHER_DESCRIPTIONS[video.provenance.publisherType]}, which
@@ -116,18 +111,18 @@ export default async function WatchPage({ params }: PageProps<"/watch/[id]">) {
               unchanged.
             </p>
           </div>
-        </details>
+        </section>
       </article>
 
-      <aside aria-labelledby="related-heading">
+      <aside aria-labelledby="related-heading" className="min-w-0">
         <h2 id="related-heading" className="text-base font-bold tracking-tight">
           Related
         </h2>
-        <p className="mt-0.5 text-xs text-muted">Same team, same kind of video or same channel. Newest first.</p>
+        <p className="mt-0.5 text-xs text-muted">Same team, same kind of video or same channel. No personalisation.</p>
         {related.length === 0 ? (
           <p className="mt-4 text-sm text-muted">Nothing related in the catalog right now.</p>
         ) : (
-          <ul className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
             {related.map((other) => (
               <li key={other.youtubeId}>
                 <VideoRow video={other} />
