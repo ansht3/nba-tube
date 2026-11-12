@@ -109,3 +109,27 @@ test("corrupted local data does not break the page", async ({ page, consoleError
   }
   expect(consoleErrors).toEqual([]);
 });
+
+test("data saved before this version still appears in every list", async ({ page }) => {
+  const [first, second] = builtCatalog();
+  const entry = (video: { youtubeId: string; title: string; channelTitle: string }) => ({ id: video.youtubeId, title: video.title, channelTitle: video.channelTitle, savedAt: 1_762_900_000_000 });
+  await page.goto("/");
+  await page.evaluate(
+    ([a, b]) => {
+      localStorage.setItem("nbatube:v1:liked", JSON.stringify([a]));
+      localStorage.setItem("nbatube:v1:watch-later", JSON.stringify([b]));
+      localStorage.setItem("nbatube:v1:history", JSON.stringify([a, b]));
+      localStorage.setItem("nbatube:v1:playlists", JSON.stringify([{ id: "p1", name: "Saved earlier", createdAt: 1, items: [b] }]));
+    },
+    [entry(first), entry(second)],
+  );
+  await page.goto("/liked/");
+  await expect(page.getByText(first.title, { exact: true })).toBeVisible();
+  await page.goto("/watch-later/");
+  await expect(page.getByText(second.title, { exact: true })).toBeVisible();
+  await page.goto("/history/");
+  await expect(page.getByText("2 videos")).toBeVisible();
+  await page.goto("/playlists/");
+  await page.getByRole("link", { name: /Saved earlier/ }).click();
+  await expect(page.getByText(second.title, { exact: true })).toBeVisible();
+});

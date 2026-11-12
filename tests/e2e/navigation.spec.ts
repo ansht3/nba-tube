@@ -73,3 +73,19 @@ test("the page never scrolls sideways", async ({ page }) => {
     expect(overflow, path).toBeLessThanOrEqual(0);
   }
 });
+
+test("every home quick link opens a populated page", async ({ page, consoleErrors }) => {
+  await page.goto("/");
+  const links = page.getByRole("navigation", { name: "Quick filters" }).getByRole("link");
+  const count = await links.count();
+  expect(count).toBeGreaterThan(5);
+  for (let index = 0; index < count; index++) {
+    await page.goto("/");
+    const link = links.nth(index);
+    const label = await link.textContent();
+    await link.click();
+    await expect(page.getByRole("heading", { level: 1 }), label!).toBeVisible();
+    await expect(page.locator('main a[href^="/watch/"], main a[href^="/teams/"]').first(), label!).toBeVisible();
+  }
+  expect(consoleErrors).toEqual([]);
+});
