@@ -350,3 +350,40 @@ describe("runSync with the keyless feeds", () => {
     expect(catalog.mode).toBe("seed");
   });
 });
+
+describe("runSync review regressions", () => {
+  const ok: EmbedCheck = { status: "ok", title: "x", channelTitle: "NBA" };
+
+  it("keeps a published video that is still in its feed when the embed check is inconclusive", async () => {
+    const game = makeCandidate({ youtubeId: testId("game") });
+    const base = { mode: "feed" as const, sources, overrides: NO_OVERRIDES, fetchFeed: async (source: Source) => (source.channelId === NBA ? [game] : []) };
+    const first = await runSync({ ...base, previous: null, now: NOW, checkEmbed: async () => ok });
+    const nextDay = new Date(NOW.getTime() + 30 * HOUR);
+    const second = await runSync({ ...base, previous: first.catalog, now: nextDay, checkEmbed: async () => ({ status: "unknown" }) });
+    expect(ids(second.catalog)).toEqual([game.youtubeId]);
+    expect(second.catalog.videos[0]).toEqual(first.catalog.videos[0]);
+  });
+
+  it("records a failed video-details batch and carries on", async () => {
+    const game = highlight("game");
+    const config: FakeApiConfig = { uploads: { [NBA]: [game.youtubeId], [HAWKS]: [] }, videos: [game], failVideos: new YouTubeApiError("http", "backend error", 503) };
+    const { catalog, report } = await apiSync(config);
+    expect(catalog.videos).toEqual([]);
+    expect(report.sourceErrors).toEqual([{ channelId: "", name: "Video details", message: "backend error" }]);
+  });
+
+  it("drops a video whose metadata fails the schema instead of writing a bad catalog", async () => {
+    const odd = highlight("odd", { thumbnailUrl: "https://example.com/thumb.jpg" });
+    const { catalog, report } = await apiSync({ uploads: { [NBA]: [odd.youtubeId], [HAWKS]: [] }, videos: [odd] });
+    expect(catalog.videos).toEqual([]);
+    expect(report.rejectedByReason).toEqual({ INVALID_METADATA: 1 });
+  });
+
+  it("keeps a known duration when a feed run rechecks an API record", async () => {
+    const game = highlight("game");
+    const first = await apiSync({ uploads: { [NBA]: [game.youtubeId], [HAWKS]: [] }, videos: [game] });
+    const nextDay = new Date(NOW.getTime() + 30 * HOUR);
+    const { catalog } = await runSync({ mode: "feed", sources, overrides: NO_OVERRIDES, previous: first.catalog, now: nextDay, fetchFeed: async () => [], checkEmbed: async () => ({ ...ok, title: game.title }) });
+    expect(catalog.videos[0].durationSeconds).toBe(600);
+  });
+});

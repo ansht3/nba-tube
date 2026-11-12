@@ -117,7 +117,7 @@ function candidateFromStored(video: Video, title: string): CandidateVideo {
     channelTitle: video.channelTitle,
     thumbnailUrl: video.thumbnailUrl,
     publishedAt: video.publishedAt,
-    durationSeconds: null,
+    durationSeconds: video.durationSeconds,
     embeddable: true,
     privacyStatus: null,
     liveBroadcast: null,
@@ -170,8 +170,12 @@ async function discoverWithApi(options: ApiSyncOptions, limits: SyncLimits, repo
     } catch (error) {
       if (error instanceof YouTubeApiError && error.kind === "quota-exceeded") {
         report.stoppedEarly = error.message;
-      } else {
+      } else if (error instanceof YouTubeApiError && error.kind === "invalid-key") {
         throw error;
+      } else {
+        // The ids in this batch are neither refreshed nor removed. They are
+        // retried on the next run, and age out if they never succeed.
+        report.sourceErrors.push({ channelId: "", name: "Video details", message: describeError(error) });
       }
     }
   }
@@ -231,6 +235,8 @@ async function confirmEmbeddable(
 
     const check = await options.checkEmbed(video.youtubeId);
     if (check.status === "ok") return { ...video, embeddable: true };
+    // Nothing was learned, so a video that is already published stays as it was.
+    if (check.status === "unknown" && before) return before;
 
     const ruleId = check.status === "unavailable" ? "embed-unavailable" : "embed-check-inconclusive";
     recordRejection(report, video, "UNAVAILABLE_VIDEO", ruleId);
