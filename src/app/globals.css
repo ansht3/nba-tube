@@ -56,3 +56,97 @@ body {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
+
+/* Card width drives the grid. The density setting only changes this number. */
+:root {
+  --card-min: 270px;
+}
+
+[data-density="compact"] {
+  --card-min: 200px;
+}
+
+@media (max-width: 480px) {
+  /* Two cards across on a phone in compact mode, one in comfortable mode. */
+  [data-density="compact"] {
+    --card-min: 150px;
+  }
+}
+
+/* Home shelves the viewer switched off in Settings. Done in CSS so the choice
+   applies before first paint, with no re-render. */
+[data-hide~="highlights"] [data-shelf="highlights"],
+[data-hide~="pregame"] [data-shelf="pregame"],
+[data-hide~="postgame"] [data-shelf="postgame"],
+[data-hide~="interviews"] [data-shelf="interviews"] {
+  display: none;
+}
+
+@layer components {
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(var(--card-min), 100%), 1fr));
+    gap: 1.75rem 1rem;
+  }
+
+  .pill {
+    @apply inline-flex h-11 cursor-pointer items-center gap-2 rounded-full bg-surface-2 px-4 text-sm font-medium whitespace-nowrap transition-colors hover:bg-line;
+  }
+
+  .pill[aria-pressed="true"] {
+    @apply bg-accent text-accent-text;
+  }
+
+  .field {
+    @apply h-11 rounded-lg border border-line bg-surface px-3 text-[15px] text-text;
+  }
+
+  .link {
+    @apply text-accent underline underline-offset-2 hover:no-underline;
+  }
+
+  /* The button that sits on a thumbnail. Hidden until the card is hovered or
+     focused, except where there is no hover to reveal it. */
+  .thumb-action {
+    @apply grid size-10 cursor-pointer place-items-center rounded-md bg-black/75 text-white opacity-0 transition-opacity;
+  }
+
+  .group:hover .thumb-action,
+  .thumb-action:focus-visible,
+  .thumb-action[data-on="true"] {
+    opacity: 1;
+  }
+
+  @media (hover: none) {
+    .thumb-action {
+      opacity: 1;
+    }
+  }
+
+  .skip-link {
+    @apply fixed left-3 top-3 z-50 -translate-y-20 rounded-md bg-accent px-4 py-2 text-sm font-medium text-accent-text focus:translate-y-0;
+  }
+}
+
+dialog.drawer {
+  margin: 0;
+  height: 100dvh;
+  max-height: none;
+  width: 18rem;
+  max-width: 85vw;
+  border: 0;
+  padding: 0;
+  background: var(--surface);
+  color: var(--text);
+}
+
+dialog.drawer::backdrop {
+  background: rgb(0 0 0 / 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
