@@ -5,7 +5,7 @@ const video = () => builtCatalog()[0];
 test("liking a video lists it on Liked and survives a reload", async ({ page }) => {
   await page.goto(`/watch/${video().youtubeId}/`);
   await page.getByRole("button", { name: "Like" }).click();
-  await expect(page.getByRole("button", { name: "Liked" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("button", { name: "Like", exact: true })).toHaveAttribute("aria-pressed", "true");
 
   await page.goto("/liked/");
   await page.reload();
@@ -13,16 +13,18 @@ test("liking a video lists it on Liked and survives a reload", async ({ page }) 
 
   await page.getByRole("button", { name: `Remove from Liked: ${video().title}` }).click();
   await expect(page.getByText("No liked videos yet")).toBeVisible();
+  // Focus lands on the empty state rather than being lost.
+  expect(await page.evaluate(() => document.activeElement?.textContent)).toContain("No liked videos yet");
 });
 
 test("watch later from a card, without duplicates", async ({ page }) => {
   await page.goto("/");
-  const button = page.getByRole("button", { name: /^Save to Watch later:/ }).first();
-  const name = (await button.getAttribute("aria-label"))!.replace("Save to Watch later: ", "");
+  const button = page.getByRole("button", { name: /^Watch later:/ }).first();
+  const name = (await button.getAttribute("aria-label"))!.replace("Watch later: ", "");
   await button.click();
 
   await page.goto(`/watch/${builtCatalog().find((entry) => entry.title === name)!.youtubeId}/`);
-  await expect(page.getByRole("button", { name: "Saved" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Watch later", exact: true })).toHaveAttribute("aria-pressed", "true");
 
   await page.goto("/watch-later/");
   await expect(page.getByText(name, { exact: true })).toHaveCount(1);

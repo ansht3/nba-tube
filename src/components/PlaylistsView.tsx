@@ -121,7 +121,7 @@ function PlaylistIndex({ playlists }: { playlists: Playlist[] }) {
                   <button type="button" className="pill" onClick={() => playlistsStore.update((current) => deletePlaylist(current, playlist.id))}>
                     Yes, delete
                   </button>
-                  <button type="button" className="pill" onClick={() => setConfirmingDelete(null)}>
+                  <button type="button" className="pill" autoFocus onClick={() => setConfirmingDelete(null)}>
                     Cancel
                   </button>
                 </div>
@@ -167,7 +167,9 @@ function PlaylistDetail({ playlist, playlists }: { playlist: Playlist; playlists
         </div>
       ) : (
         <header className="mb-6">
-          <h1 className="break-words text-2xl font-bold tracking-tight">{playlist.name}</h1>
+          <h1 tabIndex={-1} className="break-words text-2xl font-bold tracking-tight">
+            {playlist.name}
+          </h1>
           <p className="mt-1 text-sm text-muted">{pluralize(playlist.items.length, "video")}, in the order you added them.</p>
           <div className="mt-4 flex flex-wrap gap-2">
             <button type="button" className="pill" onClick={() => setRenaming(true)}>
@@ -196,7 +198,10 @@ function PlaylistDetail({ playlist, playlists }: { playlist: Playlist; playlists
               saved={item}
               inCatalog={known ? known.has(item.id) : true}
               removeLabel="Remove from playlist"
-              onRemove={() => playlistsStore.update((current) => removeFromPlaylist(current, playlist.id, item.id))}
+              onRemove={() => {
+                playlistsStore.update((current) => removeFromPlaylist(current, playlist.id, item.id));
+                document.querySelector<HTMLElement>("main h1")?.focus();
+              }}
               lead={<span className="w-6 shrink-0 pt-1 text-right text-sm tabular-nums text-muted max-sm:hidden">{index + 1}</span>}
             />
           ))}

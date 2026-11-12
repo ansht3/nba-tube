@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { formatShortDate, pluralize } from "@/lib/format";
 import { removeSaved, type SavedVideo } from "@/lib/storage/library";
 import type { Store } from "@/lib/storage/store";
@@ -26,10 +26,17 @@ export function SavedList({ store, dateVerb, removeLabel, emptyTitle, emptyHint,
   const list = useStore(store);
   const catalog = useCatalog(list.length > 0);
   const [confirmingClear, setConfirmingClear] = useState(false);
+  // Removing a row removes the focused button with it. Focus moves to the list
+  // summary instead of falling back to the top of the page.
+  const summary = useRef<HTMLParagraphElement>(null);
+  // Remembers that this visit started with items, so emptying the list moves
+  // focus to the empty state but a page that loads empty does not steal it.
+  const [hadItems, setHadItems] = useState(false);
+  if (list.length > 0 && !hadItems) setHadItems(true);
 
   if (list.length === 0) {
     return (
-      <EmptyState title={emptyTitle}>
+      <EmptyState title={emptyTitle} focusOnMount={hadItems}>
         <p>{emptyHint}</p>
       </EmptyState>
     );
@@ -42,7 +49,9 @@ export function SavedList({ store, dateVerb, removeLabel, emptyTitle, emptyHint,
     <>
       <StorageNotice store={store} />
       <div className="mb-4 flex min-h-11 flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-muted">{pluralize(list.length, "video")}</p>
+        <p ref={summary} tabIndex={-1} className="text-sm text-muted">
+          {pluralize(list.length, "video")}
+        </p>
         {clearAllLabel &&
           (confirmingClear ? (
             <div className="flex flex-wrap items-center gap-2 text-sm" role="group" aria-label={clearAllLabel}>
@@ -57,7 +66,7 @@ export function SavedList({ store, dateVerb, removeLabel, emptyTitle, emptyHint,
               >
                 Yes, clear
               </button>
-              <button type="button" className="pill" onClick={() => setConfirmingClear(false)}>
+              <button type="button" className="pill" autoFocus onClick={() => setConfirmingClear(false)}>
                 Cancel
               </button>
             </div>
@@ -75,7 +84,10 @@ export function SavedList({ store, dateVerb, removeLabel, emptyTitle, emptyHint,
             inCatalog={known ? known.has(saved.id) : true}
             note={`${dateVerb} ${formatShortDate(new Date(saved.savedAt).toISOString())}`}
             removeLabel={removeLabel}
-            onRemove={() => store.update((current) => removeSaved(current, saved.id))}
+            onRemove={() => {
+              store.update((current) => removeSaved(current, saved.id));
+              summary.current?.focus();
+            }}
           />
         ))}
       </ul>
