@@ -20,7 +20,7 @@ export function WatchLaterButton({ video, variant }: Props) {
 
   if (variant === "pill") {
     return (
-      <button type="button" onClick={toggle} aria-pressed={saved} className="pill">
+      <button type="button" onClick={toggle} aria-pressed={saved} data-shortcut="later" className="pill">
         {saved ? <CheckIcon /> : <ClockIcon />}
         Watch later
       </button>

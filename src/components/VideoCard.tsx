@@ -11,7 +11,7 @@ export function VideoCard({ video }: { video: Video }) {
 
   return (
     <article className="group relative min-w-0">
-      <Link href={watchPath(video.youtubeId)} className="block rounded-xl">
+      <Link href={watchPath(video.youtubeId)} data-video-link className="block rounded-xl">
         <div className="relative aspect-video overflow-hidden rounded-xl bg-surface-2">
           <Thumbnail src={video.thumbnailUrl} />
           {duration && (

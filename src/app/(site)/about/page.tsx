@@ -101,6 +101,12 @@ export default function AboutPage() {
         .
       </p>
 
+      <h2>Keyboard shortcuts</h2>
+      <p>
+        <kbd>/</kbd> search, <kbd>j</kbd> and <kbd>k</kbd> move between videos, <kbd>Enter</kbd> opens one, <kbd>l</kbd>{" "}
+        likes and <kbd>w</kbd> saves to Watch later, <kbd>h</kbd> goes home. Press <kbd>?</kbd> on any page for the list.
+      </p>
+
       <h2>Open source</h2>
       <p>
         The code is MIT licensed and{" "}

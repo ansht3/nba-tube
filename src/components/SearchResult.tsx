@@ -11,7 +11,7 @@ export function SearchResult({ video }: { video: Video }) {
 
   return (
     <li>
-      <Link href={watchPath(video.youtubeId)} className="group flex flex-col gap-3 rounded-xl sm:flex-row sm:gap-4">
+      <Link href={watchPath(video.youtubeId)} data-video-link className="group flex flex-col gap-3 rounded-xl sm:flex-row sm:gap-4">
         <div className="relative aspect-video w-full shrink-0 overflow-hidden rounded-xl bg-surface-2 sm:w-[min(360px,45%)]">
           <Thumbnail src={video.thumbnailUrl} />
           {duration && (

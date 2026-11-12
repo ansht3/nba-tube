@@ -47,7 +47,7 @@ export function SavedRow({ saved, inCatalog, note, removeLabel, onRemove, lead }
     <li className="flex items-start gap-2">
       {lead}
       {inCatalog ? (
-        <Link href={watchPath(saved.id)} className="group flex min-w-0 flex-1 gap-3 rounded-lg">
+        <Link href={watchPath(saved.id)} data-video-link className="group flex min-w-0 flex-1 gap-3 rounded-lg">
           {body}
         </Link>
       ) : (

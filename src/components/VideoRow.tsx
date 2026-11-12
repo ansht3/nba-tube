@@ -10,7 +10,7 @@ export function VideoRow({ video }: { video: Video }) {
   const duration = formatDuration(video.durationSeconds);
 
   return (
-    <Link href={watchPath(video.youtubeId)} className="group flex gap-3 rounded-lg">
+    <Link href={watchPath(video.youtubeId)} data-video-link className="group flex gap-3 rounded-lg">
       <div className="relative aspect-video w-40 shrink-0 overflow-hidden rounded-md bg-surface-2">
         <Thumbnail src={video.thumbnailUrl} />
         {duration && (

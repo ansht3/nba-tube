@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Header } from "@/components/Header";
+import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { SettingsSync } from "@/components/SettingsSync";
 import { SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 import { SETTINGS_BOOT_SCRIPT } from "@/lib/storage/settings";
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <SettingsSync />
         <Header />
+        <KeyboardShortcuts />
         {children}
       </body>
     </html>

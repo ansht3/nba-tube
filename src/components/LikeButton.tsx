@@ -11,6 +11,7 @@ export function LikeButton({ video }: { video: { youtubeId: string; title: strin
     <button
       type="button"
       aria-pressed={liked}
+      data-shortcut="like"
       onClick={() => likedStore.update((current) => toggleSaved(current, toSavedVideo(video, Date.now())))}
       className="pill"
     >
