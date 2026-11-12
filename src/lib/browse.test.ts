@@ -17,7 +17,8 @@ const presser = video("presser", { title: "Hawks vs. Lakers Postgame Press Confe
 const shootaround = video("shoot", { title: "Coby White Shootaround Media Availability | 11/2/26", durationSeconds: null }, { contentType: "PREGAME_INTERVIEW", gamePhase: "pregame", teamIds: ["CHA"] });
 
 const index = buildSearchIndex([game, jokic, presser, shootaround]);
-const find = (filters: Partial<BrowseFilters>) => filterVideos(index, { ...NO_FILTERS, ...filters });
+const NOW = Date.parse("2026-11-12T12:00:00Z");
+const find = (filters: Partial<BrowseFilters>) => filterVideos(index, { ...NO_FILTERS, ...filters }, NOW);
 
 describe("filterVideos", () => {
   it("returns everything, newest first, when no filter is set", () => {
@@ -74,9 +75,26 @@ describe("filterVideos", () => {
   });
 });
 
+describe("upload date and order", () => {
+  // The fixture videos are all published 2026-11-11T17:00:01Z.
+  it("keeps only videos inside the upload window", () => {
+    expect(find({ date: "day" })).toHaveLength(4);
+    expect(filterVideos(index, { ...NO_FILTERS, date: "day" }, NOW + 3 * 86_400_000)).toEqual([]);
+    expect(filterVideos(index, { ...NO_FILTERS, date: "week" }, NOW + 3 * 86_400_000)).toHaveLength(4);
+  });
+
+  it("sorts best first by kind of video when ages are equal", () => {
+    expect(find({ sort: "best" })).toEqual([game, jokic, presser, shootaround]);
+  });
+
+  it("reads the old 'newest' sort as the default order", () => {
+    expect(parseFilters(new URLSearchParams("sort=newest")).sort).toBe("latest");
+  });
+});
+
 describe("filters in the URL", () => {
   it("round-trips through a query string", () => {
-    const filters: BrowseFilters = { query: "curry", section: "postgame", type: "COACH_PRESS_CONFERENCE", team: "GSW", source: HAWKS, duration: "long", sort: "oldest" };
+    const filters: BrowseFilters = { query: "curry", section: "postgame", type: "COACH_PRESS_CONFERENCE", team: "GSW", source: HAWKS, duration: "long", date: "week", sort: "best" };
     expect(parseFilters(new URLSearchParams(filtersToQuery(filters)))).toEqual(filters);
   });
 
@@ -86,7 +104,7 @@ describe("filters in the URL", () => {
   });
 
   it("ignores unknown or malformed values instead of failing", () => {
-    const params = new URLSearchParams("section=nope&type=FAN_EDIT&team=sea&source=<script>&duration=forever&sort=random&q=%20%20curry%20");
+    const params = new URLSearchParams("section=nope&type=FAN_EDIT&team=sea&source=<script>&duration=forever&date=decade&sort=random&q=%20%20curry%20");
     expect(parseFilters(params)).toEqual({ ...NO_FILTERS, query: "curry" });
   });
 
@@ -98,6 +116,7 @@ describe("filters in the URL", () => {
   it("does not count the sort order as an active filter", () => {
     expect(hasActiveFilters(NO_FILTERS)).toBe(false);
     expect(hasActiveFilters({ ...NO_FILTERS, sort: "oldest" })).toBe(false);
+    expect(hasActiveFilters({ ...NO_FILTERS, date: "day" })).toBe(true);
     expect(hasActiveFilters({ ...NO_FILTERS, team: "LAL" })).toBe(true);
     expect(hasActiveFilters({ ...NO_FILTERS, query: "x" })).toBe(true);
   });
