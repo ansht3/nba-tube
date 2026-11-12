@@ -21,18 +21,28 @@ after the full check suite passes.
 | Accessibility | axe on 11 pages in both themes; keyboard focus fixes |
 | CI | `.github/workflows/ci.yml` (lint, types, unit, build, e2e) |
 | Audits A (content), B (visual), C (code and security) | Findings and fixes in docs/QUALITY.md |
+| HackerTube-style browsing: filter panel, Best first, list search, icon rail, YouTube-style watch layout | Playwright on desktop and Pixel 7; screenshots compared with hackertube.org |
 
-## Not done, needs the owner
+## Production refresh status (checked 2026-11-12)
 
-- **Deploy on Vercel and connect the refresh:** import the repo, create a Deploy
-  Hook, and add `VERCEL_DEPLOY_HOOK` (secret) and `SITE_URL` (variable) on
-  GitHub. See docs/DEPLOYMENT.md.
-- **Clear the GitHub billing lock.** Actions jobs currently fail with "account
-  is locked due to a billing issue", which stops CI and the refresh schedule.
-- **Add `YOUTUBE_API_KEY`** (locally in `.env`, and in Vercel's environment
-  variables) for durations and deeper history. Everything works
-  without it.
-- **Review the "NBATube" name** for trademark issues before a public launch.
+The site is live at https://nba-tube.vercel.app and Vercel deploys every push
+to `main` (each build syncs the latest videos). The every-10-minutes refresh is
+**not running yet**, for three reasons that need the owner:
+
+1. **GitHub Actions is blocked by a billing lock.** Every job, including the
+   scheduled `Refresh videos` run, fails with "The job was not started because
+   your account is locked due to a billing issue". Fix: GitHub > Settings >
+   Billing and plans.
+2. **No Vercel Deploy Hook exists.** Create one: Vercel > nba-tube > Settings >
+   Git > Deploy Hooks, name `refresh`, branch `main`.
+3. **The repository has no `VERCEL_DEPLOY_HOOK` secret or `SITE_URL` variable.**
+   Add them under GitHub > nba-tube > Settings > Secrets and variables >
+   Actions (`SITE_URL` = `https://nba-tube.vercel.app`). Creating these from
+   the CLI was attempted and refused by the session's permission policy for
+   writing secrets, so it was left to the owner.
+
+Once all three are done, the `Refresh videos` workflow can be started by hand
+from the Actions tab to confirm it, and then runs on its own.
 
 ## Next useful work
 
@@ -41,6 +51,7 @@ after the full check suite passes.
 2. Run one live Data API sync once a key exists, and compare its rejection
    report with the feed sync.
 3. Keyboard shortcuts (`j`/`k`/`l`/`w`), as on HackerTube. Only `/` exists now.
+4. A search-specific page heading (the browse page keeps its title while searching).
 
 ## Resume
 

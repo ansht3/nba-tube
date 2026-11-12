@@ -9,9 +9,9 @@ done about it.
 | --- | --- | --- |
 | Lint | `npm run lint` | Clean |
 | Types | `npm run typecheck` | Clean |
-| Unit and integration | `npm run test` | 233 passed (Vitest) |
+| Unit and integration | `npm run test` | 241 passed (Vitest) |
 | Production build | `npm run build` | 363 static pages from a 315-video catalog |
-| Browser | `npm run test:e2e` | 55 passed, 3 skipped by design (desktop and Pixel 7, Chromium) |
+| Browser | `npm run test:e2e` | 76 passed, 4 skipped by design (desktop and Pixel 7, Chromium) |
 | Accessibility | axe, inside `test:e2e` | No serious or critical violations on 11 pages, light and dark |
 
 The unit suite covers the classifier against real titles from the 31 channels,
@@ -37,6 +37,8 @@ module including corrupted and blocked storage.
 | Code review | A saved date outside the Date range crashed library pages. | P3 | Rejected when reading storage |
 | Code review | Feed rechecks erased durations learned from the API. | P3 | Kept |
 | Code review | Toggle buttons changed their names as well as `aria-pressed`; focus was lost when a removed row or confirm control disappeared. | P3 | Stable names; focus moves to the list summary, empty state or Cancel |
+| Browser tests, 2026-11-12 | The two pre-paint scripts were concatenated without a separator, so every page threw "(...) is not a function". | P1 | Joined with `;` |
+| Accessibility scan, 2026-11-12 | Accent text on the new grey description card fell below 4.5:1 in the light theme. | P3 | Light accent deepened to #9e3708 (5.7:1 on the card) |
 | Docs check (Haiku) | README and CLAUDE.md linked missing docs; YOUTUBE_SETUP overstated feed-mode refresh; "documentaries" had no rule. | P3 | Docs written and corrected; documentary rule added |
 
 ## Content classification on real data
