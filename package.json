@@ -17,9 +17,12 @@
     "seed": "tsx scripts/sync.ts --seed",
     "preview": "node scripts/preview.mjs",
     "test:e2e": "playwright test",
-    "check-updates": "tsx scripts/check-updates.ts"
+    "check-updates": "tsx scripts/check-updates.ts",
+    "db:migrate": "tsx scripts/db.ts migrate",
+    "db:import": "tsx scripts/db.ts import"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.2.1",
     "next": "16.4.6",
     "react": "19.3.0",
     "react-dom": "19.3.0",
@@ -27,6 +30,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
+    "@electric-sql/pglite": "^0.5.16",
     "@playwright/test": "^1.65.0",
     "@tailwindcss/turbopack": "4.3.3",
     "@testing-library/dom": "^10.4.2",
