@@ -79,6 +79,13 @@ export function describeRepositoryContract(name: string, create: (videos: Video[
       expect((await repo.list({ limit: 1, teamId: "LAL" })).total).toBe(3);
     });
 
+    it("finds videos about any of several teams", async () => {
+      const { repo } = await create(SAMPLE);
+      expect(ids((await repo.list({ limit: 10, anyTeamIds: ["BOS"] })).videos)).toEqual([testId("a"), testId("c")]);
+      expect(ids((await repo.list({ limit: 10, anyTeamIds: ["BOS", "LAL"] })).videos)).toEqual([testId("a"), testId("b"), testId("c"), testId("d")]);
+      expect(await repo.count({ anyTeamIds: ["NYK"] })).toBe(0);
+    });
+
     it("combines filters and counts without paging", async () => {
       const { repo } = await create(SAMPLE);
       expect(await repo.count({ teamId: "BOS", section: "highlights" })).toBe(2);

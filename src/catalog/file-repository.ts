@@ -19,6 +19,7 @@ import { countByTeam, relatedVideos } from "./select";
 function matches(video: Video, filter: VideoFilter, words: string[]): boolean {
   if (filter.section && sectionOf(video.labels) !== filter.section) return false;
   if (filter.teamId && !video.labels.teamIds.includes(filter.teamId)) return false;
+  if (filter.anyTeamIds && !filter.anyTeamIds.some((id) => video.labels.teamIds.includes(id))) return false;
   if (filter.contentTypes && !filter.contentTypes.includes(video.labels.contentType)) return false;
   if (filter.channelId && video.channelId !== filter.channelId) return false;
   if (filter.ids && !filter.ids.includes(video.youtubeId)) return false;

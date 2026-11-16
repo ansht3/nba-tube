@@ -12,6 +12,7 @@ A page of videos, newest first (ties by YouTube id).
 | `cursor` | the `nextCursor` of the previous page; only valid with the same `sort` |
 | `section` | `highlights`, `pregame`, `postgame`, `interviews` |
 | `team` | a team code, e.g. `LAL` |
+| `teams` | up to 30 comma-separated team codes: videos about any of them (a viewer's favourite teams) |
 | `type` | one or more content types, comma separated |
 | `channel` | a YouTube channel id |
 | `ids` | up to 48 comma-separated video ids: returns just those that are in the catalog (to check saved videos) |

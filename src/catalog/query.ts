@@ -6,6 +6,7 @@ export const DEFAULT_PAGE_SIZE = 24;
 export const MAX_PAGE_SIZE = 48;
 const MAX_QUERY_CHARS = 80;
 const MAX_CURSOR_CHARS = 120;
+const MAX_TEAMS = 30;
 
 export const UPLOAD_WINDOW_DAYS = { day: 1, week: 7, month: 30 } as const;
 /** Seconds, min inclusive and max exclusive. Matches the duration chips on the browse page. */
@@ -15,7 +16,7 @@ export const DURATION_RANGES = {
   long: { min: 20 * 60, max: null },
 } as const;
 
-const PARAMS = ["section", "team", "type", "channel", "ids", "q", "date", "duration", "sort", "limit", "cursor"] as const;
+const PARAMS = ["section", "team", "teams", "type", "channel", "ids", "q", "date", "duration", "sort", "limit", "cursor"] as const;
 const CHANNEL_ID = /^UC[\w-]{22}$/;
 const YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/;
 const MINUTE_MS = 60_000;
@@ -55,6 +56,15 @@ export function parseVideoQuery(params: URLSearchParams, now: number): ParsedVid
     const found = getTeam(team.toUpperCase());
     if (!found) return fail(`Unknown team "${team}".`);
     query.teamId = found.id;
+  }
+
+  const teams = params.get("teams");
+  if (teams) {
+    const found = [...new Set(teams.split(",").map((code) => code.toUpperCase()))];
+    if (found.length > MAX_TEAMS) return fail(`teams may name at most ${MAX_TEAMS} teams.`);
+    const bad = found.find((code) => !getTeam(code));
+    if (bad !== undefined) return fail(`Unknown team "${bad}".`);
+    query.anyTeamIds = found;
   }
 
   const type = params.get("type");

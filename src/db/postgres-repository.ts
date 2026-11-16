@@ -20,6 +20,10 @@ class Params {
     this.values.push(value);
     return `$${this.values.length}`;
   }
+  /** A list passed as one JSON parameter and read back as a text[] value. */
+  textArray(values: string[]): string {
+    return `ARRAY(SELECT jsonb_array_elements_text(${this.add(JSON.stringify(values))}::jsonb))`;
+  }
   /** A list passed as one JSON parameter and read back as rows of text. */
   textList(values: string[]): string {
     return `(SELECT jsonb_array_elements_text(${this.add(JSON.stringify(values))}::jsonb))`;
@@ -30,6 +34,7 @@ function filterClauses(filter: VideoFilter, params: Params): string[] {
   const clauses: string[] = [];
   if (filter.section) clauses.push(`section = ${params.add(filter.section)}`);
   if (filter.teamId) clauses.push(`team_ids @> ARRAY[${params.add(filter.teamId)}]::text[]`);
+  if (filter.anyTeamIds) clauses.push(`team_ids && ${params.textArray(filter.anyTeamIds)}`);
   if (filter.contentTypes) clauses.push(`content_type IN ${params.textList(filter.contentTypes)}`);
   if (filter.channelId) clauses.push(`channel_id = ${params.add(filter.channelId)}`);
   if (filter.ids) clauses.push(`youtube_id IN ${params.textList(filter.ids)}`);

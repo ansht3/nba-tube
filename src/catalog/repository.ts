@@ -13,6 +13,8 @@ import type { Catalog, Video } from "./schema";
 export interface VideoFilter {
   section?: SectionId;
   teamId?: string;
+  /** Videos about at least one of these teams (for a viewer's favourite teams). */
+  anyTeamIds?: string[];
   contentTypes?: ContentType[];
   channelId?: string;
   /** Only these videos (at most 48 are useful at once). Used to check which saved videos are still in the catalog. */

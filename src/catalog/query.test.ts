@@ -67,6 +67,11 @@ describe("parseVideoQuery", () => {
     expect(error(`ids=${Array.from({ length: 49 }, (_, i) => `v${String(i).padStart(10, "0")}`).join(",")}`)).toMatch(/at most 48/);
   });
 
+  it("reads a list of teams (any of them) and rejects an unknown one", () => {
+    expect(ok("teams=lal,BOS,lal").query.anyTeamIds).toEqual(["LAL", "BOS"]);
+    expect(error("teams=LAL,XXX")).toMatch(/Unknown team "XXX"/);
+  });
+
   it("bounds the page size to whole numbers from 1 to 48", () => {
     expect(ok(`limit=${MAX_PAGE_SIZE}`).query.limit).toBe(MAX_PAGE_SIZE);
     for (const bad of ["0", "49", "-1", "2.5", "ten", "1e2", ""]) expect(error(`limit=${bad}`), bad).toMatch(/limit/);
