@@ -12,6 +12,7 @@ import {
 import { videoSchema, type Video } from "@/catalog/schema";
 import { searchWords } from "@/catalog/search";
 import { SAME_GAME_BONUS, SAME_GAME_WINDOW_MS } from "@/catalog/select";
+import type { IngestionHealth } from "@/lib/api/health";
 import type { Db } from "./db";
 
 /** Collects query values and hands back their $n placeholders. */
@@ -156,5 +157,23 @@ export class PostgresCatalogRepository implements CatalogRepository {
 
   async allIds(): Promise<string[]> {
     return (await this.db.query<{ youtube_id: string }>(`SELECT youtube_id FROM videos ORDER BY published_at DESC, youtube_id`)).map((row) => row.youtube_id);
+  }
+
+  /** What the worker and the per-channel checkpoints say about ingestion, for /api/health. */
+  async ingestionHealth(): Promise<IngestionHealth> {
+    const iso = (value: string | null) => (value ? new Date(value).toISOString() : null);
+    const [last] = await this.db.query<{ status: string; started_at: string }>(`SELECT status, started_at FROM ingestion_runs ORDER BY run_id DESC LIMIT 1`);
+    const [success] = await this.db.query<{ at: string | null }>(`SELECT max(finished_at) AS at FROM ingestion_runs WHERE status IN ('succeeded', 'partial')`);
+    const [sources] = await this.db.query<{ tracked: string; failing: string; oldest: string | null }>(
+      `SELECT count(*) AS tracked, count(*) FILTER (WHERE consecutive_failures >= 3) AS failing, min(last_success_at) AS oldest FROM source_checkpoints`,
+    );
+    return {
+      lastRunAt: last ? iso(last.started_at) : null,
+      lastRunStatus: last?.status ?? null,
+      lastSuccessAt: iso(success?.at ?? null),
+      channelsTracked: Number(sources?.tracked ?? 0),
+      channelsFailing: Number(sources?.failing ?? 0),
+      oldestSourceSuccessAt: iso(sources?.oldest ?? null),
+    };
   }
 }
