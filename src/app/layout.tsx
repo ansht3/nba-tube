@@ -23,6 +23,10 @@ export const viewport: Viewport = {
   ],
 };
 
+// Pages are generated once and refreshed from the catalog at most every minute, so a new
+// video appears without a deploy. The lowest value across a route's layout and page applies.
+export const revalidate = 60;
+
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   // The newest upload this build contains. Anything later in the live catalog is new to the viewer.
   const { newestPublishedAt: newestAt } = await getCatalogRepository().meta();

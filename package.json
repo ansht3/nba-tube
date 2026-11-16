@@ -15,7 +15,7 @@
     "test:watch": "vitest",
     "sync": "tsx scripts/sync.ts",
     "seed": "tsx scripts/sync.ts --seed",
-    "preview": "node scripts/preview.mjs",
+    "preview": "next start -p 3000",
     "test:e2e": "playwright test",
     "check-updates": "tsx scripts/check-updates.ts",
     "db:migrate": "tsx scripts/db.ts migrate",

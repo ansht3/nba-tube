@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { loadCatalog } from "@/catalog/load";
 import { test as base, expect, type Page } from "@playwright/test";
 
 // The tests never reach YouTube: thumbnails get a blank image, the player API
@@ -12,9 +12,9 @@ export interface CatalogVideo {
   labels: { contentType: string; teamIds: string[] };
 }
 
-/** The catalog the site under test was built from. */
+/** The catalog the site under test is serving: the same loader the site uses. */
 export function builtCatalog(): CatalogVideo[] {
-  return JSON.parse(readFileSync("out/catalog.json", "utf8")).videos;
+  return loadCatalog().videos;
 }
 
 export const test = base.extend<{ consoleErrors: string[] }>({

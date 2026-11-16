@@ -18,8 +18,9 @@ import { channelUrl, watchUrl } from "@/lib/youtube";
 
 const RELATED_COUNT = 20;
 
-// Only videos in the catalog have a page. Any other id is a 404.
-export const dynamicParams = false;
+// Videos known at build time are prerendered; a video published since is rendered on its
+// first request. An id that is not in the catalog is still a 404 (notFound below).
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   return (await getCatalogRepository().allIds()).map((id) => ({ id }));
