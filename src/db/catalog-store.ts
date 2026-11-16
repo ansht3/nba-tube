@@ -1,4 +1,5 @@
 import { sectionOf } from "@/catalog/content-types";
+import { searchTextFor } from "@/catalog/search";
 import { catalogSchema, videoSchema, type Catalog, type Video } from "@/catalog/schema";
 import type { Db, Statement } from "./db";
 
@@ -34,17 +35,17 @@ const UPSERT_CHANNELS = `
 
 // Rows whose record did not change are not touched, so re-running an import or an ingestion is free and counts stay honest.
 const UPSERT_VIDEOS = `
-  INSERT INTO videos (youtube_id, channel_id, published_at, content_type, section, team_ids, metadata_checked_at, data)
+  INSERT INTO videos (youtube_id, channel_id, published_at, content_type, section, team_ids, metadata_checked_at, data, search_text)
   SELECT e->'v'->>'youtubeId', e->'v'->>'channelId', (e->'v'->>'publishedAt')::timestamptz,
          e->'v'->'labels'->>'contentType', e->>'section',
          ARRAY(SELECT jsonb_array_elements_text(e->'v'->'labels'->'teamIds')),
-         (e->'v'->'provenance'->>'metadataCheckedAt')::timestamptz, e->'v'
+         (e->'v'->'provenance'->>'metadataCheckedAt')::timestamptz, e->'v', e->>'search'
   FROM jsonb_array_elements($1::jsonb) AS e
   ON CONFLICT (youtube_id) DO UPDATE SET
     channel_id = EXCLUDED.channel_id, published_at = EXCLUDED.published_at, content_type = EXCLUDED.content_type,
     section = EXCLUDED.section, team_ids = EXCLUDED.team_ids, metadata_checked_at = EXCLUDED.metadata_checked_at,
-    data = EXCLUDED.data, updated_at = now()
-  WHERE videos.data IS DISTINCT FROM EXCLUDED.data
+    data = EXCLUDED.data, search_text = EXCLUDED.search_text, updated_at = now()
+  WHERE videos.data IS DISTINCT FROM EXCLUDED.data OR videos.search_text IS DISTINCT FROM EXCLUDED.search_text
   RETURNING (xmax = 0) AS inserted`;
 
 const PUBLISH_VERSION = `
@@ -54,7 +55,7 @@ const PUBLISH_VERSION = `
 
 const REMOVE_VIDEOS = `DELETE FROM videos WHERE youtube_id IN (SELECT jsonb_array_elements_text($1::jsonb)) RETURNING youtube_id`;
 
-const EXISTING = `SELECT v.youtube_id, v.data FROM videos v WHERE v.youtube_id IN (SELECT jsonb_array_elements_text($1::jsonb))`;
+const EXISTING = `SELECT v.youtube_id, v.data, v.search_text FROM videos v WHERE v.youtube_id IN (SELECT jsonb_array_elements_text($1::jsonb))`;
 
 const CURRENT_VERSION = `SELECT COALESCE(max(version), 0) AS version FROM catalog_versions`;
 
@@ -84,7 +85,7 @@ function writeStatements(videos: Video[]): { statements: Statement[]; videoState
   for (const group of chunks(videos, CHUNK_SIZE)) {
     statements.push({ sql: UPSERT_CHANNELS, params: [JSON.stringify(group)] });
     videoStatementIndexes.push(statements.length);
-    statements.push({ sql: UPSERT_VIDEOS, params: [JSON.stringify(group.map((video) => ({ v: video, section: sectionOf(video.labels) })))] });
+    statements.push({ sql: UPSERT_VIDEOS, params: [JSON.stringify(group.map((video) => ({ v: video, section: sectionOf(video.labels), search: searchTextFor(video) })))] });
   }
   return { statements, videoStatementIndexes };
 }
@@ -110,9 +111,11 @@ export async function publishVideos(
   const remove = [...new Set(options.remove ?? [])];
 
   // Compare with what is stored first. The write below stays atomic; this only decides whether there is anything to write.
-  const stored = new Map((await db.query<{ youtube_id: string; data: unknown }>(EXISTING, [JSON.stringify(videos.map((video) => video.youtubeId))])).map((row) => [row.youtube_id, canonical(row.data)]));
+  const stored = new Map(
+    (await db.query<{ youtube_id: string; data: unknown; search_text: string }>(EXISTING, [JSON.stringify(videos.map((video) => video.youtubeId))])).map((row) => [row.youtube_id, `${canonical(row.data)}|${row.search_text}`]),
+  );
   const present = remove.length > 0 ? (await db.query(EXISTING, [JSON.stringify(remove)])).length : 0;
-  if (present === 0 && videos.every((video) => stored.get(video.youtubeId) === canonical(video))) {
+  if (present === 0 && videos.every((video) => stored.get(video.youtubeId) === `${canonical(video)}|${searchTextFor(video)}`)) {
     const [current] = await db.query<{ version: string | number }>(CURRENT_VERSION);
     return { version: Number(current!.version), published: false, inserted: 0, updated: 0, unchanged: videos.length, removed: 0 };
   }

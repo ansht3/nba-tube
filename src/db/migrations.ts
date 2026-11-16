@@ -81,4 +81,11 @@ export const MIGRATIONS: Migration[] = [
        )`,
     ],
   },
+  {
+    id: "0003_search_text",
+    statements: [
+      // Normalised text a search matches against (see src/catalog/search.ts). Maintained by every write.
+      `ALTER TABLE videos ADD COLUMN IF NOT EXISTS search_text text NOT NULL DEFAULT ''`,
+    ],
+  },
 ];

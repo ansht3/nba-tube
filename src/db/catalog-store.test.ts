@@ -5,6 +5,7 @@ import { makeVideo, testId } from "@/test/fixtures";
 import { importCatalog, pruneExpired, publishVideos } from "./catalog-store";
 import type { Db } from "./db";
 import { migrate } from "./migrate";
+import { MIGRATIONS } from "./migrations";
 import { createPgliteDb } from "./pglite";
 
 let pg: PGlite;
@@ -27,7 +28,7 @@ describe("migrate", () => {
   it("creates the schema once and is a no-op the second time", async () => {
     const fresh = new PGlite();
     const freshDb = createPgliteDb(fresh);
-    expect(await migrate(freshDb)).toEqual(["0001_catalog", "0002_leases"]);
+    expect(await migrate(freshDb)).toEqual(MIGRATIONS.map((m) => m.id));
     expect(await migrate(freshDb)).toEqual([]);
     await fresh.close();
   });
@@ -36,7 +37,7 @@ describe("migrate", () => {
     const fresh = new PGlite();
     const freshDb = createPgliteDb(fresh);
     await Promise.all([migrate(freshDb), migrate(freshDb)]);
-    expect(Number((await freshDb.query<{ n: string }>(`SELECT count(*) AS n FROM schema_migrations`))[0]!.n)).toBe(2);
+    expect(Number((await freshDb.query<{ n: string }>(`SELECT count(*) AS n FROM schema_migrations`))[0]!.n)).toBe(MIGRATIONS.length);
     await fresh.close();
   });
 
