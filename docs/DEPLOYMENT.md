@@ -1,6 +1,8 @@
 # Deployment
 
-The site is a static export hosted on Vercel. Nothing runs on a server.
+The site is a Next.js app on Vercel. Pages are generated at build time and
+refreshed from the catalog at most every minute; until a database is configured
+(docs/MIGRATION.md) the catalog is the JSON file built by `npm run sync`.
 
 ## How it works
 

@@ -1,6 +1,6 @@
 # Architecture
 
-NBATube is a static website generated from one JSON file. A separate set of
+NBATube is a Next.js website whose catalog is, for now, one JSON file (a database takes over in docs/MIGRATION.md). A separate set of
 Node scripts builds that file from a registry of verified YouTube channels.
 Nothing runs on a server after deployment.
 
@@ -20,10 +20,10 @@ Nothing runs on a server after deployment.
  data/catalog.json          generated, never committed
         |
         v
- next build                 static HTML for every route and every video
+ next build                 prerendered pages, refreshed every minute (ISR)
         |
         v
- out/                       any static host; playback in YouTube's player
+ .next + next start         Vercel or any Node host; playback in YouTube's player
 ```
 
 ## Two halves that share one contract

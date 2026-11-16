@@ -2,18 +2,28 @@
 
 Short records of choices that were not obvious. Newest at the bottom.
 
-## 1. Static export instead of a running server
+## 1. A normal Next server instead of a static export
 
-The catalog changes a few times a day at most and every visitor sees the same
-videos. Prerendering everything means free hosting, no cold starts and no API
-key anywhere near a browser. The cost is that a video page exists only for
-videos in the catalog at build time, so the site is rebuilt on each sync.
+*Reverses the original decision (static export), 2026-11-16.*
+
+The site began as a static export: prerendered pages, free hosting, no API key
+near a browser. The cost was that new videos needed a rebuild, and on
+2026-11-16 the rebuild trigger had silently stopped, leaving the live catalog 82
+hours stale. docs/MIGRATION.md moves ingestion out of the deploy path, which
+needs API routes, so the export is gone.
+
+Pages are still generated once and served from the CDN; each is refreshed from
+the catalog at most every minute (`revalidate = 60` in the root layout), and a
+video published since the last build renders on its first request. Without a
+`DATABASE_URL` the site reads the same JSON file as before, so nothing changes
+until the database is switched on.
 
 ## 2. Cache Components left off
 
 `create-next-app` now turns on `cacheComponents`. It exists to mix static shells
-with streamed dynamic content, and a static export has no dynamic content. It is
-off to keep the mental model small: pages read a file at build time.
+with streamed dynamic content. It stays off to keep the mental model small:
+pages are cached whole and refreshed on a timer (`revalidate`), and API
+responses set their own `Cache-Control`.
 
 ## 3. Verified channels only, never search
 
