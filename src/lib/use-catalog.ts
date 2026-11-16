@@ -8,6 +8,11 @@ import { BASE_PATH } from "./site";
 // and shared by every component that needs it.
 let request: Promise<Video[]> | null = null;
 
+/** Forgets the downloaded catalog so the next consumer fetches the current one. */
+export function resetCatalogCache() {
+  request = null;
+}
+
 export function fetchCatalog(): Promise<Video[]> {
   if (!request) {
     request = fetch(`${BASE_PATH}/catalog.json`)

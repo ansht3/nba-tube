@@ -29,7 +29,7 @@ export const revalidate = 60;
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   // The newest upload this build contains. Anything later in the live catalog is new to the viewer.
-  const { newestPublishedAt: newestAt } = await getCatalogRepository().meta();
+  const { version, newestId } = await getCatalogRepository().meta();
 
   return (
     // The boot scripts set data attributes on <html> before React hydrates,
@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <SettingsSync />
         <Header />
         <KeyboardShortcuts />
-        <NewVideosNotice newestAt={newestAt} />
+        <NewVideosNotice version={version} newestId={newestId} />
         {children}
       </body>
     </html>

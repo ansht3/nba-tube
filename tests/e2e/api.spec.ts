@@ -82,3 +82,28 @@ test("returns one video by id, and 404 or 400 for ids that cannot exist", async 
   expect((await request.get("/api/videos/aaaaaaaaaaa")).status()).toBe(404);
   expect((await request.get("/api/videos/short")).status()).toBe(400);
 });
+
+test("/api/version is tiny and names the newest video", async ({ request }) => {
+  const response = await request.get("/api/version");
+  expect(response.status()).toBe(200);
+  const text = await response.text();
+  expect(text.length).toBeLessThan(250);
+  const body = JSON.parse(text) as { version: string; newestId: string; total: number };
+  expect(body.newestId).toBe(newestFirst()[0]!.youtubeId);
+  expect(body.total).toBe(builtCatalog().length);
+  expect((await request.get("/api/version", { headers: { "If-None-Match": response.headers()["etag"]! } })).status()).toBe(304);
+});
+
+test("/api/updates returns exactly the videos newer than the one the client has", async ({ request }) => {
+  const sorted = newestFirst();
+  const none = (await (await request.get(`/api/updates?since=${sorted[0]!.youtubeId}`)).json()) as { count: number; videos: unknown[]; reset: boolean };
+  expect(none).toMatchObject({ count: 0, videos: [], reset: false });
+
+  const three = (await (await request.get(`/api/updates?since=${sorted[3]!.youtubeId}`)).json()) as { count: number; videos: { youtubeId: string }[]; hasMore: boolean };
+  expect(three.count).toBe(3);
+  expect(three.hasMore).toBe(false);
+  expect(three.videos.map((v) => v.youtubeId)).toEqual(sorted.slice(0, 3).map((v) => v.youtubeId));
+
+  expect(((await (await request.get("/api/updates?since=gone_______")).json()) as { reset: boolean }).reset).toBe(true);
+  expect((await request.get("/api/updates")).status()).toBe(400);
+});
