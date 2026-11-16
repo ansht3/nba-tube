@@ -3,6 +3,8 @@ import type { Video } from "@/catalog/schema";
 import { formatDuration } from "@/lib/format";
 import { watchPath } from "@/lib/paths";
 import { RelativeTime } from "./RelativeTime";
+import { AddToPlaylist } from "./AddToPlaylist";
+import { LikeButton } from "./LikeButton";
 import { Thumbnail } from "./Thumbnail";
 import { VideoLabels } from "./VideoLabels";
 import { WatchLaterButton } from "./WatchLaterButton";
@@ -30,8 +32,10 @@ export function VideoCard({ video }: { video: Video }) {
         </p>
       </Link>
       {/* A sibling of the link, not a child: a button may not sit inside an anchor. */}
-      <div className="absolute right-1.5 top-1.5">
+      <div className="absolute right-1.5 top-1.5 flex flex-col gap-1.5">
         <WatchLaterButton video={video} variant="overlay" />
+        <LikeButton video={video} variant="overlay" />
+        <AddToPlaylist video={video} variant="overlay" />
       </div>
     </article>
   );

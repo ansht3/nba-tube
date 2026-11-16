@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { isSaved, toSavedVideo } from "@/lib/storage/library";
 import {
   addToPlaylist,
@@ -14,7 +14,9 @@ import {
 import { useStore } from "@/lib/storage/use-store";
 import { CloseIcon, ListIcon } from "./icons";
 
-export function AddToPlaylist({ video }: { video: { youtubeId: string; title: string; channelTitle: string } }) {
+type VideoRef = { youtubeId: string; title: string; channelTitle: string };
+
+function PlaylistDialog({ video, onClose }: { video: VideoRef; onClose: () => void }) {
   const playlists = useStore(playlistsStore);
   const dialog = useRef<HTMLDialogElement>(null);
   const [name, setName] = useState("");
@@ -43,17 +45,17 @@ export function AddToPlaylist({ video }: { video: { youtubeId: string; title: st
     setName("");
   }
 
+  // The dialog exists only while it is open, so a page of cards carries no hidden dialogs.
+  useEffect(() => {
+    dialog.current?.showModal();
+  }, []);
+
   return (
     <>
-      <button type="button" className="pill" onClick={() => dialog.current?.showModal()}>
-        <ListIcon />
-        Save to playlist
-      </button>
-
       <dialog
         ref={dialog}
         aria-labelledby={headingId}
-        onClose={() => setError(null)}
+        onClose={onClose}
         onClick={(event) => {
           if (event.target === event.currentTarget) dialog.current?.close();
         }}
@@ -117,6 +119,26 @@ export function AddToPlaylist({ video }: { video: { youtubeId: string; title: st
           )}
         </form>
       </dialog>
+    </>
+  );
+}
+
+/** Opens a dialog to put the video in one or more playlists, or in a new one. */
+export function AddToPlaylist({ video, variant = "pill" }: { video: VideoRef; variant?: "pill" | "overlay" }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      {variant === "pill" ? (
+        <button type="button" className="pill" onClick={() => setOpen(true)}>
+          <ListIcon />
+          Save to playlist
+        </button>
+      ) : (
+        <button type="button" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-label={`Add to playlist: ${video.title}`} title="Add to playlist" className="thumb-action">
+          <ListIcon className="size-[18px]" />
+        </button>
+      )}
+      {open && <PlaylistDialog video={video} onClose={() => setOpen(false)} />}
     </>
   );
 }
