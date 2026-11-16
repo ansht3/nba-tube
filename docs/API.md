@@ -14,10 +14,11 @@ A page of videos, newest first (ties by YouTube id).
 | `team` | a team code, e.g. `LAL` |
 | `type` | one or more content types, comma separated |
 | `channel` | a YouTube channel id |
+| `ids` | up to 48 comma-separated video ids: returns just those that are in the catalog (to check saved videos) |
 | `q` | search words (all must match, any order, accents and case ignored), up to 80 characters |
 | `date` | `day`, `week` or `month` |
 | `duration` | `short` (under 5 min), `medium` (5 to 20), `long` (over 20); videos with no known duration never match |
-| `sort` | `latest` (default) or `oldest` |
+| `sort` | `latest` (default), `oldest`, or `best` (the published Best first order; it does not depend on the time of day, so it pages with a stable cursor) |
 
 Unknown parameters and repeated parameters are **errors (400)**. That is
 deliberate: a CDN keys on the full URL, and ignored parameters would let anyone

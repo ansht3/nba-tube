@@ -57,6 +57,18 @@ test("filters by team, section and search, and counts what matches", async ({ re
   expect((await (await request.get("/api/videos?sort=oldest&limit=1")).json() as Page).videos[0]!.youtubeId).toBe(newestFirst().at(-1)!.youtubeId);
 });
 
+test("sorts best first and looks up a list of ids", async ({ request }) => {
+  const best = (await (await request.get("/api/videos?sort=best&limit=48")).json()) as Page;
+  const latest = (await (await request.get("/api/videos?limit=48")).json()) as Page;
+  expect(best.total).toBe(latest.total);
+  expect(new Set(best.videos.map((v) => v.youtubeId))).toEqual(new Set(latest.videos.map((v) => v.youtubeId)));
+
+  const wanted = newestFirst().slice(0, 3).map((v) => v.youtubeId);
+  const found = (await (await request.get(`/api/videos?ids=${wanted.join(",")},aaaaaaaaaaa`)).json()) as Page;
+  expect(found.videos.map((v) => v.youtubeId)).toEqual(wanted);
+  expect(found.total).toBe(3);
+});
+
 test("a repeat request with the ETag gets 304 and an empty body", async ({ request }) => {
   const first = await request.get("/api/videos?section=highlights");
   const etag = first.headers()["etag"]!;

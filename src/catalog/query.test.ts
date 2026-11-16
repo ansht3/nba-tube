@@ -57,7 +57,14 @@ describe("parseVideoQuery", () => {
     expect(error("channel=notachannel")).toMatch(/channel/);
     expect(error("date=year")).toMatch(/date/);
     expect(error("duration=forever")).toMatch(/duration/);
-    expect(error("sort=best")).toMatch(/sort/);
+    expect(error("sort=popular")).toMatch(/sort/);
+  });
+
+  it("reads best-first order and a list of ids, and bounds that list", () => {
+    expect(ok("sort=best").query.sort).toBe("best");
+    expect(ok("ids=aaaaaaaaaaa,bbbbbbbbbbb,aaaaaaaaaaa").query.ids).toEqual(["aaaaaaaaaaa", "bbbbbbbbbbb"]);
+    expect(error("ids=short")).toMatch(/not a YouTube video id/);
+    expect(error(`ids=${Array.from({ length: 49 }, (_, i) => `v${String(i).padStart(10, "0")}`).join(",")}`)).toMatch(/at most 48/);
   });
 
   it("bounds the page size to whole numbers from 1 to 48", () => {

@@ -15,8 +15,9 @@ export const DURATION_RANGES = {
   long: { min: 20 * 60, max: null },
 } as const;
 
-const PARAMS = ["section", "team", "type", "channel", "q", "date", "duration", "sort", "limit", "cursor"] as const;
+const PARAMS = ["section", "team", "type", "channel", "ids", "q", "date", "duration", "sort", "limit", "cursor"] as const;
 const CHANNEL_ID = /^UC[\w-]{22}$/;
+const YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/;
 const MINUTE_MS = 60_000;
 
 export type ParsedVideoQuery =
@@ -70,6 +71,15 @@ export function parseVideoQuery(params: URLSearchParams, now: number): ParsedVid
     query.channelId = channel;
   }
 
+  const ids = params.get("ids");
+  if (ids) {
+    const list = [...new Set(ids.split(","))];
+    if (list.length > MAX_PAGE_SIZE) return fail(`ids may name at most ${MAX_PAGE_SIZE} videos.`);
+    const bad = list.find((id) => !YOUTUBE_ID.test(id));
+    if (bad !== undefined) return fail(`"${bad}" is not a YouTube video id.`);
+    query.ids = list;
+  }
+
   const q = params.get("q")?.replace(/\s+/g, " ").trim();
   if (q) {
     if (q.length > MAX_QUERY_CHARS) return fail(`q may be at most ${MAX_QUERY_CHARS} characters.`);
@@ -93,7 +103,7 @@ export function parseVideoQuery(params: URLSearchParams, now: number): ParsedVid
 
   const sort = params.get("sort");
   if (sort) {
-    if (sort !== "latest" && sort !== "oldest") return fail(`Unknown sort "${sort}".`);
+    if (sort !== "latest" && sort !== "oldest" && sort !== "best") return fail(`Unknown sort "${sort}".`);
     query.sort = sort;
   }
 
