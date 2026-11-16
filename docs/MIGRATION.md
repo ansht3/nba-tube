@@ -1,7 +1,9 @@
 # Migration: static catalog to a shared database
 
-Status: plan. Each phase is a commit or a manual step, and none of them needs
-downtime or deletes data. Update the status lines as phases land.
+Status (2026-11-16): phases 0 to 4 are **built and tested** on branch `dev`
+(unpushed); phase 5 is manual and **not done**; phase 6 waits for it. Nothing is
+deployed. See docs/OPERATIONS.md for the switch-over steps and for what has not
+been verified (Neon, Cloudflare, a Vercel deploy).
 
 ## Why
 Today the catalog is one JSON file generated at build time. New videos need a

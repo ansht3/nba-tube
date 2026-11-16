@@ -24,6 +24,16 @@ after the full check suite passes.
 | HackerTube-style browsing: filter panel, Best first, list search, icon rail, YouTube-style watch layout | Playwright on desktop and Pixel 7; screenshots compared with hackertube.org |
 | Keyboard shortcuts (`/`, `j`/`k`, `Enter`, `l`, `w`, `h`, `?`) and a search heading ("Results for …") | tests/e2e/shortcuts.spec.ts on desktop and Pixel 7 |
 
+## Scalable catalog work (2026-11-16, branch `dev`, unpushed)
+
+Built and verified locally: visible refresh failures, a catalog repository with
+file and Postgres implementations passing one contract, idempotent storage with
+atomic versions, a leased incremental ingestion worker, cached paginated feeds,
+version and updates endpoints, infinite scrolling with position restore,
+in-site playlist playback, library export and import, same-game related videos,
+`/api/health`, and a load test. Manual steps and unverified items:
+docs/OPERATIONS.md. The plan: docs/MIGRATION.md.
+
 ## Production refresh status (re-checked 2026-11-16)
 
 The site is live at https://nba-tube.vercel.app. The refresh is **not

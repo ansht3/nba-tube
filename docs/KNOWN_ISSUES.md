@@ -21,6 +21,20 @@ the top.
   presser after a Lakers game appears under the Hawks only. The league channel's
   full-game recaps are tagged with both teams.
 
+## Database and worker (built, not yet running anywhere)
+
+- The Neon adapter, the Cloudflare Worker and a Vercel deploy of the dynamic app
+  have never been run: there were no accounts. The SQL and the ingestion logic
+  are tested on real Postgres (PGlite) and the Worker bundles for a non-Node
+  runtime. docs/OPERATIONS.md lists the steps and the unverified items.
+- `/catalog.json` is still produced at build time. With `DATABASE_URL` set it is
+  stale by design; the sync and the refresh check read it, nothing in the site does.
+- "Play all" and in-site Next/Previous exist for playlists. Liked and Watch later
+  have no queue yet.
+- Best first in the database follows the published formula without its clamp for
+  videos dated in the future; the difference only shows for such videos.
+- Load numbers are from PGlite on a laptop, not Neon.
+
 ## Keyless mode
 
 - Without `YOUTUBE_API_KEY`, only each channel's 15 newest uploads are seen per

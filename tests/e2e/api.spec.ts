@@ -127,3 +127,10 @@ test("/api/updates returns exactly the videos newer than the one the client has"
   expect(((await (await request.get("/api/updates?since=gone_______")).json()) as { reset: boolean }).reset).toBe(true);
   expect((await request.get("/api/updates")).status()).toBe(400);
 });
+
+test("/api/health reports the file catalog as ok and never caches", async ({ request }) => {
+  const response = await request.get("/api/health");
+  expect(response.status()).toBe(200);
+  expect(response.headers()["cache-control"]).toBe("no-store");
+  expect(await response.json()).toMatchObject({ status: "ok", mode: "file", worker: { state: "unknown" } });
+});

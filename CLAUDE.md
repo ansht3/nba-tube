@@ -10,7 +10,9 @@ by HackerTube. MIT licensed.
 ## Layout
 
 - `src/catalog/` the contract shared by both halves: schema, teams, content types, source registry, selectors, loader.
-- `src/ingest/` discovery and classification. Never imported by the site.
+- `src/ingest/` discovery, classification and the incremental `runIngestion`. Never imported by the site.
+- `src/db/` Postgres storage, migrations, the lease and `PostgresCatalogRepository` (Neon in production, PGlite in tests). `worker/` is the Cloudflare Worker that runs ingestion. See docs/MIGRATION.md and docs/OPERATIONS.md.
+- `src/lib/api/` the handlers behind `/api/*`; they take a repository, so they are tested against file and Postgres.
 - `src/app/`, `src/components/` the site. Reads the catalog only through `src/catalog/`.
 - `src/lib/storage/` everything kept in localStorage (lists, playlists, settings).
 - `scripts/sync.ts` builds `data/catalog.json` (git-ignored). `data/seed/catalog.json` is the committed fallback.
