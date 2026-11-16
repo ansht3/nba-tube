@@ -11,6 +11,7 @@ import {
 } from "@/catalog/repository";
 import { videoSchema, type Video } from "@/catalog/schema";
 import { searchWords } from "@/catalog/search";
+import { SAME_GAME_BONUS, SAME_GAME_WINDOW_MS } from "@/catalog/select";
 import type { Db } from "./db";
 
 /** Collects query values and hands back their $n placeholders. */
@@ -120,15 +121,17 @@ export class PostgresCatalogRepository implements CatalogRepository {
   async related(video: Video, limit: number): Promise<Video[]> {
     const params = new Params();
     const teams = params.textList(video.labels.teamIds);
-    // The same scoring as relatedVideos: 3 per shared team, 2 for the same type, 1 for the same section, 1 for the same channel.
+    // The same scoring as relatedVideos: 3 per shared team, +2 for the same team in the same game window, 2 for the same type, 1 for the same section, 1 for the same channel.
     const rows = await this.db.query<{ data: unknown }>(
       `SELECT data FROM (
          SELECT data, published_at, youtube_id,
-                3 * (SELECT count(*) FROM unnest(team_ids) AS t WHERE t IN ${teams})
+                3 * shared.n
+                + CASE WHEN shared.n > 0 AND abs(extract(epoch FROM published_at) * 1000 - ${params.add(Date.parse(video.publishedAt))}::double precision) <= ${SAME_GAME_WINDOW_MS} THEN ${SAME_GAME_BONUS} ELSE 0 END
                 + CASE WHEN content_type = ${params.add(video.labels.contentType)} THEN 2 ELSE 0 END
                 + CASE WHEN section = ${params.add(sectionOf(video.labels))} THEN 1 ELSE 0 END
                 + CASE WHEN channel_id = ${params.add(video.channelId)} THEN 1 ELSE 0 END AS score
-         FROM videos WHERE youtube_id <> ${params.add(video.youtubeId)}
+         FROM videos CROSS JOIN LATERAL (SELECT count(*) AS n FROM unnest(team_ids) AS t WHERE t IN ${teams}) AS shared
+         WHERE youtube_id <> ${params.add(video.youtubeId)}
        ) scored
        WHERE score > 0
        ORDER BY score DESC, published_at DESC, youtube_id ASC

@@ -124,7 +124,7 @@ export default async function WatchPage({ params }: PageProps<"/watch/[id]">) {
         <h2 id="related-heading" className="text-base font-bold tracking-tight">
           Up next
         </h2>
-        <p className="mt-0.5 text-xs text-muted">Related by team, kind of video and channel, newest first. No personalisation. Nothing plays by itself.</p>
+        <p className="mt-0.5 text-xs text-muted">Related by team and game, kind of video and channel, newest first. No personalisation. Nothing plays by itself.</p>
         {related.length === 0 ? (
           <p className="mt-4 text-sm text-muted">Nothing related in the catalog right now.</p>
         ) : (

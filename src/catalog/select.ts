@@ -24,10 +24,17 @@ export function countByTeam(videos: Video[]): Map<string, number> {
   return counts;
 }
 
+/** Videos about the same team published this close together very likely cover the same game: its recap, press conferences and player clips. */
+export const SAME_GAME_WINDOW_MS = 36 * 3_600_000;
+export const SAME_GAME_BONUS = 2;
+
 function relatedness(video: Video, other: Video): number {
   let score = 0;
   // A shared team is the strongest link: the same game or the same locker room.
-  score += 3 * other.labels.teamIds.filter((teamId) => video.labels.teamIds.includes(teamId)).length;
+  const shared = other.labels.teamIds.filter((teamId) => video.labels.teamIds.includes(teamId)).length;
+  score += 3 * shared;
+  // Verified context: the same team within the same game window. Both come from the catalog, never from the viewer.
+  if (shared > 0 && Math.abs(Date.parse(other.publishedAt) - Date.parse(video.publishedAt)) <= SAME_GAME_WINDOW_MS) score += SAME_GAME_BONUS;
   if (other.labels.contentType === video.labels.contentType) score += 2;
   if (sectionOf(other.labels) === sectionOf(video.labels)) score += 1;
   if (other.channelId === video.channelId) score += 1;

@@ -230,6 +230,17 @@ export function describeRepositoryContract(name: string, create: (videos: Video[
       expect(await repo.related(SAMPLE[1]!, 1)).toHaveLength(1);
     });
 
+    it("ranks a same-team video from the same game window above one from another week", async () => {
+      const day = 86_400_000;
+      const base = Date.parse("2026-11-16T12:00:00Z");
+      const at = (ms: number) => new Date(base + ms).toISOString();
+      const current = video("current", at(0), { type: "GAME_HIGHLIGHTS", teams: ["LAL", "BOS"] });
+      const sameGame = video("samegame", at(-0.5 * day), { type: "MEDIA_AVAILABILITY", teams: ["LAL"] });
+      const lastWeek = video("lastweek", at(-7 * day), { type: "MEDIA_AVAILABILITY", teams: ["LAL"] });
+      const { repo } = await create([current, sameGame, lastWeek]);
+      expect(ids(await repo.related(current, 10))).toEqual([testId("samegame"), testId("lastweek")]);
+    });
+
     it("counts videos per team, summarises channels by their newest title, and lists all ids", async () => {
       const { repo } = await create(SAMPLE);
       expect(Object.fromEntries(await repo.countsByTeam())).toEqual({ LAL: 3, BOS: 2 });
