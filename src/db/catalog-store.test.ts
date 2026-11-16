@@ -27,7 +27,7 @@ describe("migrate", () => {
   it("creates the schema once and is a no-op the second time", async () => {
     const fresh = new PGlite();
     const freshDb = createPgliteDb(fresh);
-    expect(await migrate(freshDb)).toEqual(["0001_catalog"]);
+    expect(await migrate(freshDb)).toEqual(["0001_catalog", "0002_leases"]);
     expect(await migrate(freshDb)).toEqual([]);
     await fresh.close();
   });
@@ -36,13 +36,13 @@ describe("migrate", () => {
     const fresh = new PGlite();
     const freshDb = createPgliteDb(fresh);
     await Promise.all([migrate(freshDb), migrate(freshDb)]);
-    expect(Number((await freshDb.query<{ n: string }>(`SELECT count(*) AS n FROM schema_migrations`))[0]!.n)).toBe(1);
+    expect(Number((await freshDb.query<{ n: string }>(`SELECT count(*) AS n FROM schema_migrations`))[0]!.n)).toBe(2);
     await fresh.close();
   });
 
   it("creates the tables and the indexes the feed queries depend on", async () => {
     const tables = (await db.query<{ tablename: string }>(`SELECT tablename FROM pg_tables WHERE schemaname = 'public'`)).map((r) => r.tablename);
-    expect(tables).toEqual(expect.arrayContaining(["videos", "channels", "ingestion_runs", "source_checkpoints", "catalog_versions"]));
+    expect(tables).toEqual(expect.arrayContaining(["videos", "channels", "ingestion_runs", "source_checkpoints", "catalog_versions", "leases"]));
     const indexes = (await db.query<{ indexname: string }>(`SELECT indexname FROM pg_indexes WHERE tablename = 'videos'`)).map((r) => r.indexname);
     expect(indexes).toEqual(expect.arrayContaining(["videos_published_idx", "videos_type_idx", "videos_section_idx", "videos_channel_idx", "videos_teams_idx"]));
   });
@@ -51,7 +51,7 @@ describe("migrate", () => {
 describe("publishVideos", () => {
   it("inserts videos and channels and publishes version 1", async () => {
     const result = await publishVideos(db, [video("a", "2026-11-16T09:00:00Z"), video("b", "2026-11-16T08:00:00Z")], { mode: "feed" });
-    expect(result).toEqual({ version: 1, published: true, inserted: 2, updated: 0, unchanged: 0 });
+    expect(result).toEqual({ version: 1, published: true, inserted: 2, updated: 0, unchanged: 0, removed: 0 });
     expect(await count("videos")).toBe(2);
     expect(await count("channels")).toBe(1);
     const [version] = await db.query<{ video_count: number; mode: string }>(`SELECT video_count, mode FROM catalog_versions`);
@@ -62,7 +62,7 @@ describe("publishVideos", () => {
     const videos = [video("a", "2026-11-16T09:00:00Z"), video("b", "2026-11-16T08:00:00Z")];
     await publishVideos(db, videos, { mode: "feed" });
     const again = await publishVideos(db, videos, { mode: "feed" });
-    expect(again).toEqual({ version: 1, published: false, inserted: 0, updated: 0, unchanged: 2 });
+    expect(again).toEqual({ version: 1, published: false, inserted: 0, updated: 0, unchanged: 2, removed: 0 });
     expect(await count("videos")).toBe(2);
     expect(await count("catalog_versions")).toBe(1);
   });
@@ -74,6 +74,19 @@ describe("publishVideos", () => {
     const [row] = await db.query<{ data: Video }>(`SELECT data FROM videos`);
     expect(row!.data.title).toBe("New title");
     expect((await db.query<{ title: string }>(`SELECT title FROM channels`))[0]!.title).toBe("NBA (renamed)");
+  });
+
+  it("removes confirmed-gone videos in the same transaction as the writes and publishes a version for it", async () => {
+    await publishVideos(db, [video("a", "2026-11-16T09:00:00Z"), video("b", "2026-11-16T08:00:00Z")], { mode: "feed" });
+    const result = await publishVideos(db, [], { mode: "feed", remove: [testId("a"), "notinstore__"] });
+    expect(result).toMatchObject({ version: 2, published: true, removed: 1 });
+    expect((await db.query<{ youtube_id: string }>(`SELECT youtube_id FROM videos`)).map((r) => r.youtube_id)).toEqual([testId("b")]);
+    expect((await db.query<{ video_count: number }>(`SELECT video_count FROM catalog_versions WHERE version = 2`))[0]!.video_count).toBe(1);
+  });
+
+  it("does nothing, and mints no version, when asked to remove ids that are not stored", async () => {
+    await publishVideos(db, [video("a", "2026-11-16T09:00:00Z")], { mode: "feed" });
+    expect(await publishVideos(db, [], { mode: "feed", remove: ["notinstore__"] })).toMatchObject({ published: false, removed: 0, version: 1 });
   });
 
   it("keeps one record when the same video appears twice in one call (the last wins)", async () => {

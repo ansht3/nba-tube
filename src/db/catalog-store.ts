@@ -11,6 +11,8 @@ export interface WriteResult {
 }
 
 export interface PublishResult extends WriteResult {
+  /** Videos removed by this call (confirmed gone upstream). */
+  removed: number;
   /** The catalog version after these writes: a new one if anything changed, otherwise the unchanged current one (0 when none exists yet). */
   version: number;
   published: boolean;
@@ -50,12 +52,14 @@ const PUBLISH_VERSION = `
   SELECT $1, count(*), max(published_at), $2 FROM videos
   RETURNING version`;
 
+const REMOVE_VIDEOS = `DELETE FROM videos WHERE youtube_id IN (SELECT jsonb_array_elements_text($1::jsonb)) RETURNING youtube_id`;
+
 const EXISTING = `SELECT v.youtube_id, v.data FROM videos v WHERE v.youtube_id IN (SELECT jsonb_array_elements_text($1::jsonb))`;
 
 const CURRENT_VERSION = `SELECT COALESCE(max(version), 0) AS version FROM catalog_versions`;
 
 /** JSON with object keys in a fixed order, so two equal records compare equal however they were built. */
-function canonical(value: unknown): string {
+export function canonical(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
   if (value && typeof value === "object") {
     return `{${Object.entries(value as Record<string, unknown>)
@@ -92,17 +96,29 @@ function writeStatements(videos: Video[]): { statements: Statement[]; videoState
  * and keeps the current version, so clients polling it see no false change. Nothing here deletes: a source that failed to answer never
  * removes a video; only the retention rules do (see pruneExpired).
  */
-export async function publishVideos(db: Db, input: Video[], options: { mode: Catalog["mode"]; runId?: number | null }): Promise<PublishResult> {
+export async function publishVideos(
+  db: Db,
+  input: Video[],
+  options: {
+    mode: Catalog["mode"];
+    runId?: number | null;
+    /** Ids YouTube confirmed are gone. Removed in the same transaction; never a guess from a failed request. */
+    remove?: string[];
+  },
+): Promise<PublishResult> {
   const videos = prepare(input);
+  const remove = [...new Set(options.remove ?? [])];
 
   // Compare with what is stored first. The write below stays atomic; this only decides whether there is anything to write.
   const stored = new Map((await db.query<{ youtube_id: string; data: unknown }>(EXISTING, [JSON.stringify(videos.map((video) => video.youtubeId))])).map((row) => [row.youtube_id, canonical(row.data)]));
-  if (videos.every((video) => stored.get(video.youtubeId) === canonical(video))) {
+  const present = remove.length > 0 ? (await db.query(EXISTING, [JSON.stringify(remove)])).length : 0;
+  if (present === 0 && videos.every((video) => stored.get(video.youtubeId) === canonical(video))) {
     const [current] = await db.query<{ version: string | number }>(CURRENT_VERSION);
-    return { version: Number(current!.version), published: false, inserted: 0, updated: 0, unchanged: videos.length };
+    return { version: Number(current!.version), published: false, inserted: 0, updated: 0, unchanged: videos.length, removed: 0 };
   }
 
   const { statements, videoStatementIndexes } = writeStatements(videos);
+  const removeIndex = remove.length > 0 ? statements.push({ sql: REMOVE_VIDEOS, params: [JSON.stringify(remove)] }) - 1 : -1;
   statements.push({ sql: PUBLISH_VERSION, params: [options.mode, options.runId ?? null] });
   const results = await db.batch(statements);
 
@@ -115,7 +131,8 @@ export async function publishVideos(db: Db, input: Video[], options: { mode: Cat
     }
   }
   const version = Number(results[results.length - 1]![0]!.version);
-  return { version, published: true, inserted, updated, unchanged: videos.length - inserted - updated };
+  const removed = removeIndex >= 0 ? results[removeIndex]!.length : 0;
+  return { version, published: true, inserted, updated, unchanged: videos.length - inserted - updated, removed };
 }
 
 /** Loads a catalog (for example the live /catalog.json) into the database. Only inserts and updates. */

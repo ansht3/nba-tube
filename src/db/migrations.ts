@@ -70,4 +70,15 @@ export const MIGRATIONS: Migration[] = [
        )`,
     ],
   },
+  {
+    id: "0002_leases",
+    statements: [
+      // A named, time-limited claim, so only one ingestion run works at a time. It expires on its own if a run dies.
+      `CREATE TABLE IF NOT EXISTS leases (
+         name text PRIMARY KEY,
+         owner text NOT NULL,
+         expires_at timestamptz NOT NULL
+       )`,
+    ],
+  },
 ];
