@@ -1,0 +1,142 @@
+import { sectionOf } from "@/catalog/content-types";
+import {
+  decodeCursor,
+  encodeCursor,
+  type CatalogMeta,
+  type CatalogRepository,
+  type ChannelSummary,
+  type VideoFilter,
+  type VideoPage,
+  type VideoQuery,
+} from "@/catalog/repository";
+import { videoSchema, type Video } from "@/catalog/schema";
+import { searchWords } from "@/catalog/search";
+import type { Db } from "./db";
+
+/** Collects query values and hands back their $n placeholders. */
+class Params {
+  readonly values: unknown[] = [];
+  add(value: unknown): string {
+    this.values.push(value);
+    return `$${this.values.length}`;
+  }
+  /** A list passed as one JSON parameter and read back as rows of text. */
+  textList(values: string[]): string {
+    return `(SELECT jsonb_array_elements_text(${this.add(JSON.stringify(values))}::jsonb))`;
+  }
+}
+
+function filterClauses(filter: VideoFilter, params: Params): string[] {
+  const clauses: string[] = [];
+  if (filter.section) clauses.push(`section = ${params.add(filter.section)}`);
+  if (filter.teamId) clauses.push(`team_ids @> ARRAY[${params.add(filter.teamId)}]::text[]`);
+  if (filter.contentTypes) clauses.push(`content_type IN ${params.textList(filter.contentTypes)}`);
+  if (filter.channelId) clauses.push(`channel_id = ${params.add(filter.channelId)}`);
+  if (filter.publishedAfterMs !== undefined) clauses.push(`published_at >= to_timestamp(${params.add(filter.publishedAfterMs)}::double precision / 1000.0)`);
+  if (filter.duration) {
+    clauses.push(`(data->>'durationSeconds') IS NOT NULL AND (data->>'durationSeconds')::int >= ${params.add(filter.duration.min)}`);
+    if (filter.duration.max !== null) clauses.push(`(data->>'durationSeconds')::int < ${params.add(filter.duration.max)}`);
+  }
+  // strpos is an exact substring test, so a search needs no LIKE escaping.
+  for (const word of searchWords(filter.q ?? "")) clauses.push(`strpos(search_text, ${params.add(word)}) > 0`);
+  return clauses;
+}
+
+const where = (clauses: string[]) => (clauses.length > 0 ? `WHERE ${clauses.join(" AND ")}` : "");
+const parse = (rows: { data: unknown }[]): Video[] => rows.map((row) => videoSchema.parse(row.data));
+
+/**
+ * The catalog answered by indexed queries instead of an in-memory array. Order
+ * is "published_at DESC, youtube_id ASC" (ids in byte order), the same as
+ * compareVideos, so a keyset cursor stays valid while newer videos arrive.
+ */
+export class PostgresCatalogRepository implements CatalogRepository {
+  constructor(private readonly db: Db) {}
+
+  async meta(): Promise<CatalogMeta> {
+    const [row] = await this.db.query<{ version: string | number; published_at: string; mode: CatalogMeta["mode"]; video_count: number; newest_published_at: string | null }>(
+      `SELECT version, published_at, mode, video_count, newest_published_at FROM catalog_versions ORDER BY version DESC LIMIT 1`,
+    );
+    if (!row) return { version: "0", generatedAt: new Date(0).toISOString(), mode: "feed", total: 0, newestPublishedAt: null };
+    return {
+      version: String(row.version),
+      generatedAt: new Date(row.published_at).toISOString(),
+      mode: row.mode,
+      total: Number(row.video_count),
+      newestPublishedAt: row.newest_published_at ? new Date(row.newest_published_at).toISOString() : null,
+    };
+  }
+
+  async list(query: VideoQuery): Promise<VideoPage> {
+    const sort = query.sort ?? "latest";
+    const countParams = new Params();
+    const countClauses = filterClauses(query, countParams);
+
+    const params = new Params();
+    const clauses = filterClauses(query, params);
+    if (query.cursor) {
+      const position = decodeCursor(query.cursor, sort);
+      const ts = `to_timestamp(${params.add(position.publishedMs)}::double precision / 1000.0)`;
+      const id = params.add(position.youtubeId);
+      clauses.push(sort === "latest" ? `(published_at < ${ts} OR (published_at = ${ts} AND youtube_id > ${id}))` : `(published_at > ${ts} OR (published_at = ${ts} AND youtube_id < ${id}))`);
+    }
+    const order = sort === "latest" ? "published_at DESC, youtube_id ASC" : "published_at ASC, youtube_id DESC";
+    // One extra row tells whether another page exists without a second query.
+    const [total, rows] = await Promise.all([
+      this.db.query<{ n: string }>(`SELECT count(*) AS n FROM videos ${where(countClauses)}`, countParams.values),
+      this.db.query<{ data: unknown }>(`SELECT data FROM videos ${where(clauses)} ORDER BY ${order} LIMIT ${params.add(query.limit + 1)}`, params.values),
+    ]);
+    const videos = parse(rows.slice(0, query.limit));
+    const last = videos.at(-1);
+    return { videos, total: Number(total[0]!.n), nextCursor: last && rows.length > query.limit ? encodeCursor(last, sort) : null };
+  }
+
+  async count(filter: VideoFilter): Promise<number> {
+    const params = new Params();
+    const [row] = await this.db.query<{ n: string }>(`SELECT count(*) AS n FROM videos ${where(filterClauses(filter, params))}`, params.values);
+    return Number(row!.n);
+  }
+
+  async get(youtubeId: string): Promise<Video | null> {
+    const rows = await this.db.query<{ data: unknown }>(`SELECT data FROM videos WHERE youtube_id = $1`, [youtubeId]);
+    return rows[0] ? videoSchema.parse(rows[0].data) : null;
+  }
+
+  async related(video: Video, limit: number): Promise<Video[]> {
+    const params = new Params();
+    const teams = params.textList(video.labels.teamIds);
+    // The same scoring as relatedVideos: 3 per shared team, 2 for the same type, 1 for the same section, 1 for the same channel.
+    const rows = await this.db.query<{ data: unknown }>(
+      `SELECT data FROM (
+         SELECT data, published_at, youtube_id,
+                3 * (SELECT count(*) FROM unnest(team_ids) AS t WHERE t IN ${teams})
+                + CASE WHEN content_type = ${params.add(video.labels.contentType)} THEN 2 ELSE 0 END
+                + CASE WHEN section = ${params.add(sectionOf(video.labels))} THEN 1 ELSE 0 END
+                + CASE WHEN channel_id = ${params.add(video.channelId)} THEN 1 ELSE 0 END AS score
+         FROM videos WHERE youtube_id <> ${params.add(video.youtubeId)}
+       ) scored
+       WHERE score > 0
+       ORDER BY score DESC, published_at DESC, youtube_id ASC
+       LIMIT ${params.add(limit)}`,
+      params.values,
+    );
+    return parse(rows);
+  }
+
+  async countsByTeam(): Promise<Map<string, number>> {
+    const rows = await this.db.query<{ team: string; n: string }>(`SELECT t AS team, count(*) AS n FROM videos, unnest(team_ids) AS t GROUP BY t ORDER BY t`);
+    return new Map(rows.map((row) => [row.team, Number(row.n)]));
+  }
+
+  async channels(): Promise<ChannelSummary[]> {
+    // The newest video's channel title is the channel's current name.
+    const rows = await this.db.query<{ channel_id: string; title: string; n: string }>(
+      `SELECT channel_id, (array_agg(data->>'channelTitle' ORDER BY published_at DESC, youtube_id))[1] AS title, count(*) AS n FROM videos GROUP BY channel_id`,
+    );
+    return rows.map((row) => ({ channelId: row.channel_id, channelTitle: row.title, count: Number(row.n) }));
+  }
+
+  async allIds(): Promise<string[]> {
+    return (await this.db.query<{ youtube_id: string }>(`SELECT youtube_id FROM videos ORDER BY published_at DESC, youtube_id`)).map((row) => row.youtube_id);
+  }
+}
