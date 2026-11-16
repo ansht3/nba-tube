@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { catalogSchema, type Catalog } from "./schema";
+import { syncStatusSchema, type SyncStatus } from "./status";
 import { parseSourceRegistry, type SourceRegistry } from "./sources";
 
 // This module reads from disk, so it only runs at build time or in the dev
@@ -9,6 +10,7 @@ import { parseSourceRegistry, type SourceRegistry } from "./sources";
 const DATA_DIR = path.join(process.cwd(), "data");
 const SYNCED_CATALOG = path.join(DATA_DIR, "catalog.json");
 const SEED_CATALOG = path.join(DATA_DIR, "seed", "catalog.json");
+const SYNC_STATUS = path.join(DATA_DIR, "sync-status.json");
 
 function readCatalog(file: string): Catalog {
   const parsed = catalogSchema.safeParse(JSON.parse(readFileSync(file, "utf8")));
@@ -61,4 +63,15 @@ export function loadCatalog(): Catalog {
 
 export function loadSources(): SourceRegistry {
   return parseSourceRegistry(JSON.parse(readFileSync(path.join(DATA_DIR, "sources.json"), "utf8")));
+}
+
+/** What the last sync on this machine did, or null when it never ran or the file is unreadable. */
+export function loadSyncStatus(): SyncStatus | null {
+  if (!existsSync(SYNC_STATUS)) return null;
+  try {
+    const parsed = syncStatusSchema.safeParse(JSON.parse(readFileSync(SYNC_STATUS, "utf8")));
+    return parsed.success ? parsed.data : null;
+  } catch {
+    return null;
+  }
 }

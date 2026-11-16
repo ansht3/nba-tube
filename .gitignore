@@ -16,6 +16,7 @@ next-env.d.ts
 # rebuilt by `npm run sync` and never committed (see docs/DECISIONS.md)
 data/catalog.json
 data/sync-report.json
+data/sync-status.json
 
 # test output
 coverage/
