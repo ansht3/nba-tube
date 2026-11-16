@@ -32,6 +32,7 @@ function filterClauses(filter: VideoFilter, params: Params): string[] {
   if (filter.teamId) clauses.push(`team_ids @> ARRAY[${params.add(filter.teamId)}]::text[]`);
   if (filter.contentTypes) clauses.push(`content_type IN ${params.textList(filter.contentTypes)}`);
   if (filter.channelId) clauses.push(`channel_id = ${params.add(filter.channelId)}`);
+  if (filter.ids) clauses.push(`youtube_id IN ${params.textList(filter.ids)}`);
   if (filter.publishedAfterMs !== undefined) clauses.push(`published_at >= to_timestamp(${params.add(filter.publishedAfterMs)}::double precision / 1000.0)`);
   if (filter.duration) {
     clauses.push(`(data->>'durationSeconds') IS NOT NULL AND (data->>'durationSeconds')::int >= ${params.add(filter.duration.min)}`);
@@ -81,9 +82,15 @@ export class PostgresCatalogRepository implements CatalogRepository {
       const position = decodeCursor(query.cursor, sort);
       const ts = `to_timestamp(${params.add(position.publishedMs)}::double precision / 1000.0)`;
       const id = params.add(position.youtubeId);
-      clauses.push(sort === "latest" ? `(published_at < ${ts} OR (published_at = ${ts} AND youtube_id > ${id}))` : `(published_at > ${ts} OR (published_at = ${ts} AND youtube_id < ${id}))`);
+      const newestAfter = `(published_at < ${ts} OR (published_at = ${ts} AND youtube_id > ${id}))`;
+      if (sort === "latest") clauses.push(newestAfter);
+      else if (sort === "oldest") clauses.push(`(published_at > ${ts} OR (published_at = ${ts} AND youtube_id < ${id}))`);
+      else {
+        const key = params.add(position.bestKey);
+        clauses.push(`(best_key < ${key}::double precision OR (best_key = ${key}::double precision AND ${newestAfter}))`);
+      }
     }
-    const order = sort === "latest" ? "published_at DESC, youtube_id ASC" : "published_at ASC, youtube_id DESC";
+    const order = { latest: "published_at DESC, youtube_id ASC", oldest: "published_at ASC, youtube_id DESC", best: "best_key DESC, published_at DESC, youtube_id ASC" }[sort];
     // One extra row tells whether another page exists without a second query.
     const [total, rows] = await Promise.all([
       this.db.query<{ n: string }>(`SELECT count(*) AS n FROM videos ${where(countClauses)}`, countParams.values),

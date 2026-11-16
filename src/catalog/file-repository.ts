@@ -1,3 +1,4 @@
+import { bestKey } from "@/lib/rank";
 import { sectionOf } from "./content-types";
 import { searchTextFor, searchWords } from "./search";
 import {
@@ -20,6 +21,7 @@ function matches(video: Video, filter: VideoFilter, words: string[]): boolean {
   if (filter.teamId && !video.labels.teamIds.includes(filter.teamId)) return false;
   if (filter.contentTypes && !filter.contentTypes.includes(video.labels.contentType)) return false;
   if (filter.channelId && video.channelId !== filter.channelId) return false;
+  if (filter.ids && !filter.ids.includes(video.youtubeId)) return false;
   if (filter.publishedAfterMs !== undefined && Date.parse(video.publishedAt) < filter.publishedAfterMs) return false;
   if (filter.duration) {
     const seconds = video.durationSeconds;
@@ -59,8 +61,9 @@ export class FileCatalogRepository implements CatalogRepository {
     const sort = query.sort ?? "latest";
     const words = searchWords(query.q ?? "");
     const newestFirst = this.snapshot().videos.filter((video) => matches(video, query, words));
-    // "oldest" is the exact reverse of the catalog order, ties included.
-    const matching = sort === "oldest" ? [...newestFirst].reverse() : newestFirst;
+    // "oldest" is the exact reverse of the catalog order, ties included. "best" orders by the clock-independent
+    // score key, then newest, then id (newestFirst is already in that tie order and the sort is stable).
+    const matching = sort === "oldest" ? [...newestFirst].reverse() : sort === "best" ? [...newestFirst].sort((a, b) => bestKey(b) - bestKey(a)) : newestFirst;
     const position = query.cursor ? decodeCursor(query.cursor, sort) : null;
     const remaining = position ? matching.filter((video) => isAfter(video, position)) : matching;
     const videos = remaining.slice(0, query.limit);

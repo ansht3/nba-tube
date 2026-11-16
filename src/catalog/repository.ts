@@ -1,4 +1,5 @@
 import type { ContentType, SectionId } from "./content-types";
+import { bestKey } from "@/lib/rank";
 import type { Catalog, Video } from "./schema";
 
 /**
@@ -14,6 +15,8 @@ export interface VideoFilter {
   teamId?: string;
   contentTypes?: ContentType[];
   channelId?: string;
+  /** Only these videos (at most 48 are useful at once). Used to check which saved videos are still in the catalog. */
+  ids?: string[];
   /** Every word must appear in the video's search text (title, channel, type, teams), in any order. */
   q?: string;
   /** Only videos published at or after this time, in milliseconds since the epoch. */
@@ -22,8 +25,11 @@ export interface VideoFilter {
   duration?: { min: number; max: number | null };
 }
 
-/** latest: newest first. oldest: exactly the reverse, ties included. */
-export type VideoSort = "latest" | "oldest";
+/**
+ * latest: newest first. oldest: exactly the reverse, ties included.
+ * best: the published "Best first" order (see src/lib/rank.ts), ties newest first then by id.
+ */
+export type VideoSort = "latest" | "oldest" | "best";
 
 export interface VideoQuery extends VideoFilter {
   limit: number;
@@ -77,6 +83,8 @@ export class InvalidCursorError extends Error {
 
 export interface CursorPosition {
   sort: VideoSort;
+  /** Only for sort "best": the clock-independent score key at this position. */
+  bestKey?: number;
   /** publishedAt as milliseconds since the epoch, so offsets like +00:00 and Z compare equal. */
   publishedMs: number;
   youtubeId: string;
@@ -90,17 +98,25 @@ export function compareVideos(a: Pick<Video, "publishedAt" | "youtubeId">, b: Pi
 const base64url = (text: string) => btoa(text).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const fromBase64url = (text: string) => atob(text.replace(/-/g, "+").replace(/_/g, "/"));
 
-export function encodeCursor(video: Pick<Video, "publishedAt" | "youtubeId">, sort: VideoSort = "latest"): string {
-  return base64url(`${sort === "latest" ? "l" : "o"}.${Date.parse(video.publishedAt)}.${video.youtubeId}`);
+const SORT_TAG = { latest: "l", oldest: "o", best: "b" } as const;
+
+/** Fields are separated by "~", which cannot appear in a number or in a YouTube id (letters, digits, - and _). */
+export function encodeCursor(video: Video, sort: VideoSort = "latest"): string {
+  const position = `${Date.parse(video.publishedAt)}~${video.youtubeId}`;
+  // The key is written in JavaScript's shortest round-trip form, so Postgres reads back the identical double.
+  return base64url(sort === "best" ? `b~${bestKey(video)}~${position}` : `${SORT_TAG[sort]}~${position}`);
 }
 
 /** Throws InvalidCursorError for anything this API did not issue, or for a cursor from a different sort. */
 export function decodeCursor(cursor: string, sort: VideoSort = "latest"): CursorPosition {
   try {
-    const [tag, ms, youtubeId, ...rest] = fromBase64url(cursor).split(".");
+    const [tag, ...fields] = fromBase64url(cursor).split("~");
+    if (tag !== SORT_TAG[sort] || fields.length !== (sort === "best" ? 3 : 2)) throw new InvalidCursorError();
+    const bestKeyValue = sort === "best" ? Number(fields.shift()) : undefined;
+    const [ms, youtubeId] = fields;
     const publishedMs = Number(ms);
-    if (rest.length > 0 || tag !== (sort === "latest" ? "l" : "o") || !Number.isSafeInteger(publishedMs) || !/^[A-Za-z0-9_-]{11}$/.test(youtubeId ?? "")) throw new InvalidCursorError();
-    return { sort, publishedMs, youtubeId: youtubeId! };
+    if ((bestKeyValue !== undefined && !Number.isFinite(bestKeyValue)) || !Number.isSafeInteger(publishedMs) || !/^[A-Za-z0-9_-]{11}$/.test(youtubeId ?? "")) throw new InvalidCursorError();
+    return { sort, publishedMs, youtubeId: youtubeId!, ...(bestKeyValue !== undefined ? { bestKey: bestKeyValue } : {}) };
   } catch {
     throw new InvalidCursorError();
   }
@@ -109,6 +125,10 @@ export function decodeCursor(cursor: string, sort: VideoSort = "latest"): Cursor
 /** True when the video comes after the cursor position in the cursor's own order. */
 export function isAfter(video: Pick<Video, "publishedAt" | "youtubeId">, position: CursorPosition): boolean {
   const ms = Date.parse(video.publishedAt);
+  if (position.sort === "best") {
+    const key = bestKey(video as Video);
+    return key < position.bestKey! || (key === position.bestKey && (ms < position.publishedMs || (ms === position.publishedMs && video.youtubeId > position.youtubeId)));
+  }
   if (position.sort === "oldest") return ms > position.publishedMs || (ms === position.publishedMs && video.youtubeId < position.youtubeId);
   return ms < position.publishedMs || (ms === position.publishedMs && video.youtubeId > position.youtubeId);
 }

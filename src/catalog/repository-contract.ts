@@ -4,6 +4,7 @@ import type { ContentType } from "./content-types";
 import { InvalidCursorError, compareVideos, decodeCursor, encodeCursor, type CatalogRepository } from "./repository";
 import type { Video } from "./schema";
 import { relatedVideos } from "./select";
+import { sortBestFirst } from "@/lib/rank";
 
 /**
  * What every CatalogRepository must do, whatever it is backed by. The same
@@ -173,7 +174,7 @@ export function describeRepositoryContract(name: string, create: (videos: Video[
 
     it("rejects cursors this API did not issue, and cursors from a different sort", async () => {
       const { repo } = await create(many);
-      for (const bad of ["not base64 !!", btoa("abc"), btoa("123.short"), btoa("l.x.AAAAAAAAAAA"), btoa("l.1.2.AAAAAAAAAAA"), btoa("z.1.AAAAAAAAAAA")]) {
+      for (const bad of ["not base64 !!", btoa("abc"), btoa("123~short"), btoa("l~x~AAAAAAAAAAA"), btoa("l~1~2~AAAAAAAAAAA"), btoa("z~1~AAAAAAAAAAA"), btoa("b~notanumber~1~AAAAAAAAAAA")]) {
         await expect(repo.list({ limit: 4, cursor: bad }), bad).rejects.toBeInstanceOf(InvalidCursorError);
       }
       const latestCursor = (await repo.list({ limit: 4 })).nextCursor!;
@@ -229,6 +230,64 @@ export function describeRepositoryContract(name: string, create: (videos: Video[
       expect(channels).toHaveLength(2);
       expect(channels.find((c) => c.channelTitle === "Celtics")?.count).toBe(1);
       expect(await repo.allIds()).toEqual(ids(SAMPLE));
+    });
+  });
+
+  describe(`${name}: best first and id lookup`, () => {
+    const D = 86_400_000;
+    const base = Date.parse("2026-11-16T12:00:00Z");
+    const ago = (days: number) => new Date(base - days * D).toISOString();
+    // Different kinds and ages, so the order differs from newest-first: a 2-day-old recap outranks a fresh media availability.
+    const mixed = [
+      video("recap2d", ago(2), { type: "GAME_HIGHLIGHTS" }),
+      video("media0d", ago(0.1), { type: "MEDIA_AVAILABILITY" }),
+      video("post1d", ago(1), { type: "POSTGAME_INTERVIEW" }),
+      video("player5d", ago(5), { type: "PLAYER_HIGHLIGHTS" }),
+      video("top3d", ago(3), { type: "TOP_PLAYS" }),
+      video("pre1d", ago(1.5), { type: "PREGAME_INTERVIEW" }),
+      video("recap9d", ago(9), { type: "GAME_HIGHLIGHTS" }),
+    ];
+
+    it("orders exactly as the published Best first formula, at any time of day", async () => {
+      const { repo } = await create(mixed);
+      const order = ids((await repo.list({ limit: 20, sort: "best" })).videos);
+      for (const now of [base, base + 3 * D, base + 40 * D]) expect(order).toEqual(ids(sortBestFirst(mixed, now)));
+      expect(order).not.toEqual(ids((await repo.list({ limit: 20 })).videos));
+    });
+
+    it("pages best first with a stable cursor, visiting every video once", async () => {
+      const { repo } = await create(mixed);
+      const seen: string[] = [];
+      let cursor: string | null = null;
+      do {
+        const page = await repo.list({ limit: 3, sort: "best", cursor });
+        expect(page.total).toBe(mixed.length);
+        seen.push(...ids(page.videos));
+        cursor = page.nextCursor;
+      } while (cursor);
+      expect(seen).toEqual(ids(sortBestFirst(mixed, base)));
+    });
+
+    it("does not accept a latest cursor for best first, or the other way round", async () => {
+      const { repo } = await create(mixed);
+      const latest = (await repo.list({ limit: 2 })).nextCursor!;
+      const best = (await repo.list({ limit: 2, sort: "best" })).nextCursor!;
+      await expect(repo.list({ limit: 2, sort: "best", cursor: latest })).rejects.toBeInstanceOf(InvalidCursorError);
+      await expect(repo.list({ limit: 2, cursor: best })).rejects.toBeInstanceOf(InvalidCursorError);
+    });
+
+    it("filters best first like any other order", async () => {
+      const { repo } = await create(mixed);
+      const page = await repo.list({ limit: 10, sort: "best", contentTypes: ["GAME_HIGHLIGHTS", "TOP_PLAYS"] });
+      expect(ids(page.videos)).toEqual(ids(sortBestFirst(mixed.filter((v) => ["GAME_HIGHLIGHTS", "TOP_PLAYS"].includes(v.labels.contentType)), base)));
+    });
+
+    it("returns only the requested ids, in catalog order, and ignores ones that do not exist", async () => {
+      const { repo } = await create(mixed);
+      const page = await repo.list({ limit: 10, ids: [testId("player5d"), testId("recap2d"), "doesnotexist"] });
+      expect(ids(page.videos)).toEqual([testId("recap2d"), testId("player5d")]);
+      expect(page.total).toBe(2);
+      expect(await repo.count({ ids: [testId("top3d")] })).toBe(1);
     });
   });
 }
