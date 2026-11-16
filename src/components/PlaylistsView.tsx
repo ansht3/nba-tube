@@ -17,7 +17,7 @@ import {
   type Playlist,
 } from "@/lib/storage/playlists";
 import { useStore } from "@/lib/storage/use-store";
-import { useCatalog } from "@/lib/use-catalog";
+import { useKnownVideoIds } from "@/lib/use-known-videos";
 import { playAllUrl } from "@/lib/youtube";
 import { EmptyState } from "./EmptyState";
 import { ExternalIcon, PencilIcon, PlusIcon, TrashIcon } from "./icons";
@@ -140,8 +140,7 @@ function PlaylistIndex({ playlists }: { playlists: Playlist[] }) {
 
 function PlaylistDetail({ playlist, playlists }: { playlist: Playlist; playlists: Playlist[] }) {
   const [renaming, setRenaming] = useState(false);
-  const catalog = useCatalog(playlist.items.length > 0);
-  const known = catalog.status === "ready" ? new Set(catalog.videos.map((video) => video.youtubeId)) : null;
+  const known = useKnownVideoIds(playlist.items.map((item) => item.id));
 
   return (
     <>

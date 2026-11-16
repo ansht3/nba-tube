@@ -5,7 +5,7 @@ import { formatShortDate, pluralize } from "@/lib/format";
 import { removeSaved, type SavedVideo } from "@/lib/storage/library";
 import type { Store } from "@/lib/storage/store";
 import { useStore } from "@/lib/storage/use-store";
-import { useCatalog } from "@/lib/use-catalog";
+import { useKnownVideoIds } from "@/lib/use-known-videos";
 import { EmptyState } from "./EmptyState";
 import { SavedRow } from "./SavedRow";
 import { StorageNotice } from "./StorageNotice";
@@ -24,7 +24,7 @@ interface Props {
 /** The body of the Watch later, Liked and History pages. */
 export function SavedList({ store, dateVerb, removeLabel, emptyTitle, emptyHint, clearAllLabel }: Props) {
   const list = useStore(store);
-  const catalog = useCatalog(list.length > 0);
+  const known = useKnownVideoIds(list.map((saved) => saved.id));
   const [confirmingClear, setConfirmingClear] = useState(false);
   // Removing a row removes the focused button with it. Focus moves to the list
   // summary instead of falling back to the top of the page.
@@ -42,8 +42,7 @@ export function SavedList({ store, dateVerb, removeLabel, emptyTitle, emptyHint,
     );
   }
 
-  // Until the catalog has loaded, assume every entry still has a page.
-  const known = catalog.status === "ready" ? new Set(catalog.videos.map((video) => video.youtubeId)) : null;
+  // Until the lookup has answered, assume every entry still has a page.
 
   return (
     <>
