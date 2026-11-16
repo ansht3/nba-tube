@@ -10,25 +10,23 @@ import {
   NO_FILTERS,
   SORT_OPTIONS,
   UPLOAD_WINDOWS,
-  buildSearchIndex,
-  filterVideos,
   filtersToQuery,
-  hasActiveFilters,
   parseFilters,
   type BrowseFilters,
 } from "@/lib/browse";
+import { feedKey, feedParams, type FeedPage } from "@/lib/feed";
 import { pluralize } from "@/lib/format";
 import { BEST_FIRST_EXPLANATION } from "@/lib/rank";
 import { SITE_NAME } from "@/lib/site";
-import { useCatalog } from "@/lib/use-catalog";
+import { useVideoFeed } from "@/lib/use-video-feed";
 import { EmptyState } from "./EmptyState";
+import { FeedFooter } from "./FeedFooter";
 import { FilterPanel } from "./FilterPanel";
 import { PageHeader } from "./PageHeader";
 import { CloseIcon, SettingsIcon } from "./icons";
 import { SearchResult } from "./SearchResult";
 import { VideoGrid } from "./VideoCard";
 
-const PAGE_SIZE = 48;
 const TITLE = "Browse all videos";
 
 function DefaultHeader() {
@@ -39,25 +37,68 @@ function DefaultHeader() {
   );
 }
 
+const PATH = "/browse";
+
 interface Props {
-  /** The newest videos, rendered on the server and shown until the full catalog has loaded. */
+  /** The newest videos, rendered on the server and shown while the viewer's own list loads. */
   initial: Video[];
   total: number;
+  /** Where the next page of the default list starts. */
+  initialCursor: string | null;
   /** Channels that currently have videos, for the source filter. */
   sources: { channelId: string; name: string }[];
+  /** Whether any video has a known duration, so the duration filter is only offered when it can match something. */
+  hasDurations: boolean;
 }
 
-function BrowseContent({ initial, total, sources }: Props) {
+/** The results: the count, the list, and the loading behind it. Keyed by its filters, so each list has its own state. */
+function BrowseResults({ filters, params, seed }: { filters: BrowseFilters; params: URLSearchParams; seed: { key: string; page: FeedPage } }) {
+  const feed = useVideoFeed({ path: PATH, params, initial: seed });
+  const first = feed.status === "loading" && feed.total === null;
+
+  return (
+    <>
+      <p className="mb-5 mt-4 text-sm text-muted" role="status" aria-live="polite">
+        {feed.total === null ? (first || feed.status === "idle" ? "Loading videos…" : "") : pluralize(feed.total, "video")}
+        {filters.sort === "best" && feed.total !== null && <span className="max-sm:block"> · {BEST_FIRST_EXPLANATION}</span>}
+      </p>
+
+      {feed.videos.length > 0 &&
+        (filters.query ? (
+          // Search results read like YouTube's: a list with large thumbnails.
+          <ul className="flex max-w-5xl flex-col gap-6 sm:gap-4">
+            {feed.videos.map((video) => (
+              <SearchResult key={video.youtubeId} video={video} />
+            ))}
+          </ul>
+        ) : (
+          <VideoGrid videos={feed.videos} />
+        ))}
+
+      {feed.done && feed.videos.length === 0 && (
+        <EmptyState title="No videos match">
+          <p>
+            {filters.query
+              ? "Search looks at titles, channels, teams and content types. Try fewer words or remove a filter."
+              : "No video in the catalog fits this combination of filters."}
+          </p>
+        </EmptyState>
+      )}
+
+      <FeedFooter feed={feed} retry={feed.retry} sentinel={feed.sentinel} />
+    </>
+  );
+}
+
+function BrowseContent({ initial, total, initialCursor, sources, hasDurations }: Props) {
   const router = useRouter();
   const params = useSearchParams();
   const query = params.toString();
   const filters = useMemo(() => parseFilters(new URLSearchParams(query)), [query]);
 
-  const catalog = useCatalog();
-  // The search text for every video is built once per catalog, not once per keystroke or render.
-  const index = useMemo(() => (catalog.videos ? buildSearchIndex(catalog.videos) : null), [catalog.videos]);
-  const results = useMemo(() => (index ? filterVideos(index, filters) : null), [index, filters]);
-  const hasDurations = useMemo(() => catalog.videos?.some((video) => video.durationSeconds !== null) ?? false, [catalog.videos]);
+  const apiParams = useMemo(() => feedParams(filters), [filters]);
+  const listKey = feedKey(PATH, apiParams);
+  const seed = useMemo(() => ({ key: feedKey(PATH, new URLSearchParams()), page: { videos: initial, total, nextCursor: initialCursor } }), [initial, total, initialCursor]);
 
   // While searching, the heading and the tab title name the search, as on YouTube.
   // Next.js writes the page's own title after a client-side navigation, so the
@@ -80,9 +121,6 @@ function BrowseContent({ initial, total, sources }: Props) {
   }, [filters.query]);
 
   const [panelOpen, setPanelOpen] = useState(false);
-  // How many results are shown. Tied to the query, so a new filter starts from the first page again.
-  const [paging, setPaging] = useState({ query, count: PAGE_SIZE });
-  const visibleCount = paging.query === query ? paging.count : PAGE_SIZE;
 
   function navigate(next: BrowseFilters) {
     const search = filtersToQuery(next);
@@ -104,11 +142,6 @@ function BrowseContent({ initial, total, sources }: Props) {
   if (filters.source) chips.push({ key: "source", label: sources.find((source) => source.channelId === filters.source)?.name ?? "Source" });
   if (filters.duration) chips.push({ key: "duration", label: DURATION_BUCKETS.find((bucket) => bucket.id === filters.duration)!.label });
 
-  const active = hasActiveFilters(filters);
-  // Before the catalog arrives there is still something true to show when no filter is set.
-  const showingInitial = results === null && !active && filters.sort === "latest";
-  const videos = results ?? (showingInitial ? initial : null);
-  const count = results ? results.length : showingInitial ? total : null;
   const filterCount = chips.filter((chip) => chip.key !== "query").length + (filters.sort !== "latest" ? 1 : 0);
 
   return (
@@ -163,57 +196,15 @@ function BrowseContent({ initial, total, sources }: Props) {
         <FilterPanel filters={filters} sources={sources} hasDurations={hasDurations} onChange={setFilter} />
       </div>
 
-      <p className="mb-5 mt-4 text-sm text-muted" role="status" aria-live="polite">
-        {count === null ? "Loading the catalog…" : pluralize(count, "video")}
-        {filters.sort === "best" && count !== null && <span className="max-sm:block"> · {BEST_FIRST_EXPLANATION}</span>}
-      </p>
-
-      {catalog.status === "error" && (
-        <div role="alert" className="mb-5 rounded-lg border border-line bg-surface px-4 py-3 text-sm">
-          The catalog could not be loaded, so search and filters are unavailable.{" "}
-          <button type="button" onClick={catalog.retry} className="link cursor-pointer">
-            Try again
-          </button>
-        </div>
-      )}
-
-      {videos && videos.length > 0 &&
-        (filters.query ? (
-          // Search results read like YouTube's: a list with large thumbnails.
-          <ul className="flex max-w-5xl flex-col gap-6 sm:gap-4">
-            {videos.slice(0, visibleCount).map((video) => (
-              <SearchResult key={video.youtubeId} video={video} />
-            ))}
-          </ul>
-        ) : (
-          <VideoGrid videos={videos.slice(0, visibleCount)} />
-        ))}
-
-      {results && results.length === 0 && (
-        <EmptyState title="No videos match">
-          <p>
-            {filters.query
-              ? "Search looks at titles, channels, teams and content types. Try fewer words or remove a filter."
-              : "No video in the catalog fits this combination of filters."}
-          </p>
-        </EmptyState>
-      )}
-
-      {videos && visibleCount < videos.length && (
-        <div className="mt-8 flex justify-center">
-          <button type="button" className="pill" onClick={() => setPaging({ query, count: visibleCount + PAGE_SIZE })}>
-            Show more ({(videos.length - visibleCount).toLocaleString("en-US")} left)
-          </button>
-        </div>
-      )}
+      <BrowseResults key={listKey} filters={filters} params={apiParams} seed={seed} />
     </>
   );
 }
 
-/** Search and filters over the whole catalog. The filters live in the URL, so any view can be shared or bookmarked. */
+/** Search and filters over the whole catalog, loaded a page at a time. The filters live in the URL, so any view can be shared or bookmarked. */
 export function BrowseView(props: Props) {
   return (
-    // Reading the URL in a statically exported page needs a Suspense boundary.
+    // Reading the URL in a prerendered page needs a Suspense boundary.
     // Its fallback is the same grid the page starts with, so nothing jumps.
     <Suspense
       fallback={

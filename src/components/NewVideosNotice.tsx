@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useMemo } from "react";
-import { resetCatalogCache } from "@/lib/use-catalog";
 import { useCatalogUpdates, type CatalogMarker } from "@/lib/use-catalog-updates";
 
 /**
@@ -23,7 +22,6 @@ export function NewVideosNotice({ version, newestId }: { version: string | null;
   if (count === 0 && !reset) return null;
   const label = reset ? "The catalog has been updated" : `${hasMore ? `${count}+` : count} new video${count === 1 && !hasMore ? "" : "s"}`;
   const show = () => {
-    resetCatalogCache();
     router.refresh();
     acknowledge();
   };

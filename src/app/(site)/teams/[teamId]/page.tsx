@@ -30,7 +30,7 @@ export default async function TeamPage({ params }: PageProps<"/teams/[teamId]">)
   if (!team) notFound();
 
   const repository = getCatalogRepository();
-  const { videos, total } = await repository.list({ teamId: team.id, limit: LIST_PAGE_SIZE });
+  const { videos, total, nextCursor } = await repository.list({ teamId: team.id, limit: LIST_PAGE_SIZE });
   const sectionCounts = await Promise.all(SECTIONS.map(async (section) => ({ section, count: await repository.count({ teamId: team.id, section: section.id }) })));
   const channel = loadSources().sources.find((source) => source.teamId === team.id && source.status === "approved");
 
@@ -80,7 +80,7 @@ export default async function TeamPage({ params }: PageProps<"/teams/[teamId]">)
           </p>
         </EmptyState>
       ) : (
-        <VideoList initial={videos} total={total} scope={{ teamId: team.id }} />
+        <VideoList initial={videos} total={total} nextCursor={nextCursor} scope={{ teamId: team.id }} />
       )}
     </>
   );

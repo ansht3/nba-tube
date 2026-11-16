@@ -1,4 +1,5 @@
 import { compareVideos } from "@/catalog/repository";
+import { bestKey } from "@/lib/rank";
 import { expect, test } from "@playwright/test";
 import { builtCatalog } from "./fixtures";
 
@@ -58,10 +59,17 @@ test("filters by team, section and search, and counts what matches", async ({ re
 });
 
 test("sorts best first and looks up a list of ids", async ({ request }) => {
-  const best = (await (await request.get("/api/videos?sort=best&limit=48")).json()) as Page;
-  const latest = (await (await request.get("/api/videos?limit=48")).json()) as Page;
-  expect(best.total).toBe(latest.total);
-  expect(new Set(best.videos.map((v) => v.youtubeId))).toEqual(new Set(latest.videos.map((v) => v.youtubeId)));
+  // Walk the whole catalog in best-first order: every video exactly once, and the stable score key never increases.
+  const seen: Page["videos"] = [];
+  let cursor: string | null = null;
+  do {
+    const page = (await (await request.get(`/api/videos?sort=best&limit=48${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ""}`)).json()) as Page;
+    seen.push(...page.videos);
+    cursor = page.nextCursor;
+  } while (cursor);
+  expect(seen.map((v) => v.youtubeId).sort()).toEqual(builtCatalog().map((v) => v.youtubeId).sort());
+  const keys = seen.map((v) => bestKey(v as never));
+  for (let i = 1; i < keys.length; i++) expect(keys[i]!, `position ${i}`).toBeLessThanOrEqual(keys[i - 1]!);
 
   const wanted = newestFirst().slice(0, 3).map((v) => v.youtubeId);
   const found = (await (await request.get(`/api/videos?ids=${wanted.join(",")},aaaaaaaaaaa`)).json()) as Page;
