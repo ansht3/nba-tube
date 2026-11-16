@@ -7,9 +7,11 @@ import { AddToPlaylist } from "@/components/AddToPlaylist";
 import { HistoryRecorder } from "@/components/HistoryRecorder";
 import { ExternalIcon } from "@/components/icons";
 import { LikeButton } from "@/components/LikeButton";
+import { PlaylistPanel } from "@/components/PlaylistPanel";
 import { Player } from "@/components/Player";
 import { contentLabel } from "@/components/VideoLabels";
 import { VideoRow } from "@/components/VideoRow";
+import { WatchControls } from "@/components/WatchControls";
 import { WatchLaterButton } from "@/components/WatchLaterButton";
 import { formatDuration, formatLongDate } from "@/lib/format";
 import { teamPath } from "@/lib/paths";
@@ -45,6 +47,8 @@ export default async function WatchPage({ params }: PageProps<"/watch/[id]">) {
   if (!video) notFound();
 
   const related = await repository.related(video, RELATED_COUNT);
+  // What the Previous/Next buttons and the playlist panel work from. Small, because it is sent to the browser.
+  const queueEntries = related.map((other) => ({ id: other.youtubeId, title: other.title, channelTitle: other.channelTitle }));
   const teams = video.labels.teamIds.map(getTeam).filter((team) => team !== undefined);
   const duration = formatDuration(video.durationSeconds);
   const manual = video.provenance.verificationStatus === "manual-review";
@@ -58,6 +62,7 @@ export default async function WatchPage({ params }: PageProps<"/watch/[id]">) {
         <div className="max-sm:-mx-4 max-sm:[&>div]:rounded-none">
           <Player key={video.youtubeId} youtubeId={video.youtubeId} title={video.title} />
         </div>
+        <WatchControls currentId={video.youtubeId} related={queueEntries} />
 
         <h1 className="mt-3 text-xl font-bold leading-snug tracking-tight">{video.title}</h1>
 
@@ -115,10 +120,11 @@ export default async function WatchPage({ params }: PageProps<"/watch/[id]">) {
       </article>
 
       <aside aria-labelledby="related-heading" className="min-w-0">
+        <PlaylistPanel currentId={video.youtubeId} related={queueEntries} />
         <h2 id="related-heading" className="text-base font-bold tracking-tight">
-          Related
+          Up next
         </h2>
-        <p className="mt-0.5 text-xs text-muted">Same team, same kind of video or same channel. No personalisation.</p>
+        <p className="mt-0.5 text-xs text-muted">Related by team, kind of video and channel, newest first. No personalisation. Nothing plays by itself.</p>
         {related.length === 0 ? (
           <p className="mt-4 text-sm text-muted">Nothing related in the catalog right now.</p>
         ) : (

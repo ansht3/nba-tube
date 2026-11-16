@@ -9,6 +9,7 @@ const SHORTCUTS: [key: string, action: string][] = [
   ["Enter", "Open the selected video"],
   ["l", "Like the video you are watching"],
   ["w", "Watch later (the selected video, or the one you are watching)"],
+  ["n / p", "Next or previous video (on a watch page)"],
   ["h", "Home"],
   ["?", "Show these shortcuts"],
 ];
@@ -42,6 +43,12 @@ export function KeyboardShortcuts() {
         case "k":
           moveFocus(-1);
           break;
+        case "n":
+          document.querySelector<HTMLElement>('[data-shortcut="next"]')?.click();
+          break;
+        case "p":
+          document.querySelector<HTMLElement>('[data-shortcut="previous"]')?.click();
+          break;
         case "h":
           router.push("/");
           break;
@@ -50,7 +57,7 @@ export function KeyboardShortcuts() {
           break;
         case "w": {
           // A selected card's own button first, so "w" never saves a video other than the one in view.
-          const card = focused?.parentElement?.querySelector<HTMLElement>(".thumb-action");
+          const card = focused?.parentElement?.querySelector<HTMLElement>('[data-action="later"]');
           (card ?? (focused ? null : document.querySelector<HTMLElement>('[data-shortcut="later"]')))?.click();
           break;
         }
