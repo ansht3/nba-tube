@@ -14,11 +14,21 @@ export interface VideoFilter {
   teamId?: string;
   contentTypes?: ContentType[];
   channelId?: string;
+  /** Every word must appear in the video's search text (title, channel, type, teams), in any order. */
+  q?: string;
+  /** Only videos published at or after this time, in milliseconds since the epoch. */
+  publishedAfterMs?: number;
+  /** Seconds, min inclusive and max exclusive (null = no upper limit). A video with no known duration never matches. */
+  duration?: { min: number; max: number | null };
 }
+
+/** latest: newest first. oldest: exactly the reverse, ties included. */
+export type VideoSort = "latest" | "oldest";
 
 export interface VideoQuery extends VideoFilter {
   limit: number;
-  /** An opaque cursor from a previous page's nextCursor. */
+  sort?: VideoSort;
+  /** An opaque cursor from a previous page's nextCursor. It only works with the sort that issued it. */
   cursor?: string | null;
 }
 
@@ -64,6 +74,7 @@ export class InvalidCursorError extends Error {
 }
 
 export interface CursorPosition {
+  sort: VideoSort;
   /** publishedAt as milliseconds since the epoch, so offsets like +00:00 and Z compare equal. */
   publishedMs: number;
   youtubeId: string;
@@ -77,23 +88,25 @@ export function compareVideos(a: Pick<Video, "publishedAt" | "youtubeId">, b: Pi
 const base64url = (text: string) => btoa(text).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const fromBase64url = (text: string) => atob(text.replace(/-/g, "+").replace(/_/g, "/"));
 
-export function encodeCursor(video: Pick<Video, "publishedAt" | "youtubeId">): string {
-  return base64url(`${Date.parse(video.publishedAt)}.${video.youtubeId}`);
+export function encodeCursor(video: Pick<Video, "publishedAt" | "youtubeId">, sort: VideoSort = "latest"): string {
+  return base64url(`${sort === "latest" ? "l" : "o"}.${Date.parse(video.publishedAt)}.${video.youtubeId}`);
 }
 
-export function decodeCursor(cursor: string): CursorPosition {
+/** Throws InvalidCursorError for anything this API did not issue, or for a cursor from a different sort. */
+export function decodeCursor(cursor: string, sort: VideoSort = "latest"): CursorPosition {
   try {
-    const [ms, youtubeId, ...rest] = fromBase64url(cursor).split(".");
+    const [tag, ms, youtubeId, ...rest] = fromBase64url(cursor).split(".");
     const publishedMs = Number(ms);
-    if (rest.length > 0 || !Number.isSafeInteger(publishedMs) || !/^[A-Za-z0-9_-]{11}$/.test(youtubeId ?? "")) throw new InvalidCursorError();
-    return { publishedMs, youtubeId: youtubeId! };
+    if (rest.length > 0 || tag !== (sort === "latest" ? "l" : "o") || !Number.isSafeInteger(publishedMs) || !/^[A-Za-z0-9_-]{11}$/.test(youtubeId ?? "")) throw new InvalidCursorError();
+    return { sort, publishedMs, youtubeId: youtubeId! };
   } catch {
     throw new InvalidCursorError();
   }
 }
 
-/** True when the video comes after the cursor in catalog order. */
+/** True when the video comes after the cursor position in the cursor's own order. */
 export function isAfter(video: Pick<Video, "publishedAt" | "youtubeId">, position: CursorPosition): boolean {
   const ms = Date.parse(video.publishedAt);
+  if (position.sort === "oldest") return ms > position.publishedMs || (ms === position.publishedMs && video.youtubeId < position.youtubeId);
   return ms < position.publishedMs || (ms === position.publishedMs && video.youtubeId > position.youtubeId);
 }

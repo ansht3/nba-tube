@@ -1,4 +1,5 @@
 import { sectionOf } from "./content-types";
+import { searchTextFor, searchWords } from "./search";
 import {
   compareVideos,
   decodeCursor,
@@ -14,11 +15,20 @@ import {
 import type { Catalog, Video } from "./schema";
 import { countByTeam, relatedVideos } from "./select";
 
-function matches(video: Video, filter: VideoFilter): boolean {
+function matches(video: Video, filter: VideoFilter, words: string[]): boolean {
   if (filter.section && sectionOf(video.labels) !== filter.section) return false;
   if (filter.teamId && !video.labels.teamIds.includes(filter.teamId)) return false;
   if (filter.contentTypes && !filter.contentTypes.includes(video.labels.contentType)) return false;
   if (filter.channelId && video.channelId !== filter.channelId) return false;
+  if (filter.publishedAfterMs !== undefined && Date.parse(video.publishedAt) < filter.publishedAfterMs) return false;
+  if (filter.duration) {
+    const seconds = video.durationSeconds;
+    if (seconds === null || seconds < filter.duration.min || (filter.duration.max !== null && seconds >= filter.duration.max)) return false;
+  }
+  if (words.length > 0) {
+    const text = searchTextFor(video);
+    if (!words.every((word) => text.includes(word))) return false;
+  }
   return true;
 }
 
@@ -46,16 +56,21 @@ export class FileCatalogRepository implements CatalogRepository {
   }
 
   async list(query: VideoQuery): Promise<VideoPage> {
-    const matching = this.snapshot().videos.filter((video) => matches(video, query));
-    const position = query.cursor ? decodeCursor(query.cursor) : null;
+    const sort = query.sort ?? "latest";
+    const words = searchWords(query.q ?? "");
+    const newestFirst = this.snapshot().videos.filter((video) => matches(video, query, words));
+    // "oldest" is the exact reverse of the catalog order, ties included.
+    const matching = sort === "oldest" ? [...newestFirst].reverse() : newestFirst;
+    const position = query.cursor ? decodeCursor(query.cursor, sort) : null;
     const remaining = position ? matching.filter((video) => isAfter(video, position)) : matching;
     const videos = remaining.slice(0, query.limit);
     const last = videos.at(-1);
-    return { videos, total: matching.length, nextCursor: last && remaining.length > videos.length ? encodeCursor(last) : null };
+    return { videos, total: matching.length, nextCursor: last && remaining.length > videos.length ? encodeCursor(last, sort) : null };
   }
 
   async count(filter: VideoFilter): Promise<number> {
-    return this.snapshot().videos.filter((video) => matches(video, filter)).length;
+    const words = searchWords(filter.q ?? "");
+    return this.snapshot().videos.filter((video) => matches(video, filter, words)).length;
   }
 
   async get(youtubeId: string): Promise<Video | null> {
