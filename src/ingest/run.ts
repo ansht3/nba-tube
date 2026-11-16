@@ -1,0 +1,323 @@
+import { videoSchema, type Video } from "@/catalog/schema";
+import type { Source } from "@/catalog/sources";
+import { canonical, publishVideos, pruneExpired } from "@/db/catalog-store";
+import type { Db } from "@/db/db";
+import { acquireLease, releaseLease, renewLease } from "@/db/lease";
+import type { CandidateVideo } from "./candidate";
+import { decide } from "./decide";
+import { mapWithConcurrency, type FetchLike, type RetryOptions } from "./http";
+import type { Overrides } from "./overrides";
+import type { YouTubeApi } from "./youtube/api";
+import { fetchChannelFeed } from "./youtube/feed";
+import { checkEmbed } from "./youtube/oembed";
+
+/**
+ * One incremental ingestion run: discover new uploads from the official
+ * channels, classify them with the same deterministic rules as the sync, and
+ * write them to the database. It is safe to run on a schedule, to run twice at
+ * once (a lease allows one), and to fail halfway (nothing is removed because a
+ * request failed, and the catalog version only advances after the write).
+ */
+export interface IngestionOptions {
+  /** How long one run may hold the lease. Keep it shorter than the schedule interval. */
+  leaseSeconds: number;
+  feedConcurrency: number;
+  embedConcurrency: number;
+  /** Channels polled per run, least recently attempted first. Lower it to stay inside a Worker's subrequest limit. */
+  maxChannelsPerRun: number;
+  /** Stored videos re-verified per run, oldest check first. */
+  recheckPerRun: number;
+  recheckAfterHours: number;
+  retentionDays: number;
+  maxMetadataAgeDays: number;
+  /** The most YouTube Data API quota units one run may spend. */
+  apiUnitBudget: number;
+  retry: RetryOptions;
+}
+
+export const DEFAULT_INGESTION_OPTIONS: IngestionOptions = {
+  leaseSeconds: 240,
+  feedConcurrency: 4,
+  embedConcurrency: 6,
+  maxChannelsPerRun: 1000,
+  recheckPerRun: 10,
+  recheckAfterHours: 24,
+  retentionDays: 45,
+  maxMetadataAgeDays: 30,
+  apiUnitBudget: 200,
+  retry: { retries: 2, baseDelayMs: 500, timeoutMs: 12_000 },
+};
+
+export interface IngestionDeps {
+  db: Db;
+  /** Approved channels only. */
+  sources: Source[];
+  overrides: Overrides;
+  fetch: FetchLike;
+  /** Optional. Adds durations, a second opinion on embedding, and recovery of uploads the feed missed. */
+  api?: YouTubeApi;
+  /** Unique per invocation; identifies the lease holder. */
+  owner: string;
+  now?: () => Date;
+  options?: Partial<IngestionOptions>;
+}
+
+export interface IngestionSummary {
+  status: "succeeded" | "partial" | "failed" | "skipped";
+  runId: number | null;
+  /** Distinct videos seen on the polled channels within the retention window. */
+  discovered: number;
+  /** Accepted by the classification rules (including ones already stored). */
+  accepted: number;
+  rejected: number;
+  /** Rows inserted or changed in the database. */
+  updated: number;
+  /** Channels that could not be read, plus checks that were inconclusive. These are retried next run. */
+  failed: number;
+  /** Videos confirmed gone and removed, plus those aged out by the retention rules. */
+  removed: number;
+  version: number | null;
+  published: boolean;
+  failedChannels: { channelId: string; name: string; message: string }[];
+  message?: string;
+}
+
+const LEASE_NAME = "ingestion";
+const HOUR_MS = 3_600_000;
+
+const describe = (error: unknown) => (error instanceof Error ? error.message : String(error));
+
+class LeaseLostError extends Error {
+  constructor() {
+    super("The ingestion lease expired before the results could be written, so nothing was written.");
+    this.name = "LeaseLostError";
+  }
+}
+
+interface ChannelOutcome {
+  source: Source;
+  candidates: CandidateVideo[];
+  error: string | null;
+}
+
+interface CheckpointRow {
+  channel_id: string;
+  last_attempt_at: string | null;
+  newest_seen_at: string | null;
+}
+
+/**
+ * What a feed-based rediscovery means for a stored video. A feed entry knows
+ * nothing about duration or embedding, and it would stamp a fresh check time on
+ * a record nobody actually re-verified. So facts the feed cannot know, and the
+ * provenance, stay as stored; only what the feed does say (title, labels, ...) can change.
+ */
+function mergeRediscovered(before: Video, next: Video): Video {
+  return { ...next, embeddable: next.embeddable ?? before.embeddable, durationSeconds: next.durationSeconds ?? before.durationSeconds, provenance: before.provenance };
+}
+
+export async function runIngestion(deps: IngestionDeps): Promise<IngestionSummary> {
+  const options = { ...DEFAULT_INGESTION_OPTIONS, ...deps.options };
+  const now = (deps.now ?? (() => new Date()))();
+  const { db } = deps;
+
+  const summary: IngestionSummary = {
+    status: "failed",
+    runId: null,
+    discovered: 0,
+    accepted: 0,
+    rejected: 0,
+    updated: 0,
+    failed: 0,
+    removed: 0,
+    version: null,
+    published: false,
+    failedChannels: [],
+  };
+
+  if (!(await acquireLease(db, LEASE_NAME, deps.owner, options.leaseSeconds))) {
+    return { ...summary, status: "skipped", message: "Another ingestion run holds the lease." };
+  }
+
+  try {
+    const [run] = await db.query<{ run_id: string | number }>(`INSERT INTO ingestion_runs (owner, status) VALUES ($1, 'running') RETURNING run_id`, [deps.owner]);
+    summary.runId = Number(run!.run_id);
+
+    await ingest(deps, options, now, summary);
+
+    const anyChannelWorked = summary.failedChannels.length < Math.min(deps.sources.length, options.maxChannelsPerRun);
+    summary.status = summary.failedChannels.length === 0 ? "succeeded" : anyChannelWorked ? "partial" : "failed";
+  } catch (error) {
+    summary.status = "failed";
+    summary.message = describe(error);
+  } finally {
+    // Recording the outcome must never hide the outcome itself.
+    try {
+      if (summary.runId !== null) {
+        await db.query(
+          `UPDATE ingestion_runs SET finished_at = now(), status = $2, discovered = $3, accepted = $4, rejected = $5, updated = $6, failed = $7, error = $8 WHERE run_id = $1`,
+          [summary.runId, summary.status, summary.discovered, summary.accepted, summary.rejected, summary.updated, summary.failed, summary.message ?? null],
+        );
+      }
+      await releaseLease(db, LEASE_NAME, deps.owner);
+    } catch (error) {
+      summary.message ??= `Could not record the run: ${describe(error)}`;
+    }
+  }
+  return summary;
+}
+
+async function ingest(deps: IngestionDeps, options: IngestionOptions, now: Date, summary: IngestionSummary): Promise<void> {
+  const { db, api } = deps;
+  const bySource = new Map(deps.sources.map((source) => [source.channelId, source]));
+
+  // Channels attempted longest ago go first, so a limited run still reaches every channel in turn.
+  const checkpoints = new Map((await db.query<CheckpointRow>(`SELECT channel_id, last_attempt_at, newest_seen_at FROM source_checkpoints`)).map((row) => [row.channel_id, row]));
+  const attemptedAt = (source: Source) => Date.parse(checkpoints.get(source.channelId)?.last_attempt_at ?? "") || 0;
+  const todo = [...deps.sources].sort((a, b) => attemptedAt(a) - attemptedAt(b)).slice(0, options.maxChannelsPerRun);
+
+  const outcomes: ChannelOutcome[] = await mapWithConcurrency(todo, options.feedConcurrency, async (source) => {
+    try {
+      const candidates = await fetchChannelFeed(source, deps.fetch, options.retry);
+      candidates.push(...(await recoverMissed(source, candidates, checkpoints.get(source.channelId), deps, options, summary)));
+      return { source, candidates, error: null };
+    } catch (error) {
+      // One unreachable channel must not cost the others their update.
+      summary.failedChannels.push({ channelId: source.channelId, name: source.name, message: describe(error) });
+      summary.failed++;
+      return { source, candidates: [], error: describe(error) };
+    }
+  });
+
+  // Older than the retention window: it would be removed again right away, so it is never stored.
+  const oldest = now.getTime() - options.retentionDays * 24 * HOUR_MS;
+  const unique = new Map<string, CandidateVideo>();
+  for (const outcome of outcomes) {
+    for (const candidate of outcome.candidates) if (Date.parse(candidate.publishedAt) >= oldest) unique.set(candidate.youtubeId, candidate);
+  }
+  summary.discovered = unique.size;
+
+  const stored = await readStored(db, [...unique.keys()]);
+  const toWrite: Video[] = [];
+  const toVerify: Video[] = [];
+
+  for (const candidate of unique.values()) {
+    const decision = decide(candidate, bySource.get(candidate.channelId), deps.overrides, now);
+    if (!decision.accepted) {
+      summary.rejected++;
+      continue;
+    }
+    summary.accepted++;
+    const before = stored.get(candidate.youtubeId);
+    if (!before) toVerify.push(decision.video);
+    else {
+      const merged = mergeRediscovered(before, decision.video);
+      if (canonical(merged) !== canonical(before)) toWrite.push(merged);
+    }
+  }
+
+  toWrite.push(...(await verifyNew(toVerify, deps, options, summary)));
+
+  const remove: string[] = [];
+  toWrite.push(...(await recheckStored(deps, options, now, new Set(unique.keys()), remove, summary)));
+
+  // The database decides who holds the lease. Losing it means another run may be writing, so this one must not.
+  if (!(await renewLease(db, LEASE_NAME, deps.owner, options.leaseSeconds))) throw new LeaseLostError();
+
+  const result = await publishVideos(db, toWrite, { mode: api ? "api" : "feed", runId: summary.runId, remove });
+  summary.updated = result.inserted + result.updated;
+  summary.removed = result.removed;
+  summary.version = result.version;
+  summary.published = result.published;
+
+  // Checkpoints advance only now that the writes are durable. A failed write leaves them where they were, so nothing is skipped.
+  await writeCheckpoints(db, outcomes);
+
+  const pruned = await pruneExpired(db, now, { retentionDays: options.retentionDays, maxMetadataAgeDays: options.maxMetadataAgeDays });
+  if (pruned.deleted > 0) {
+    summary.removed += pruned.deleted;
+    summary.version = pruned.version;
+    summary.published = true;
+  }
+}
+
+/** The feed lists only a channel's newest uploads. If all of them are newer than the last run saw, uploads may have fallen off the end; the API can fetch them. */
+async function recoverMissed(source: Source, feed: CandidateVideo[], checkpoint: CheckpointRow | undefined, deps: IngestionDeps, options: IngestionOptions, summary: IngestionSummary): Promise<CandidateVideo[]> {
+  const api = deps.api;
+  if (!api || !checkpoint?.newest_seen_at || feed.length === 0) return [];
+  const lastSeen = Date.parse(checkpoint.newest_seen_at);
+  if (!feed.every((candidate) => Date.parse(candidate.publishedAt) > lastSeen)) return [];
+  if (api.unitsUsed >= options.apiUnitBudget) return [];
+  try {
+    const channel = (await api.getChannels([source.channelId])).get(source.channelId);
+    if (!channel) return [];
+    const known = new Set(feed.map((candidate) => candidate.youtubeId));
+    const ids = (await api.listPlaylistVideoIds(channel.uploadsPlaylistId, 50)).filter((id) => !known.has(id));
+    return ids.length > 0 ? await api.getVideos(ids) : [];
+  } catch (error) {
+    summary.failed++;
+    summary.message ??= `Recovery for ${source.name} failed: ${describe(error)}`;
+    return [];
+  }
+}
+
+async function readStored(db: Db, ids: string[]): Promise<Map<string, Video>> {
+  if (ids.length === 0) return new Map();
+  const rows = await db.query<{ youtube_id: string; data: unknown }>(`SELECT youtube_id, data FROM videos WHERE youtube_id IN (SELECT jsonb_array_elements_text($1::jsonb))`, [JSON.stringify(ids)]);
+  return new Map(rows.map((row) => [row.youtube_id, videoSchema.parse(row.data)]));
+}
+
+/** A feed entry says nothing about embedding, so a new video is checked before it is stored. */
+async function verifyNew(videos: Video[], deps: IngestionDeps, options: IngestionOptions, summary: IngestionSummary): Promise<Video[]> {
+  const checked = await mapWithConcurrency(videos, options.embedConcurrency, async (video) => {
+    if (video.embeddable === true) return video;
+    const check = await checkEmbed(video.youtubeId, deps.fetch, options.retry);
+    if (check.status === "ok") return { ...video, embeddable: true };
+    if (check.status === "unavailable") summary.rejected++;
+    // Inconclusive: nothing was learned, so it is neither stored nor rejected for good. The feed offers it again next run.
+    else summary.failed++;
+    return null;
+  });
+  return checked.filter((video) => video !== null);
+}
+
+/** Re-verifies the stored videos checked longest ago. Only a confirmed "gone" removes one; an inconclusive check changes nothing. */
+async function recheckStored(deps: IngestionDeps, options: IngestionOptions, now: Date, skip: Set<string>, remove: string[], summary: IngestionSummary): Promise<Video[]> {
+  if (options.recheckPerRun <= 0) return [];
+  const cutoff = new Date(now.getTime() - options.recheckAfterHours * HOUR_MS).toISOString();
+  const rows = await deps.db.query<{ youtube_id: string; data: unknown }>(
+    `SELECT youtube_id, data FROM videos WHERE metadata_checked_at < $1 ORDER BY metadata_checked_at ASC, youtube_id LIMIT $2`,
+    [cutoff, options.recheckPerRun + skip.size],
+  );
+  const stale = rows.filter((row) => !skip.has(row.youtube_id)).slice(0, options.recheckPerRun).map((row) => videoSchema.parse(row.data));
+
+  const refreshed = await mapWithConcurrency(stale, options.embedConcurrency, async (video) => {
+    const check = await checkEmbed(video.youtubeId, deps.fetch, options.retry);
+    if (check.status === "unavailable") remove.push(video.youtubeId);
+    else if (check.status === "unknown") summary.failed++;
+    else return { ...video, embeddable: true, provenance: { ...video.provenance, metadataCheckedAt: now.toISOString() } };
+    return null;
+  });
+  return refreshed.filter((video) => video !== null);
+}
+
+const UPSERT_CHECKPOINTS = `
+  INSERT INTO source_checkpoints (channel_id, last_attempt_at, last_success_at, newest_seen_at, consecutive_failures, last_error)
+  SELECT e->>'channelId', now(), CASE WHEN e->>'error' IS NULL THEN now() END, (e->>'newest')::timestamptz,
+         CASE WHEN e->>'error' IS NULL THEN 0 ELSE 1 END, e->>'error'
+  FROM jsonb_array_elements($1::jsonb) AS e
+  ON CONFLICT (channel_id) DO UPDATE SET
+    last_attempt_at = now(),
+    last_success_at = COALESCE(EXCLUDED.last_success_at, source_checkpoints.last_success_at),
+    newest_seen_at = GREATEST(EXCLUDED.newest_seen_at, source_checkpoints.newest_seen_at),
+    consecutive_failures = CASE WHEN EXCLUDED.last_error IS NULL THEN 0 ELSE source_checkpoints.consecutive_failures + 1 END,
+    last_error = EXCLUDED.last_error`;
+
+async function writeCheckpoints(db: Db, outcomes: ChannelOutcome[]): Promise<void> {
+  if (outcomes.length === 0) return;
+  const rows = outcomes.map(({ source, candidates, error }) => {
+    const newest = candidates.reduce<number>((latest, candidate) => Math.max(latest, Date.parse(candidate.publishedAt)), 0);
+    return { channelId: source.channelId, newest: newest > 0 ? new Date(newest).toISOString() : null, error };
+  });
+  await db.query(UPSERT_CHECKPOINTS, [JSON.stringify(rows)]);
+}
