@@ -19,7 +19,9 @@
     "test:e2e": "playwright test",
     "check-updates": "tsx scripts/check-updates.ts",
     "db:migrate": "tsx scripts/db.ts migrate",
-    "db:import": "tsx scripts/db.ts import"
+    "db:import": "tsx scripts/db.ts import",
+    "build:worker": "esbuild worker/index.ts --bundle --format=esm --platform=browser --conditions=workerd,worker,browser --outfile=out-worker/index.js --log-level=warning",
+    "ingest": "tsx scripts/ingest.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.1",
@@ -39,6 +41,7 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "esbuild": "^0.28.2",
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
     "jsdom": "^29.1.1",
