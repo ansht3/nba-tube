@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Header } from "@/components/Header";
 import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { NewVideosNotice } from "@/components/NewVideosNotice";
-import { loadCatalog } from "@/catalog/load";
+import { getCatalogRepository } from "@/catalog/server";
 import { SettingsSync } from "@/components/SettingsSync";
 import { SITE_NAME, SITE_TAGLINE } from "@/lib/site";
 import { SETTINGS_BOOT_SCRIPT } from "@/lib/storage/settings";
@@ -23,9 +23,9 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
   // The newest upload this build contains. Anything later in the live catalog is new to the viewer.
-  const newestAt = loadCatalog().videos.reduce<string | null>((newest, video) => (!newest || video.publishedAt > newest ? video.publishedAt : newest), null);
+  const { newestPublishedAt: newestAt } = await getCatalogRepository().meta();
 
   return (
     // The boot scripts set data attributes on <html> before React hydrates,

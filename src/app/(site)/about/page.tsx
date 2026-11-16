@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CONTENT_TYPES, CONTENT_TYPE_LABELS } from "@/catalog/content-types";
-import { loadCatalog, loadSources } from "@/catalog/load";
+import { loadSources } from "@/catalog/load";
+import { getCatalogRepository } from "@/catalog/server";
 import { approvedSources } from "@/catalog/sources";
 import { formatLongDate, pluralize } from "@/lib/format";
 import { KIND_WEIGHTS, LEAGUE_RECAP_BONUS } from "@/lib/rank";
@@ -16,8 +17,8 @@ const MODE_DESCRIPTIONS = {
   seed: "the small sample snapshot that ships with the code, not a live sync",
 } as const;
 
-export default function AboutPage() {
-  const catalog = loadCatalog();
+export default async function AboutPage() {
+  const catalog = await getCatalogRepository().meta();
   const sources = approvedSources(loadSources());
 
   return (
@@ -76,7 +77,7 @@ export default function AboutPage() {
 
       <h2>This catalog</h2>
       <p>
-        {pluralize(catalog.videos.length, "video")}, generated on {formatLongDate(catalog.generatedAt)}. It is{" "}
+        {pluralize(catalog.total, "video")}, generated on {formatLongDate(catalog.generatedAt)}. It is{" "}
         {MODE_DESCRIPTIONS[catalog.mode]}.
       </p>
 

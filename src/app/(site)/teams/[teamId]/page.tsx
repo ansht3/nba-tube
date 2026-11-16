@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SECTIONS } from "@/catalog/content-types";
-import { loadCatalog, loadSources } from "@/catalog/load";
-import { videosForTeam, videosInSection } from "@/catalog/select";
+import { loadSources } from "@/catalog/load";
+import { getCatalogRepository } from "@/catalog/server";
 import { TEAMS, getTeam, teamFullName } from "@/catalog/teams";
 import { EmptyState } from "@/components/EmptyState";
 import { ExternalIcon } from "@/components/icons";
@@ -29,7 +29,9 @@ export default async function TeamPage({ params }: PageProps<"/teams/[teamId]">)
   const team = getTeam((await params).teamId.toUpperCase());
   if (!team) notFound();
 
-  const videos = videosForTeam(loadCatalog().videos, team.id);
+  const repository = getCatalogRepository();
+  const { videos, total } = await repository.list({ teamId: team.id, limit: LIST_PAGE_SIZE });
+  const sectionCounts = await Promise.all(SECTIONS.map(async (section) => ({ section, count: await repository.count({ teamId: team.id, section: section.id }) })));
   const channel = loadSources().sources.find((source) => source.teamId === team.id && source.status === "approved");
 
   return (
@@ -41,7 +43,7 @@ export default async function TeamPage({ params }: PageProps<"/teams/[teamId]">)
       </p>
       <PageHeader title={teamFullName(team)}>
         <p>
-          {videos.length > 0 ? `${pluralize(videos.length, "video")}, newest first.` : "No videos in the catalog right now."}
+          {total > 0 ? `${pluralize(total, "video")}, newest first.` : "No videos in the catalog right now."}
           {channel && (
             <>
               {" "}
@@ -54,10 +56,9 @@ export default async function TeamPage({ params }: PageProps<"/teams/[teamId]">)
         </p>
       </PageHeader>
 
-      {videos.length > 0 && (
+      {total > 0 && (
         <ul className="mb-6 flex flex-wrap gap-2" aria-label={`${team.name} videos by section`}>
-          {SECTIONS.map((section) => {
-            const count = videosInSection(videos, section.id).length;
+          {sectionCounts.map(({ section, count }) => {
             if (count === 0) return null;
             return (
               <li key={section.id}>
@@ -71,7 +72,7 @@ export default async function TeamPage({ params }: PageProps<"/teams/[teamId]">)
         </ul>
       )}
 
-      {videos.length === 0 ? (
+      {total === 0 ? (
         <EmptyState title={`Nothing from the ${team.name} yet`}>
           <p>
             Their recent uploads did not include highlights or media sessions that the catalog accepts. This page fills
@@ -79,7 +80,7 @@ export default async function TeamPage({ params }: PageProps<"/teams/[teamId]">)
           </p>
         </EmptyState>
       ) : (
-        <VideoList initial={videos.slice(0, LIST_PAGE_SIZE)} total={videos.length} scope={{ teamId: team.id }} />
+        <VideoList initial={videos} total={total} scope={{ teamId: team.id }} />
       )}
     </>
   );

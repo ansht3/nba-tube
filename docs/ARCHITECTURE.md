@@ -97,3 +97,19 @@ and continues from the live `/catalog.json`, so no commit is needed to update
 videos. A scheduled GitHub Actions job checks the channel feeds every 10 minutes
 and calls a Vercel Deploy Hook only when there is a new video to publish. See
 docs/DEPLOYMENT.md.
+
+## Catalog access
+
+Pages and routes do not read the catalog file. They ask a `CatalogRepository`
+(`src/catalog/repository.ts`) through `getCatalogRepository()`
+(`src/catalog/server.ts`): a page of videos for a filter, a count, one video,
+related videos, per-team counts, channels, and catalog metadata. Order is
+always newest first with ties by YouTube id, and cursors are built from parsed
+timestamps, so a cursor stays valid while newer videos are inserted.
+
+`FileCatalogRepository` answers from `data/catalog.json` (or the committed
+seed) exactly as the site always has. A database implementation will answer the
+same questions with indexed queries; see docs/MIGRATION.md. The two JSON
+artifacts `/catalog.json` and `/status.json` still read the file directly: they
+are the published form of the file catalog.
+

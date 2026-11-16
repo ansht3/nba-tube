@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { loadCatalog } from "@/catalog/load";
-import { findVideo, relatedVideos } from "@/catalog/select";
+import { getCatalogRepository } from "@/catalog/server";
 import { getTeam, teamFullName } from "@/catalog/teams";
 import { AddToPlaylist } from "@/components/AddToPlaylist";
 import { HistoryRecorder } from "@/components/HistoryRecorder";
@@ -22,13 +21,13 @@ const RELATED_COUNT = 20;
 // Only videos in the catalog have a page. Any other id is a 404.
 export const dynamicParams = false;
 
-export function generateStaticParams() {
-  return loadCatalog().videos.map((video) => ({ id: video.youtubeId }));
+export async function generateStaticParams() {
+  return (await getCatalogRepository().allIds()).map((id) => ({ id }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/watch/[id]">): Promise<Metadata> {
   const { id } = await params;
-  const video = findVideo(loadCatalog().videos, id);
+  const video = await getCatalogRepository().get(id);
   if (!video) return { title: "Video not found" };
   return { title: video.title, description: `${contentLabel(video.labels)} from ${video.channelTitle}.` };
 }
@@ -40,11 +39,11 @@ const PUBLISHER_DESCRIPTIONS = {
 
 export default async function WatchPage({ params }: PageProps<"/watch/[id]">) {
   const { id } = await params;
-  const { videos } = loadCatalog();
-  const video = findVideo(videos, id);
+  const repository = getCatalogRepository();
+  const video = await repository.get(id);
   if (!video) notFound();
 
-  const related = relatedVideos(video, videos, RELATED_COUNT);
+  const related = await repository.related(video, RELATED_COUNT);
   const teams = video.labels.teamIds.map(getTeam).filter((team) => team !== undefined);
   const duration = formatDuration(video.durationSeconds);
   const manual = video.provenance.verificationStatus === "manual-review";
