@@ -1,13 +1,18 @@
 name: Refresh videos
 
-# Every 10 minutes, checks the official channels for videos the live site does
-# not have yet, and if there are any, asks Vercel to rebuild. The rebuild runs
-# the sync, so the site picks up the new videos without any commit.
+# Every 10 minutes (GitHub may run it less often), checks the official channels
+# for videos the live site does not have, and asks Vercel to rebuild when there
+# are some. The rebuild runs the sync, so no commit is needed.
 #
-# Setup (Settings > Secrets and variables > Actions):
+# This job is red whenever the refresh is not really working:
+#   - the deploy hook or SITE_URL is missing (nothing could be published),
+#   - the hook request fails,
+#   - a video has been missing for over an hour (rebuilds are not publishing).
+# A green run means: configuration present, and nothing is stuck.
+#
+# Setup (Settings > Secrets and variables > Actions), details in docs/DEPLOYMENT.md:
 #   secret   VERCEL_DEPLOY_HOOK  the Deploy Hook URL from Vercel (Project > Settings > Git)
 #   variable SITE_URL            the production URL, e.g. https://nba-tube.vercel.app
-# Until VERCEL_DEPLOY_HOOK exists the job does nothing.
 
 on:
   schedule:
@@ -26,26 +31,32 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      HAS_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK != '' }}
+      # The hook URL is a secret: GitHub masks it in logs.
+      HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+      SITE_URL: ${{ vars.SITE_URL }}
     steps:
-      - if: env.HAS_HOOK != 'true'
-        run: echo "::notice::VERCEL_DEPLOY_HOOK is not set, so no refresh is triggered. See docs/DEPLOYMENT.md."
-      - if: env.HAS_HOOK == 'true'
-        uses: actions/checkout@v4
-      - if: env.HAS_HOOK == 'true'
-        uses: actions/setup-node@v4
+      - name: Require configuration
+        run: |
+          missing=""
+          [ -z "$HOOK" ] && missing="$missing VERCEL_DEPLOY_HOOK (secret)"
+          [ -z "$SITE_URL" ] && missing="$missing SITE_URL (variable)"
+          if [ -n "$missing" ]; then
+            echo "::error title=Refresh is not configured::Missing:$missing. New videos will not be published until this is set. See docs/DEPLOYMENT.md."
+            exit 1
+          fi
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - if: env.HAS_HOOK == 'true'
-        run: npm ci
-      - if: env.HAS_HOOK == 'true'
-        id: check
+      - run: npm ci
+      - id: check
         run: npm run --silent check-updates
-        env:
-          SITE_URL: ${{ vars.SITE_URL }}
-      - if: env.HAS_HOOK == 'true' && steps.check.outputs.changed == 'true'
-        # The hook URL is a secret: GitHub masks it in logs.
+      - name: Ask Vercel to rebuild
+        if: steps.check.outputs.changed == 'true'
         run: curl --fail --silent --show-error -X POST "$HOOK" > /dev/null && echo "Rebuild requested."
-        env:
-          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+      - name: Fail when the refresh is not keeping up
+        if: steps.check.outputs.status == 'stuck' || steps.check.outputs.status == 'unreachable'
+        run: |
+          echo "::error title=Refresh is not keeping up::status=${{ steps.check.outputs.status }}, ${{ steps.check.outputs.pending }} video(s) waiting, the oldest ${{ steps.check.outputs.oldest_pending_minutes }} minutes since upload. A rebuild was requested if the hook is set; check the Vercel deployments and the latest build log."
+          exit 1

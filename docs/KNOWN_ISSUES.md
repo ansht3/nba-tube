@@ -32,10 +32,12 @@ the top.
 
 ## Not verified
 
-- The scheduled refresh (`.github/workflows/refresh.yml`) has not run on GitHub:
-  the account's Actions are locked by a billing issue. Its two parts were run
-  locally: `npm run check-updates` against a served build, and a sync that
-  continues from a published catalog.
+- The scheduled refresh (`.github/workflows/refresh.yml`) runs on GitHub but
+  could not publish anything: the deploy hook and `SITE_URL` were never set, and
+  the job used to succeed anyway. It now fails when they are missing. Until the
+  owner adds them (docs/DEPLOYMENT.md) the live site only updates on a push to
+  `main`. Checked against production on 2026-11-16: 168 videos waiting, the
+  oldest for 78 hours.
 - Vercel has not built the site yet. `vercel.json`'s build command and headers
   were run locally.
 - The Data API path is covered by unit tests with recorded response shapes, but

@@ -36,6 +36,37 @@ The site is a static export hosted on Vercel. Nothing runs on a server.
 GitHub Actions must be able to run on the account. If a job says "account is
 locked due to a billing issue", fix that under GitHub Settings > Billing first.
 
+## Checking that refreshing works
+
+A green workflow used to mean nothing: without the deploy hook the job printed a
+notice and succeeded. Now:
+
+- **The `Refresh videos` job is red** when `VERCEL_DEPLOY_HOOK` or `SITE_URL` is
+  missing, when the hook request fails, or when any video has been missing from
+  the site for more than an hour (`status=stuck`). Its run summary lists the
+  refresh status, how many videos are waiting, the oldest wait, the live
+  catalog's age and what the last build's sync reported.
+- **`/status.json` on the live site** says what the current build is made of:
+  `generatedAt`, `mode`, `videoCount`, `newestPublishedAt`, and `sync`
+  (`ok`, `usedFallback`, `error`). `usedFallback` is `previous-catalog` when the
+  build's sync failed and the last published catalog was kept instead of the
+  committed seed.
+- **Locally:** `SITE_URL=https://nba-tube.vercel.app npm run check-updates`
+  prints `status` as `current`, `pending` (waiting less than an hour), `stuck`
+  or `unreachable`.
+
+GitHub runs scheduled workflows on a best-effort basis. On a quiet repository
+they can run hours apart instead of every 10 minutes (the runs of this repo were
+4 to 6 hours apart). If freshness within minutes matters, do not rely on the
+schedule.
+
+### Production state when this was written (2026-11-16)
+- The live catalog had been generated on 2026-11-12 21:33 UTC, 82 hours earlier.
+- `npm run check-updates` against it reported 168 videos waiting, the oldest for
+  78 hours (`status=stuck`).
+- The repository had no `VERCEL_DEPLOY_HOOK` secret and no `SITE_URL` variable,
+  so every scheduled run succeeded without doing anything.
+
 ## Without GitHub Actions
 
 Any scheduler that can send an HTTP POST can trigger the hook, for example a
