@@ -46,6 +46,8 @@ export interface CatalogMeta {
   mode: Catalog["mode"];
   total: number;
   newestPublishedAt: string | null;
+  /** The id of the newest video (by the catalog order), what a client says it has seen up to. */
+  newestId: string | null;
 }
 
 export interface ChannelSummary {

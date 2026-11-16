@@ -194,9 +194,9 @@ export function describeRepositoryContract(name: string, create: (videos: Video[
   describe(`${name}: single reads`, () => {
     it("describes the catalog", async () => {
       const { repo } = await create(SAMPLE);
-      expect(await repo.meta()).toMatchObject({ mode: expect.stringMatching(/^(seed|feed|api)$/), total: 4, newestPublishedAt: "2026-11-16T09:00:00.000Z" });
+      expect(await repo.meta()).toMatchObject({ mode: expect.stringMatching(/^(seed|feed|api)$/), total: 4, newestPublishedAt: "2026-11-16T09:00:00.000Z", newestId: testId("a") });
       expect((await create([])).repo).toBeDefined();
-      expect((await (await create([])).repo.meta()).newestPublishedAt).toBeNull();
+      expect(await (await create([])).repo.meta()).toMatchObject({ newestPublishedAt: null, newestId: null });
     });
 
     it("changes its version when videos are added", async () => {

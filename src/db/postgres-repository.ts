@@ -54,16 +54,19 @@ export class PostgresCatalogRepository implements CatalogRepository {
   constructor(private readonly db: Db) {}
 
   async meta(): Promise<CatalogMeta> {
-    const [row] = await this.db.query<{ version: string | number; published_at: string; mode: CatalogMeta["mode"]; video_count: number; newest_published_at: string | null }>(
-      `SELECT version, published_at, mode, video_count, newest_published_at FROM catalog_versions ORDER BY version DESC LIMIT 1`,
+    const [row] = await this.db.query<{ version: string | number; published_at: string; mode: CatalogMeta["mode"]; video_count: number; newest_published_at: string | null; newest_id: string | null }>(
+      `SELECT version, published_at, mode, video_count, newest_published_at,
+              (SELECT youtube_id FROM videos ORDER BY published_at DESC, youtube_id LIMIT 1) AS newest_id
+       FROM catalog_versions ORDER BY version DESC LIMIT 1`,
     );
-    if (!row) return { version: "0", generatedAt: new Date(0).toISOString(), mode: "feed", total: 0, newestPublishedAt: null };
+    if (!row) return { version: "0", generatedAt: new Date(0).toISOString(), mode: "feed", total: 0, newestPublishedAt: null, newestId: null };
     return {
       version: String(row.version),
       generatedAt: new Date(row.published_at).toISOString(),
       mode: row.mode,
       total: Number(row.video_count),
       newestPublishedAt: row.newest_published_at ? new Date(row.newest_published_at).toISOString() : null,
+      newestId: row.newest_id,
     };
   }
 

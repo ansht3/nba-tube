@@ -52,7 +52,7 @@ export class FileCatalogRepository implements CatalogRepository {
 
   async meta(): Promise<CatalogMeta> {
     const { catalog, videos } = this.snapshot();
-    return { version: catalog.generatedAt, generatedAt: catalog.generatedAt, mode: catalog.mode, total: videos.length, newestPublishedAt: videos[0]?.publishedAt ?? null };
+    return { version: catalog.generatedAt, generatedAt: catalog.generatedAt, mode: catalog.mode, total: videos.length, newestPublishedAt: videos[0]?.publishedAt ?? null, newestId: videos[0]?.youtubeId ?? null };
   }
 
   async list(query: VideoQuery): Promise<VideoPage> {
