@@ -15,7 +15,9 @@ test("new videos are offered after a published version, found with tiny requests
   page.on("request", (request) => paths.push(new URL(request.url()).pathname));
   await publishNewVideo(page);
   await page.goto("/");
-  await page.clock.fastForward(FIVE_MINUTES_AND_JITTER);
+  // The poll timer exists only once the page has hydrated, which on a slow machine is after goto returns.
+  // Advancing the fake clock before then schedules nothing, so keep advancing until the first check is seen.
+  await expect.poll(async () => (await page.clock.fastForward(FIVE_MINUTES_AND_JITTER), paths.includes("/api/version")), { timeout: 15_000 }).toBe(true);
 
   const notice = page.getByRole("status").filter({ hasText: "new video" });
   await expect(notice).toHaveText(/1 new video/);
@@ -41,10 +43,19 @@ test("a hidden tab does no polling, and checks when it becomes visible again", a
   await page.clock.fastForward("20:00");
   expect(versionRequests, "no requests while hidden").toHaveLength(0);
 
-  await page.evaluate(() => {
-    (window as unknown as { __hidden: boolean }).__hidden = false;
-    document.dispatchEvent(new Event("visibilitychange"));
-  });
+  // Becoming visible only checks once the page's listener exists, so repeat the signal until it is answered.
+  await expect
+    .poll(
+      async () => {
+        await page.evaluate(() => {
+          (window as unknown as { __hidden: boolean }).__hidden = false;
+          document.dispatchEvent(new Event("visibilitychange"));
+        });
+        return versionRequests.length;
+      },
+      { timeout: 15_000 },
+    )
+    .toBeGreaterThan(0);
   await expect(page.getByRole("status").filter({ hasText: "new video" })).toHaveText(/1 new video/);
   expect(versionRequests.length).toBeGreaterThan(0);
 });
