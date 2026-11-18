@@ -9,6 +9,16 @@ async function publishNewVideo(page: import("@playwright/test").Page) {
   await page.route("**/api/updates**", (route) => route.fulfill({ json: { videos: [fresh], count: 1, hasMore: false, reset: false, version: "v-new" } }));
 }
 
+/**
+ * Advances the fake clock until the new-videos notice appears. The poll timer exists only once the page
+ * has hydrated, which on a slow machine is after goto returns, and advancing before then schedules nothing.
+ */
+async function waitForNotice(page: import("@playwright/test").Page) {
+  const notice = page.getByRole("status").filter({ hasText: "new video" });
+  await expect.poll(async () => (await page.clock.fastForward(FIVE_MINUTES_AND_JITTER), await notice.count()), { timeout: 15_000 }).toBeGreaterThan(0);
+  return notice;
+}
+
 test("new videos are offered after a published version, found with tiny requests and no catalog download", async ({ page }) => {
   await page.clock.install();
   const paths: string[] = [];
@@ -65,9 +75,7 @@ test("Show refreshes in place without reloading the page", async ({ page }) => {
   await publishNewVideo(page);
   await page.goto("/");
   await page.evaluate(() => ((window as unknown as { __survives: boolean }).__survives = true));
-  await page.clock.fastForward(FIVE_MINUTES_AND_JITTER);
-
-  const notice = page.getByRole("status").filter({ hasText: "new video" });
+  const notice = await waitForNotice(page);
   await notice.getByRole("button", { name: "Show" }).click();
   await expect(notice).toBeHidden();
   expect(await page.evaluate(() => (window as unknown as { __survives?: boolean }).__survives), "the document was not reloaded").toBe(true);
@@ -80,9 +88,7 @@ test("on a watch page the notice never touches the player: it only links to the 
   const player = page.locator("iframe");
   await expect(player).toBeVisible();
   await page.evaluate(() => ((window as unknown as { __survives: boolean }).__survives = true));
-  await page.clock.fastForward(FIVE_MINUTES_AND_JITTER);
-
-  const notice = page.getByRole("status").filter({ hasText: "new video" });
+  const notice = await waitForNotice(page);
   await expect(notice).toHaveText(/1 new video/);
   await expect(notice.getByRole("button", { name: "Show" })).toHaveCount(0);
   const link = notice.getByRole("link", { name: /new tab/ });
