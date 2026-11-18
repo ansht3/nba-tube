@@ -65,7 +65,8 @@ export default async function AboutPage() {
       <p>
         There is no recommendation algorithm and no view or like counts. Best first is a fixed formula: each kind of
         video has a weight, and every day since upload subtracts one point. Recaps from the league channel, which cover
-        both teams, get {LEAGUE_RECAP_BONUS} extra. Ties go to the newer video.
+        both teams, get {LEAGUE_RECAP_BONUS} extra. Ties go to the newer video. A video whose date is later than the day this site
+        checked it (a scheduled premiere, say) counts from the day it was checked, so it cannot jump to the top early.
       </p>
       <ul className="mt-3 list-disc pl-6">
         {CONTENT_TYPES.map((type) => (

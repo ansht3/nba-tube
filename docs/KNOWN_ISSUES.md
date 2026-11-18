@@ -31,8 +31,9 @@ the top.
   stale by design; the sync and the refresh check read it, nothing in the site does.
 - "Play all" and in-site Next/Previous exist for playlists. Liked and Watch later
   have no queue yet.
-- Best first in the database follows the published formula without its clamp for
-  videos dated in the future; the difference only shows for such videos.
+- Best first treats a date later than the check time as the check time (a premiere
+  or wrong date cannot outrank real news). Rows already in a database keep their old
+  key until the video is next written, or `npm run db:import` is run again.
 - Load numbers are from PGlite on a laptop, not Neon.
 
 ## Keyless mode
