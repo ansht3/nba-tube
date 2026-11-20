@@ -35,6 +35,9 @@ export interface IngestionOptions {
   retry: RetryOptions;
 }
 
+/** At least this many removals in one batch, and more than half of it, is treated as a bad answer from YouTube and not acted on. */
+const MIN_SUSPECT_REMOVALS = 3;
+
 export const DEFAULT_INGESTION_OPTIONS: IngestionOptions = {
   leaseSeconds: 240,
   feedConcurrency: 4,
@@ -291,13 +294,24 @@ async function recheckStored(deps: IngestionDeps, options: IngestionOptions, now
   );
   const stale = rows.filter((row) => !skip.has(row.youtube_id)).slice(0, options.recheckPerRun).map((row) => videoSchema.parse(row.data));
 
+  const gone: string[] = [];
   const refreshed = await mapWithConcurrency(stale, options.embedConcurrency, async (video) => {
     const check = await checkEmbed(video.youtubeId, deps.fetch, options.retry);
-    if (check.status === "unavailable") remove.push(video.youtubeId);
+    if (check.status === "unavailable") gone.push(video.youtubeId);
     else if (check.status === "unknown") summary.failed++;
     else return { ...video, embeddable: true, provenance: { ...video.provenance, metadataCheckedAt: now.toISOString() } };
     return null;
   });
+
+  // A few videos going away at once is a takedown. Most of a batch going away at once is far more likely to be YouTube
+  // answering us with an error status for every request (blocked addresses, an outage), and acting on it would empty the
+  // catalog a batch at a time. Nothing is removed then; the next run checks again.
+  if (gone.length >= MIN_SUSPECT_REMOVALS && gone.length * 2 > stale.length) {
+    summary.failed += gone.length;
+    summary.message ??= `YouTube reported ${gone.length} of ${stale.length} checked videos unavailable at once. That is more likely a block or an outage than ${gone.length} takedowns, so none were removed.`;
+  } else {
+    remove.push(...gone);
+  }
   return refreshed.filter((video) => video !== null);
 }
 

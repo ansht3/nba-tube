@@ -184,6 +184,28 @@ describe("runIngestion", () => {
     expect(new Date(fine!.metadata_checked_at).toISOString()).toBe(NOW.toISOString());
   });
 
+  it("removes nothing when most of a batch comes back unavailable at once: that is a block or an outage, not takedowns", async () => {
+    const stale = "2026-11-10T00:00:00.000Z";
+    const videos = ["v1", "v2", "v3", "v4", "v5", "v6"].map((name, i) => makeVideo({ youtubeId: testId(name), channelId: CHANNEL_A, publishedAt: `2026-11-14T0${i}:00:00.000Z`, provenance: { ...makeVideo().provenance, metadataCheckedAt: stale } }));
+    await importCatalog(db, { schemaVersion: 1, mode: "feed", generatedAt: stale, videos });
+    const everythingGone = Object.fromEntries(videos.map((video) => [video.youtubeId, "gone" as const]));
+    const summary = await runIngestion(deps(newWorld({ [CHANNEL_A]: [], [CHANNEL_B]: [], [CHANNEL_C]: [] }, everythingGone)));
+    expect(summary.removed).toBe(0);
+    expect(summary.failed).toBe(6);
+    expect(summary.message).toMatch(/more likely a block or an outage/);
+    expect(await count("videos")).toBe(6);
+  });
+
+  it("still removes a few real takedowns when most of the batch is fine", async () => {
+    const stale = "2026-11-10T00:00:00.000Z";
+    const names = ["k1", "k2", "k3", "k4", "k5", "k6"];
+    const videos = names.map((name, i) => makeVideo({ youtubeId: testId(name), channelId: CHANNEL_A, publishedAt: `2026-11-14T0${i}:00:00.000Z`, provenance: { ...makeVideo().provenance, metadataCheckedAt: stale } }));
+    await importCatalog(db, { schemaVersion: 1, mode: "feed", generatedAt: stale, videos });
+    const summary = await runIngestion(deps(newWorld({ [CHANNEL_A]: [], [CHANNEL_B]: [], [CHANNEL_C]: [] }, { [testId("k1")]: "gone", [testId("k2")]: "gone" })));
+    expect(summary.removed).toBe(2);
+    expect(await count("videos")).toBe(4);
+  });
+
   it("ages out videos past retention", async () => {
     await importCatalog(db, { schemaVersion: 1, mode: "feed", generatedAt: "2026-11-10T00:00:00.000Z", videos: [makeVideo({ youtubeId: testId("ancient"), channelId: CHANNEL_A, publishedAt: "2026-09-01T00:00:00.000Z" })] });
     const summary = await runIngestion(deps(newWorld({ [CHANNEL_A]: [], [CHANNEL_B]: [], [CHANNEL_C]: [] })));
