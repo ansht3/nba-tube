@@ -43,8 +43,10 @@ async function run(env: Env): Promise<void> {
 }
 
 const worker = {
-  async scheduled(_event: { scheduledTime: number; cron: string }, env: Env, ctx: { waitUntil(promise: Promise<unknown>): void }): Promise<void> {
-    ctx.waitUntil(run(env));
+  // The run is awaited, not handed to ctx.waitUntil: a failed run must fail this invocation, where the platform records
+  // it, instead of becoming a background rejection nothing observes.
+  async scheduled(_event: { scheduledTime: number; cron: string }, env: Env): Promise<void> {
+    await run(env);
   },
   // Nothing to serve: the Worker exists to run on its schedule.
   async fetch(): Promise<Response> {
