@@ -1,7 +1,7 @@
 import type { Source } from "@/catalog/sources";
 import { YOUTUBE_ID_PATTERN } from "@/catalog/schema";
 import { defaultThumbnailUrl, type CandidateVideo } from "../candidate";
-import { fetchWithRetry, type FetchLike, type RetryOptions } from "../http";
+import { fetchWithRetry, MAX_FEED_BYTES, readTextLimited, type FetchLike, type RetryOptions } from "../http";
 
 const FEED_URL = "https://www.youtube.com/feeds/videos.xml";
 
@@ -96,7 +96,7 @@ async function fetchFeed(url: string, fetchImpl: FetchLike, retry?: RetryOptions
   const response = await fetchWithRetry(fetchImpl, url, retry);
   if (response.status === 404) return null;
   if (!response.ok) throw new FeedError(`Feed request failed with HTTP ${response.status}`);
-  return parseFeed(await response.text());
+  return parseFeed(await readTextLimited(response, MAX_FEED_BYTES));
 }
 
 /**

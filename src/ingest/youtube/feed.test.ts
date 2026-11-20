@@ -94,6 +94,12 @@ describe("fetchChannelFeed", () => {
     expect(vi.mocked(fetchImpl).mock.calls[0][0]).toContain("playlist_id=UULFWJ2lWNubArHWmf3FIHbfcQ");
   });
 
+  it("fails the channel, instead of buffering it, when a feed is far larger than any real one", async () => {
+    const huge = `<feed>${" ".repeat(1_500_000)}</feed>`;
+    const fetchImpl: FetchLike = vi.fn(async () => new Response(huge));
+    await expect(fetchChannelFeed(source, fetchImpl, noRetry)).rejects.toThrow(/larger than/);
+  });
+
   it("falls back to the channel feed when the long-form playlist is missing or empty", async () => {
     for (const first of [new Response("", { status: 404 }), new Response(feed())]) {
       const fetchImpl: FetchLike = vi.fn(async (url: string) => (url.includes("playlist_id") ? first : new Response(feed(entry({})))));

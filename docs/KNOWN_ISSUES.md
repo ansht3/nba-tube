@@ -57,8 +57,6 @@ feed) found the issues fixed on `dev` that day, and these that are **not fixed**
   smaller still. Relevant only without `DATABASE_URL`.
 - **`script-src 'unsafe-inline'` in the CSP (confirmed).** The usual Next.js
   trade-off without nonces. The site has no accounts or user content.
-- **No response-size cap on feed fetches (reported).** Low risk: trusted hosts and
-  a timeout.
 - **Not verified in a browser this round.** The poller and the Liked/Watch later
   queue changes were checked by unit tests and by the browser tests earlier, but
   the final commits were not re-run in a browser; CI is the check.

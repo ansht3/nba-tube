@@ -1,6 +1,6 @@
 import { catalogSchema, type Catalog } from "@/catalog/schema";
 import { fallbackFor } from "@/catalog/status";
-import { fetchWithRetry, type FetchLike } from "./http";
+import { fetchWithRetry, MAX_CATALOG_BYTES, readJsonLimited, type FetchLike } from "./http";
 
 export interface PreviousCatalogSources {
   /** The local data/catalog.json parsed as JSON, or undefined when the file does not exist. */
@@ -40,7 +40,7 @@ export async function readPreviousCatalog(sources: PreviousCatalogSources): Prom
       return null;
     }
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const parsed = catalogSchema.safeParse(await response.json());
+    const parsed = catalogSchema.safeParse(await readJsonLimited(response, MAX_CATALOG_BYTES));
     // The seed is a sample, not a sync, so it is never carried forward.
     if (parsed.success && parsed.data.mode === "seed") return null;
     if (!parsed.success) throw new Error("the response is not a valid catalog");
