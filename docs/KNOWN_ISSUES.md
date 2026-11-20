@@ -48,10 +48,13 @@ feed) found the issues fixed on `dev` that day, and these that are **not fixed**
   refreshing durations, so a Data API duration can live up to the 45-day limit
   instead of 30 days. No fix without a way to tell "embed rechecked" from "metadata
   refreshed".
-- **The legacy build-time sync can shrink the live catalog (reported).** If the
-  published `catalog.json` cannot be fetched at build time, the sync starts fresh
-  and publishes only the newest uploads per channel. Relevant only without
-  `DATABASE_URL`.
+- **The legacy build-time sync can still shrink the live catalog (confirmed, reduced).**
+  If the published `catalog.json` stays unreachable for a whole build (after two
+  retries), the build starts fresh and publishes only the newest uploads per
+  channel. The build log now says so and what it costs; a 404 (first deploy) is
+  expected and quiet. Failing the build instead is not an option as wired: the
+  build command swallows a failed sync and deploys the committed seed, which is
+  smaller still. Relevant only without `DATABASE_URL`.
 - **`script-src 'unsafe-inline'` in the CSP (confirmed).** The usual Next.js
   trade-off without nonces. The site has no accounts or user content.
 - **No response-size cap on feed fetches (reported).** Low risk: trusted hosts and
