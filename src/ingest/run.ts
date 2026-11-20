@@ -101,6 +101,14 @@ interface ChannelOutcome {
   source: Source;
   candidates: CandidateVideo[];
   error: string | null;
+  /** Keep the channel's newest-seen time where it was. */
+  holdCheckpoint?: boolean;
+}
+
+/** What recovering missed uploads produced. `failed` means the channel's checkpoint must not move past what was not recovered. */
+interface Recovery {
+  candidates: CandidateVideo[];
+  failed: string | null;
 }
 
 interface CheckpointRow {
@@ -195,7 +203,15 @@ async function ingest(deps: IngestionDeps, options: IngestionOptions, now: Date,
   const outcomes: ChannelOutcome[] = await mapWithConcurrency(todo, options.feedConcurrency, async (source) => {
     try {
       const candidates = await fetchChannelFeed(source, deps.fetch, options.retry);
-      candidates.push(...(await recoverMissed(source, candidates, checkpoints.get(source.channelId), deps, options, summary)));
+      const recovery = await recoverMissed(source, candidates, checkpoints.get(source.channelId), deps, options);
+      candidates.push(...recovery.candidates);
+      if (recovery.failed !== null) {
+        // The feed's videos are still stored. But the checkpoint must stay where it was: moving it to the feed's newest
+        // would tell the next run that nothing could have been missed, and the uploads that fell off the feed stay lost.
+        summary.failedChannels.push({ channelId: source.channelId, name: source.name, message: recovery.failed });
+        summary.failed++;
+        return { source, candidates, error: recovery.failed, holdCheckpoint: true };
+      }
       return { source, candidates, error: null };
     } catch (error) {
       // One unreachable channel must not cost the others their update.
@@ -251,22 +267,21 @@ async function ingest(deps: IngestionDeps, options: IngestionOptions, now: Date,
 }
 
 /** The feed lists only a channel's newest uploads. If all of them are newer than the last run saw, uploads may have fallen off the end; the API can fetch them. */
-async function recoverMissed(source: Source, feed: CandidateVideo[], checkpoint: CheckpointRow | undefined, deps: IngestionDeps, options: IngestionOptions, summary: IngestionSummary): Promise<CandidateVideo[]> {
+async function recoverMissed(source: Source, feed: CandidateVideo[], checkpoint: CheckpointRow | undefined, deps: IngestionDeps, options: IngestionOptions): Promise<Recovery> {
+  const none: Recovery = { candidates: [], failed: null };
   const api = deps.api;
-  if (!api || !checkpoint?.newest_seen_at || feed.length === 0) return [];
+  if (!api || !checkpoint?.newest_seen_at || feed.length === 0) return none;
   const lastSeen = Date.parse(checkpoint.newest_seen_at);
-  if (!feed.every((candidate) => Date.parse(candidate.publishedAt) > lastSeen)) return [];
-  if (api.unitsUsed >= options.apiUnitBudget) return [];
+  if (!feed.every((candidate) => Date.parse(candidate.publishedAt) > lastSeen)) return none;
+  if (api.unitsUsed >= options.apiUnitBudget) return none;
   try {
     const channel = (await api.getChannels([source.channelId])).get(source.channelId);
-    if (!channel) return [];
+    if (!channel) return none;
     const known = new Set(feed.map((candidate) => candidate.youtubeId));
     const ids = (await api.listPlaylistVideoIds(channel.uploadsPlaylistId, 50)).filter((id) => !known.has(id));
-    return ids.length > 0 ? await api.getVideos(ids) : [];
+    return { candidates: ids.length > 0 ? await api.getVideos(ids) : [], failed: null };
   } catch (error) {
-    summary.failed++;
-    summary.message ??= `Recovery for ${source.name} failed: ${describe(error)}`;
-    return [];
+    return { candidates: [], failed: `Recovering missed uploads failed: ${describe(error)}` };
   }
 }
 
@@ -347,9 +362,9 @@ const UPSERT_CHECKPOINTS = `
 
 async function writeCheckpoints(db: Db, outcomes: ChannelOutcome[]): Promise<void> {
   if (outcomes.length === 0) return;
-  const rows = outcomes.map(({ source, candidates, error }) => {
+  const rows = outcomes.map(({ source, candidates, error, holdCheckpoint }) => {
     const newest = candidates.reduce<number>((latest, candidate) => Math.max(latest, Date.parse(candidate.publishedAt)), 0);
-    return { channelId: source.channelId, newest: newest > 0 ? new Date(newest).toISOString() : null, error };
+    return { channelId: source.channelId, newest: newest > 0 && !holdCheckpoint ? new Date(newest).toISOString() : null, error };
   });
   await db.query(UPSERT_CHECKPOINTS, [JSON.stringify(rows)]);
 }

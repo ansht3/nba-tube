@@ -248,6 +248,38 @@ describe("runIngestion", () => {
   });
 });
 
+describe("recovering uploads that fell off the feed", () => {
+  const CHECKPOINT = "2026-11-10T00:00:00.000Z";
+
+  /** A channel that has been seen before, and a feed whose every entry is newer than that, so uploads may have been missed. */
+  async function seenBefore() {
+    await db.query(`INSERT INTO source_checkpoints (channel_id, last_attempt_at, last_success_at, newest_seen_at) VALUES ($1, $2, $2, $2)`, [CHANNEL_A, CHECKPOINT]);
+    return newWorld({ [CHANNEL_A]: [{ id: testId("a1"), channelId: CHANNEL_A, published: "2026-11-15T10:00:00+00:00" }], [CHANNEL_B]: [], [CHANNEL_C]: [] });
+  }
+  const brokenApi = { unitsUsed: 0, getChannels: async () => { throw new Error("quota exceeded"); }, listPlaylistVideoIds: async () => [], getVideos: async () => [] } as unknown as NonNullable<IngestionDeps["api"]>;
+
+  it("keeps the channel's checkpoint where it was when recovery fails, so the next run tries again", async () => {
+    const world = await seenBefore();
+    const summary = await runIngestion(deps(world, { api: brokenApi }));
+    // The video the feed did offer is still stored.
+    expect(await idsInDb()).toEqual([testId("a1")]);
+    expect(summary.failedChannels).toEqual([expect.objectContaining({ channelId: CHANNEL_A, message: expect.stringMatching(/Recovering missed uploads failed.*quota exceeded/) })]);
+    expect(summary.status).toBe("partial");
+    const [row] = await db.query<{ newest_seen_at: string; consecutive_failures: number }>(`SELECT newest_seen_at, consecutive_failures FROM source_checkpoints WHERE channel_id = $1`, [CHANNEL_A]);
+    expect(new Date(row!.newest_seen_at).toISOString()).toBe(CHECKPOINT);
+    expect(row!.consecutive_failures).toBe(1);
+  });
+
+  it("advances the checkpoint once recovery works", async () => {
+    const world = await seenBefore();
+    const workingApi = { unitsUsed: 0, getChannels: async () => new Map([[CHANNEL_A, { uploadsPlaylistId: "UU" }]]), listPlaylistVideoIds: async () => [], getVideos: async () => [] } as unknown as NonNullable<IngestionDeps["api"]>;
+    const summary = await runIngestion(deps(world, { api: workingApi }));
+    expect(summary.status).toBe("succeeded");
+    const [row] = await db.query<{ newest_seen_at: string }>(`SELECT newest_seen_at FROM source_checkpoints WHERE channel_id = $1`, [CHANNEL_A]);
+    expect(new Date(row!.newest_seen_at).toISOString()).toBe("2026-11-15T10:00:00.000Z");
+  });
+});
+
 describe("repeated runs over time", () => {
   const later = (hours: number) => () => new Date(NOW.getTime() + hours * 3_600_000);
 
