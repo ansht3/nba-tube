@@ -89,3 +89,63 @@ describe("createStore", () => {
     expect(store.isPersisting()).toBe(false);
   });
 });
+
+describe("createStore with other tabs and several subscribers", () => {
+  /** Captures the page's "storage" listener, which a browser would call when another tab writes. */
+  function fakeWindow() {
+    const handlers: ((event: { key: string | null }) => void)[] = [];
+    vi.stubGlobal("window", { addEventListener: (type: string, handler: (event: { key: string | null }) => void) => type === "storage" && handlers.push(handler) });
+    return { fire: (key: string | null) => handlers.forEach((handler) => handler({ key })) };
+  }
+
+  it("follows another tab's change to its own key, and ignores other keys", () => {
+    const tabs = fakeWindow();
+    const storage = memoryStorage({ "test:numbers": JSON.stringify([1]) });
+    const store = numberStore(storage);
+    const heard = vi.fn();
+    store.subscribe(heard);
+    expect(store.get()).toEqual([1]);
+
+    storage.data.set("test:numbers", JSON.stringify([1, 2]));
+    tabs.fire("some:other:key");
+    expect(heard).not.toHaveBeenCalled();
+    tabs.fire("test:numbers");
+    expect(store.get()).toEqual([1, 2]);
+    expect(heard).toHaveBeenCalledTimes(1);
+    vi.unstubAllGlobals();
+  });
+
+  it("empties when another tab clears all of storage (an event with no key)", () => {
+    const tabs = fakeWindow();
+    const storage = memoryStorage({ "test:numbers": JSON.stringify([1, 2]) });
+    const store = numberStore(storage);
+    const heard = vi.fn();
+    store.subscribe(heard);
+    expect(store.get()).toEqual([1, 2]);
+
+    storage.data.clear();
+    tabs.fire(null);
+    expect(store.get()).toEqual([]);
+    expect(heard).toHaveBeenCalledTimes(1);
+    vi.unstubAllGlobals();
+  });
+
+  it("tells every subscriber about a change even when one of them throws", () => {
+    const store = numberStore(memoryStorage());
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
+    const before = vi.fn();
+    const after = vi.fn();
+    store.subscribe(before);
+    store.subscribe(() => {
+      throw new Error("a broken component");
+    });
+    store.subscribe(after);
+
+    store.set([5]);
+    expect(before).toHaveBeenCalledTimes(1);
+    expect(after).toHaveBeenCalledTimes(1);
+    expect(store.get()).toEqual([5]);
+    expect(log).toHaveBeenCalledTimes(1);
+    log.mockRestore();
+  });
+});
