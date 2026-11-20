@@ -49,6 +49,9 @@ export function useCatalogUpdates(initial: CatalogMarker | null): CatalogUpdates
     let failures = 0;
     let lastCheck = Date.now();
     let stopped = false;
+    // A check that is still waiting on the network. Another one starting beside it (the timer and a tab coming back
+    // into view can both fire) would start a second chain of timers and the page would poll at twice the rate.
+    let checking = false;
 
     const schedule = () => {
       if (!stopped) timer = setTimeout(check, nextDelay(failures));
@@ -57,12 +60,14 @@ export function useCatalogUpdates(initial: CatalogMarker | null): CatalogUpdates
     async function check() {
       // A hidden tab does no work. The next visible moment checks instead.
       if (document.hidden) return schedule();
+      if (checking) return;
+      checking = true;
       lastCheck = Date.now();
       try {
         const version = await getJson<{ version: string }>("/api/version");
         failures = 0;
         if (version.version !== latest.current!.version) {
-          const updates = await getJson<UpdatesBody>(`/api/updates?since=${known.current!.newestId}&limit=24`);
+          const updates = await getJson<UpdatesBody>(`/api/updates?since=${encodeURIComponent(known.current!.newestId)}&limit=24`);
           if (stopped) return;
           latest.current = { version: updates.version, newestId: updates.videos[0]?.youtubeId ?? known.current!.newestId };
           setState({ count: updates.count, hasMore: updates.hasMore, reset: updates.reset });
@@ -70,12 +75,14 @@ export function useCatalogUpdates(initial: CatalogMarker | null): CatalogUpdates
       } catch {
         // Offline, or the server is busy: wait longer each time rather than hammering it.
         failures += 1;
+      } finally {
+        checking = false;
       }
       schedule();
     }
 
     const onVisibilityChange = () => {
-      if (document.hidden || !shouldCheckOnFocus(lastCheck, Date.now())) return;
+      if (document.hidden || checking || !shouldCheckOnFocus(lastCheck, Date.now())) return;
       clearTimeout(timer);
       void check();
     };
