@@ -25,6 +25,8 @@ npm run dev          # dev server on :3000
 npm run sync         # rebuild data/catalog.json (Data API with YOUTUBE_API_KEY, keyless feeds without)
 npm run seed         # rebuild the committed seed (keyless)
 npm run lint && npm run typecheck && npm run test
+npm run test:coverage  # the same tests with a coverage summary (v8); CI runs this
+npm run build:worker   # bundles the Cloudflare Worker; CI runs this too
 npm run build        # production build (.next)
 npm run test:e2e     # Playwright against `next start` (build first)
 npm run preview      # next start on :3000 (build first)
