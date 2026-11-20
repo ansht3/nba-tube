@@ -37,6 +37,40 @@ the top.
   key until the video is next written, or `npm run db:import` is run again.
 - Load numbers are from PGlite on a laptop, not Neon.
 
+## Open findings from the 2026-11-19 review
+
+Three read-only reviews (API and SQL, ingestion and database, client storage and
+feed) found the issues fixed on `dev` that day, and these that are **not fixed**.
+"Confirmed" means I read the code path myself; "reported" means only the reviewer did.
+
+- **A stored video that stops qualifying stays visible (confirmed).** If a video
+  is added to `data/overrides.json` excludes, or its channel is suspended or
+  removed from `data/sources.json`, the worker counts it as rejected but does not
+  delete it; it stays until the 45-day prune. The file-based sync deleted it. For
+  a takedown, remove the row by hand (`DELETE FROM videos WHERE youtube_id = ...`)
+  and publish a version.
+- **oEmbed rechecks reset the 30-day clock for API-derived data (confirmed in
+  code, behaviour reasoned).** A recheck stamps a fresh `metadataCheckedAt` without
+  refreshing durations, so a Data API duration can live up to the 45-day limit
+  instead of 30 days. No fix without a way to tell "embed rechecked" from "metadata
+  refreshed".
+- **No run-level deadline (reported).** Retries and rate-limit waits are bounded per
+  request, but a slow run can pass the 240-second lease and then writes nothing;
+  the next run starts over. Not observed; the arithmetic is the reviewer's.
+- **The legacy build-time sync can shrink the live catalog (reported).** If the
+  published `catalog.json` cannot be fetched at build time, the sync starts fresh
+  and publishes only the newest uploads per channel. Relevant only without
+  `DATABASE_URL`.
+- **`script-src 'unsafe-inline'` in the CSP (confirmed).** The usual Next.js
+  trade-off without nonces. The site has no accounts or user content.
+- **No response-size cap on feed fetches (reported).** Low risk: trusted hosts and
+  a timeout.
+- **`ingestion_runs` and `catalog_versions` grow without limit** (about 288 rows a
+  day each). Not pruned yet.
+- **Not verified in a browser this round.** The poller and the Liked/Watch later
+  queue changes were checked by unit tests and by the browser tests earlier, but
+  the final commits were not re-run in a browser; CI is the check.
+
 ## Keyless mode
 
 - Without `YOUTUBE_API_KEY`, only each channel's 15 newest uploads are seen per
