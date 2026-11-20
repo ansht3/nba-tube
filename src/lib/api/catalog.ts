@@ -65,10 +65,13 @@ export async function handleUpdates(request: Request, repository: CatalogReposit
     // One extra row: if the page has more than `limit` videos before `since`, or never reaches it, more exist than we return.
     const page = await repository.list({ ...parsed.query, limit: parsed.query.limit + 1 });
     const index = page.videos.findIndex((video) => video.youtubeId === since);
-    const body: UpdatesBody =
-      index >= 0
-        ? { videos: page.videos.slice(0, index), count: index, hasMore: false, reset: false, version: meta.version }
-        : { videos: page.videos.slice(0, parsed.query.limit), count: parsed.query.limit, hasMore: true, reset: false, version: meta.version };
+    let body: UpdatesBody;
+    if (index >= 0) body = { videos: page.videos.slice(0, index), count: index, hasMore: false, reset: false, version: meta.version };
+    // A full page without the marker: at least `limit` videos are newer than it.
+    else if (page.videos.length > parsed.query.limit) body = { videos: page.videos.slice(0, parsed.query.limit), count: parsed.query.limit, hasMore: true, reset: false, version: meta.version };
+    // A short page without the marker: the video exists but is not in this filtered list (or fell outside its date window),
+    // so there is no telling what is newer than it. Saying "limit new videos" would invent a number; ask for a reload.
+    else body = { videos: [], count: 0, hasMore: false, reset: true, version: meta.version };
     return json(body, { etag, cache: VERSION_CACHE });
   } catch (error) {
     if (error instanceof InvalidCursorError) return errorResponse(400, error.message);

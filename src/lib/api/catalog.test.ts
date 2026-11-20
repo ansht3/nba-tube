@@ -68,6 +68,18 @@ describe("GET /api/updates", () => {
     expect(more.videos).toHaveLength(5);
   });
 
+  it("asks for a reload instead of inventing a count when the marker is not in the filtered list", async () => {
+    // v04 is a LAL video. In the BOS feed (three videos) it is not there, so there is no telling what is "newer" than it.
+    const result = await body(await updates(repo, `?since=${testId("v04")}&team=BOS`));
+    expect(result).toMatchObject({ reset: true, count: 0, hasMore: false });
+    expect(result.videos).toEqual([]);
+  });
+
+  it("still says hasMore when the marker is not found in a full page of new videos", async () => {
+    const result = await body(await updates(repo, `?since=${testId("v05")}&limit=2`));
+    expect(result).toMatchObject({ reset: false, hasMore: true, count: 2 });
+  });
+
   it("applies the client's filters, using the newest video in the filtered feed as the marker", async () => {
     // BOS videos are the odd-numbered ones: v01, v03, v05, ...
     const result = await body(await updates(repo, `?since=${testId("v05")}&team=BOS`));
