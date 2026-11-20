@@ -19,7 +19,10 @@ export function searchTextFor(video: Video): string {
   return normalizeText([video.title, video.channelTitle, CONTENT_TYPE_LABELS[video.labels.contentType], ...teams].join(" "));
 }
 
+/** Words beyond this are ignored. Each word is a scan of the catalog's search text, so a request cannot make the database do unlimited work. */
+export const MAX_SEARCH_WORDS = 8;
+
 /** A search matches when every one of these words appears in the video's search text, in any order. */
 export function searchWords(query: string): string[] {
-  return normalizeText(query).split(/\s+/).filter(Boolean);
+  return normalizeText(query).split(/\s+/).filter(Boolean).slice(0, MAX_SEARCH_WORDS);
 }

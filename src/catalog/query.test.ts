@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, parseVideoQuery } from "./query";
 import { decodeCursor, InvalidCursorError } from "./repository";
+import { searchWords } from "./search";
 
 const NOW = Date.parse("2026-11-16T12:00:30Z");
 const parse = (search: string) => parseVideoQuery(new URLSearchParams(search), NOW);
@@ -86,6 +87,29 @@ describe("parseVideoQuery", () => {
   it("gives the same cache key whatever order the parameters arrive in", () => {
     expect(ok("team=LAL&section=highlights").cacheKey).toBe(ok("section=highlights&team=LAL").cacheKey);
     expect(ok("team=LAL").cacheKey).not.toBe(ok("team=BOS").cacheKey);
+  });
+
+  it("gives one cache key to requests that mean the same thing", () => {
+    expect(ok("team=lal").cacheKey).toBe(ok("team=LAL").cacheKey);
+    expect(ok("teams=LAL,BOS").cacheKey).toBe(ok("teams=BOS,LAL,LAL").cacheKey);
+    expect(ok("type=GAME_HIGHLIGHTS,TOP_PLAYS").cacheKey).toBe(ok("type=TOP_PLAYS,GAME_HIGHLIGHTS").cacheKey);
+    expect(ok("sort=latest").cacheKey).toBe(ok("").cacheKey);
+    expect(ok(`limit=${DEFAULT_PAGE_SIZE}`).cacheKey).toBe(ok("").cacheKey);
+    expect(ok("q=Lakers  Celtics").cacheKey).toBe(ok("q=celtics lakers").cacheKey);
+  });
+
+  it("still tells different requests apart", () => {
+    expect(ok("sort=oldest").cacheKey).not.toBe(ok("").cacheKey);
+    expect(ok("limit=12").cacheKey).not.toBe(ok("").cacheKey);
+    expect(ok("q=lakers").cacheKey).not.toBe(ok("q=celtics").cacheKey);
+    expect(ok("date=day").cacheKey).not.toBe(ok("date=week").cacheKey);
+    expect(ok("duration=short").cacheKey).not.toBe(ok("duration=long").cacheKey);
+  });
+
+  it("ignores search words beyond the eighth, so a request cannot force unlimited scans", () => {
+    const words = Array.from({ length: 30 }, (_, i) => `word${i}`);
+    expect(ok(`q=${words.slice(0, 8).join(" ")}`).cacheKey).toBe(ok(`q=${words.slice(0, 8).join(" ")} extra`).cacheKey);
+    expect(searchWords(words.join(" "))).toHaveLength(8);
   });
 });
 

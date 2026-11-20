@@ -1,5 +1,6 @@
 import { SECTIONS, isContentType, type ContentType, type SectionId } from "./content-types";
 import type { VideoQuery } from "./repository";
+import { searchWords } from "./search";
 import { getTeam } from "./teams";
 
 export const DEFAULT_PAGE_SIZE = 24;
@@ -130,6 +131,22 @@ export function parseVideoQuery(params: URLSearchParams, now: number): ParsedVid
     query.cursor = cursor;
   }
 
-  const cacheKey = PARAMS.map((name) => `${name}=${params.get(name) ?? ""}`).join("&");
+  // Built from what the query means, not from how it was written, so "team=lal" and "team=LAL", reordered lists and
+  // an explicit default all share one cache entry, and one ETag.
+  const set = (values: readonly string[] | undefined) => [...new Set(values ?? [])].sort().join(",");
+  const cacheKey = [
+    `section=${query.section ?? ""}`,
+    `team=${query.teamId ?? ""}`,
+    `teams=${set(query.anyTeamIds)}`,
+    `type=${set(query.contentTypes)}`,
+    `channel=${query.channelId ?? ""}`,
+    `ids=${set(query.ids)}`,
+    `q=${set(searchWords(query.q ?? ""))}`,
+    `date=${params.get("date") ?? ""}`,
+    `duration=${params.get("duration") ?? ""}`,
+    `sort=${query.sort ?? "latest"}`,
+    `limit=${query.limit}`,
+    `cursor=${query.cursor ?? ""}`,
+  ].join("&");
   return { ok: true, query, cacheKey, timeSensitive };
 }
