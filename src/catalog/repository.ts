@@ -100,6 +100,12 @@ export function compareVideos(a: Pick<Video, "publishedAt" | "youtubeId">, b: Pi
 const base64url = (text: string) => btoa(text).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 const fromBase64url = (text: string) => atob(text.replace(/-/g, "+").replace(/_/g, "/"));
 
+/** Every video is from the YouTube era, so a cursor outside these dates was not issued by this API. Postgres cannot read timestamps far outside them. */
+const MIN_CURSOR_MS = 0;
+const MAX_CURSOR_MS = 4_102_444_800_000; // 2100-01-01
+/** A best-first key is a small weight plus a day count, far below this. */
+const MAX_CURSOR_KEY = 1_000_000;
+
 const SORT_TAG = { latest: "l", oldest: "o", best: "b" } as const;
 
 /** Fields are separated by "~", which cannot appear in a number or in a YouTube id (letters, digits, - and _). */
@@ -117,7 +123,9 @@ export function decodeCursor(cursor: string, sort: VideoSort = "latest"): Cursor
     const bestKeyValue = sort === "best" ? Number(fields.shift()) : undefined;
     const [ms, youtubeId] = fields;
     const publishedMs = Number(ms);
-    if ((bestKeyValue !== undefined && !Number.isFinite(bestKeyValue)) || !Number.isSafeInteger(publishedMs) || !/^[A-Za-z0-9_-]{11}$/.test(youtubeId ?? "")) throw new InvalidCursorError();
+    const keyInRange = bestKeyValue === undefined || (Number.isFinite(bestKeyValue) && Math.abs(bestKeyValue) <= MAX_CURSOR_KEY);
+    const timeInRange = Number.isSafeInteger(publishedMs) && publishedMs >= MIN_CURSOR_MS && publishedMs <= MAX_CURSOR_MS;
+    if (!keyInRange || !timeInRange || !/^[A-Za-z0-9_-]{11}$/.test(youtubeId ?? "")) throw new InvalidCursorError();
     return { sort, publishedMs, youtubeId: youtubeId!, ...(bestKeyValue !== undefined ? { bestKey: bestKeyValue } : {}) };
   } catch {
     throw new InvalidCursorError();

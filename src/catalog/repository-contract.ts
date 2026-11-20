@@ -129,6 +129,12 @@ export function describeRepositoryContract(name: string, create: (videos: Video[
   });
 
   describe(`${name}: cursor pagination`, () => {
+    it("refuses a forged cursor the same way, whatever the storage: it is a client error, not an outage", async () => {
+      const { repo } = await create([video("a", "2026-11-10T00:00:00Z")]);
+      const forged = Buffer.from("l~-9007199254740991~AAAAAAAAAAA").toString("base64url");
+      await expect(repo.list({ limit: 4, cursor: forged })).rejects.toThrow(InvalidCursorError);
+    });
+
     const many = Array.from({ length: 11 }, (_, i) => video(`v${String(i).padStart(2, "0")}`, `2026-11-16T${String(20 - i).padStart(2, "0")}:00:00.000Z`));
 
     it("walks every video exactly once, with a constant total", async () => {

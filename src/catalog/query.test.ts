@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, parseVideoQuery } from "./query";
+import { decodeCursor, InvalidCursorError } from "./repository";
 
 const NOW = Date.parse("2026-11-16T12:00:30Z");
 const parse = (search: string) => parseVideoQuery(new URLSearchParams(search), NOW);
@@ -85,5 +86,29 @@ describe("parseVideoQuery", () => {
   it("gives the same cache key whatever order the parameters arrive in", () => {
     expect(ok("team=LAL&section=highlights").cacheKey).toBe(ok("section=highlights&team=LAL").cacheKey);
     expect(ok("team=LAL").cacheKey).not.toBe(ok("team=BOS").cacheKey);
+  });
+});
+
+describe("cursor bounds", () => {
+  const cursor = (text: string) => Buffer.from(text).toString("base64url");
+  const rejected = (text: string, sort: "latest" | "oldest" | "best" = "latest") => expect(() => decodeCursor(cursor(text), sort)).toThrow(InvalidCursorError);
+
+  it("accepts the cursors this API issues", () => {
+    expect(decodeCursor(cursor("l~1700000000000~AAAAAAAAAAA"), "latest")).toMatchObject({ publishedMs: 1_700_000_000_000 });
+    expect(decodeCursor(cursor("b~12345.5~1700000000000~AAAAAAAAAAA"), "best")).toMatchObject({ bestKey: 12345.5 });
+  });
+
+  it("rejects times that no video can have, so the database is never asked to read them", () => {
+    rejected("l~-9007199254740991~AAAAAAAAAAA");
+    rejected("l~-1~AAAAAAAAAAA");
+    rejected("o~9007199254740991~AAAAAAAAAAA", "oldest");
+    rejected("l~4102444800001~AAAAAAAAAAA");
+  });
+
+  it("rejects an out-of-range or non-finite best key", () => {
+    rejected("b~1e308~1700000000000~AAAAAAAAAAA", "best");
+    rejected("b~-1e9~1700000000000~AAAAAAAAAAA", "best");
+    rejected("b~Infinity~1700000000000~AAAAAAAAAAA", "best");
+    rejected("b~NaN~1700000000000~AAAAAAAAAAA", "best");
   });
 });
