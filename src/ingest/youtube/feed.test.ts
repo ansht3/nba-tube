@@ -59,6 +59,30 @@ describe("parseFeed", () => {
   });
 });
 
+describe("parseFeed with hostile or broken character references", () => {
+  const titleOf = (title: string) => parseFeed(feed(entry({ title })))[0]?.title;
+
+  it("does not throw on a reference outside Unicode, so one odd title cannot fail a whole channel", () => {
+    expect(() => parseFeed(feed(entry({ title: "Bad &#x110000; reference" })))).not.toThrow();
+    expect(() => parseFeed(feed(entry({ title: "Huge &#99999999999999999999; reference" })))).not.toThrow();
+    expect(titleOf("Bad &#x110000; reference")).toBe("Bad &#x110000; reference");
+    expect(titleOf("Huge &#99999999999999999999; reference")).toBe("Huge &#99999999999999999999; reference");
+  });
+
+  it("leaves references to characters XML does not allow as they were, instead of inserting them", () => {
+    for (const reference of ["&#0;", "&#x1;", "&#xD800;", "&#xDFFF;", "&#xFFFE;"]) expect(titleOf(`A ${reference} B`)).toBe(`A ${reference} B`);
+  });
+
+  it("still decodes ordinary references, including characters outside the first plane", () => {
+    expect(titleOf("Tab&#9;and &#x1F3C0; and &#128293; and &#xE9;")).toBe("Tab\tand \u{1F3C0} and \u{1F525} and \u00E9");
+  });
+
+  it("keeps the other entries of the feed when one title has a bad reference", () => {
+    const xml = feed(entry({ id: "AAAAAAAAAAA", title: "Fine one" }) + entry({ id: "BBBBBBBBBBB", title: "Broken &#x110000;" }) + entry({ id: "CCCCCCCCCCC", title: "Fine two" }));
+    expect(parseFeed(xml).map((video) => video.youtubeId)).toEqual(["AAAAAAAAAAA", "BBBBBBBBBBB", "CCCCCCCCCCC"]);
+  });
+});
+
 describe("fetchChannelFeed", () => {
   const source = makeSource();
 
