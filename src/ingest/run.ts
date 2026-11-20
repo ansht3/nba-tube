@@ -35,6 +35,29 @@ export interface IngestionOptions {
   retry: RetryOptions;
 }
 
+/** Rejections that are decisions about the publisher or an editor's call, not guesses from a title. */
+const WITHDRAWING_REJECTIONS: ReadonlySet<string> = new Set(["MANUAL_EXCLUSION", "UNVERIFIED_PUBLISHER"]);
+
+/**
+ * Videos stored from a channel that is no longer approved (suspended, or taken out of data/sources.json). Such a channel
+ * is never polled again, so nothing else would ever touch its videos. Nothing is removed when the approved list is
+ * empty, or when it would remove most of the catalog: either is far more likely a broken configuration than an intent.
+ */
+async function withdrawnChannelVideos(db: Db, sources: Source[], summary: IngestionSummary): Promise<string[]> {
+  if (sources.length === 0) return [];
+  const approved = JSON.stringify(sources.map((source) => source.channelId));
+  const [totals] = await db.query<{ n: string }>(`SELECT count(*) AS n FROM videos`);
+  const rows = await db.query<{ youtube_id: string }>(`SELECT youtube_id FROM videos WHERE channel_id NOT IN (SELECT jsonb_array_elements_text($1::jsonb))`, [approved]);
+  const total = Number(totals?.n ?? 0);
+  if (rows.length === 0) return [];
+  if (total >= MIN_SUSPECT_REMOVALS + 1 && rows.length * 2 > total) {
+    summary.failed++;
+    summary.message ??= `${rows.length} of ${total} stored videos belong to channels that are not approved. That is more likely a configuration mistake than an intent, so none were removed.`;
+    return [];
+  }
+  return rows.map((row) => row.youtube_id);
+}
+
 /** At least this many removals in one batch, and more than half of it, is treated as a bad answer from YouTube and not acted on. */
 const MIN_SUSPECT_REMOVALS = 3;
 
@@ -232,6 +255,7 @@ async function ingest(deps: IngestionDeps, options: IngestionOptions, now: Date,
   summary.discovered = unique.size;
 
   const stored = await readStored(db, [...unique.keys()], summary);
+  const remove: string[] = [];
   const toWrite: Video[] = [];
   const toVerify: Video[] = [];
 
@@ -239,6 +263,9 @@ async function ingest(deps: IngestionDeps, options: IngestionOptions, now: Date,
     const decision = decide(candidate, bySource.get(candidate.channelId), deps.overrides, now);
     if (!decision.accepted) {
       summary.rejected++;
+      // A policy decision about a video already published takes it down. Other rejections (a title rule, a missing
+      // duration) do not: a keyless feed cannot tell what the API knew, so they must never delete.
+      if (WITHDRAWING_REJECTIONS.has(decision.rejection) && stored.has(candidate.youtubeId)) remove.push(candidate.youtubeId);
       continue;
     }
     summary.accepted++;
@@ -252,13 +279,13 @@ async function ingest(deps: IngestionDeps, options: IngestionOptions, now: Date,
 
   toWrite.push(...(await verifyNew(toVerify, deps, options, summary)));
 
-  const remove: string[] = [];
+  remove.push(...(await withdrawnChannelVideos(db, deps.sources, summary)));
   toWrite.push(...(await recheckStored(deps, options, now, new Set(unique.keys()), remove, summary)));
 
   // The database decides who holds the lease. Losing it means another run may be writing, so this one must not.
   if (!(await renewLease(db, LEASE_NAME, deps.owner, options.leaseSeconds))) throw new LeaseLostError();
 
-  const result = await publishVideos(db, toWrite, { mode: api ? "api" : "feed", runId: summary.runId, remove });
+  const result = await publishVideos(db, toWrite, { mode: api ? "api" : "feed", runId: summary.runId, remove: [...new Set(remove)] });
   summary.updated = result.inserted + result.updated;
   summary.removed += result.removed;
   summary.version = result.version;

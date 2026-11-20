@@ -43,12 +43,6 @@ Three read-only reviews (API and SQL, ingestion and database, client storage and
 feed) found the issues fixed on `dev` that day, and these that are **not fixed**.
 "Confirmed" means I read the code path myself; "reported" means only the reviewer did.
 
-- **A stored video that stops qualifying stays visible (confirmed).** If a video
-  is added to `data/overrides.json` excludes, or its channel is suspended or
-  removed from `data/sources.json`, the worker counts it as rejected but does not
-  delete it; it stays until the 45-day prune. The file-based sync deleted it. For
-  a takedown, remove the row by hand (`DELETE FROM videos WHERE youtube_id = ...`)
-  and publish a version.
 - **oEmbed rechecks reset the 30-day clock for API-derived data (confirmed in
   code, behaviour reasoned).** A recheck stamps a fresh `metadataCheckedAt` without
   refreshing durations, so a Data API duration can live up to the 45-day limit

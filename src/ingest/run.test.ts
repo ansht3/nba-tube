@@ -257,6 +257,54 @@ describe("runIngestion", () => {
   });
 });
 
+describe("withdrawing videos that should no longer be shown", () => {
+  const stale = "2026-11-15T00:00:00.000Z";
+  const stored = (name: string, channelId: string, hours: number) => makeVideo({ youtubeId: testId(name), channelId, publishedAt: `2026-11-15T0${hours}:00:00.000Z`, provenance: { ...makeVideo().provenance, metadataCheckedAt: stale } });
+  const seed = (videos: ReturnType<typeof stored>[]) => importCatalog(db, { schemaVersion: 1, mode: "feed", generatedAt: stale, videos });
+  const excluding = (...ids: string[]) => parseOverrides({ schemaVersion: 1, include: [], exclude: ids.map((id) => ({ youtubeId: id, note: "taken down by an editor" })) });
+
+  it("removes a stored video that an editor has since excluded, when its feed shows it again", async () => {
+    await seed([stored("bad", CHANNEL_A, 1), stored("keep", CHANNEL_A, 2)]);
+    const world = newWorld({ [CHANNEL_A]: [{ id: testId("bad"), channelId: CHANNEL_A, published: "2026-11-15T01:00:00+00:00" }, { id: testId("keep"), channelId: CHANNEL_A, published: "2026-11-15T02:00:00+00:00" }], [CHANNEL_B]: [], [CHANNEL_C]: [] });
+    const summary = await runIngestion(deps(world, { overrides: excluding(testId("bad")) }));
+    expect(summary).toMatchObject({ removed: 1, published: true });
+    expect(await idsInDb()).toEqual([testId("keep")]);
+  });
+
+  it("removes stored videos of a channel that is no longer approved, which is never polled again", async () => {
+    const GONE = "UC" + "Z".repeat(22);
+    await seed([stored("gone1", GONE, 1), stored("fine1", CHANNEL_A, 2), stored("fine2", CHANNEL_A, 3)]);
+    const summary = await runIngestion(deps(newWorld({ [CHANNEL_A]: [], [CHANNEL_B]: [], [CHANNEL_C]: [] })));
+    expect(summary.removed).toBe(1);
+    expect(await idsInDb()).toEqual([testId("fine1"), testId("fine2")].sort());
+  });
+
+  it("does not delete on a title-rule rejection: a keyless feed cannot tell what the API knew", async () => {
+    await seed([stored("odd", CHANNEL_A, 1)]);
+    const world = newWorld({ [CHANNEL_A]: [{ id: testId("odd"), channelId: CHANNEL_A, title: "Behind the scenes with the mascot", published: "2026-11-15T01:00:00+00:00" }], [CHANNEL_B]: [], [CHANNEL_C]: [] });
+    const summary = await runIngestion(deps(world));
+    expect(summary.rejected).toBe(1);
+    expect(summary.removed).toBe(0);
+    expect(await idsInDb()).toEqual([testId("odd")]);
+  });
+
+  it("removes nothing when no channel is approved: that is a broken configuration, not a decision", async () => {
+    await seed([stored("a", CHANNEL_A, 1), stored("b", CHANNEL_B, 2)]);
+    const summary = await runIngestion(deps(newWorld({}), { sources: [] }));
+    expect(summary.removed).toBe(0);
+    expect(await count("videos")).toBe(2);
+  });
+
+  it("removes nothing when most of the catalog would go at once, and says why", async () => {
+    const GONE = "UC" + "Y".repeat(22);
+    await seed([stored("g1", GONE, 1), stored("g2", GONE, 2), stored("g3", GONE, 3), stored("f1", CHANNEL_A, 4)]);
+    const summary = await runIngestion(deps(newWorld({ [CHANNEL_A]: [], [CHANNEL_B]: [], [CHANNEL_C]: [] })));
+    expect(summary.removed).toBe(0);
+    expect(summary.message).toMatch(/configuration mistake/);
+    expect(await count("videos")).toBe(4);
+  });
+});
+
 describe("recovering uploads that fell off the feed", () => {
   const CHECKPOINT = "2026-11-10T00:00:00.000Z";
 
