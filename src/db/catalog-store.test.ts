@@ -2,7 +2,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { Catalog, Video } from "@/catalog/schema";
 import { makeVideo, testId } from "@/test/fixtures";
-import { importCatalog, pruneExpired, publishVideos } from "./catalog-store";
+import { importCatalog, pruneExpired, pruneHistory, publishVideos } from "./catalog-store";
 import type { Db } from "./db";
 import { migrate } from "./migrate";
 import { MIGRATIONS } from "./migrations";
@@ -173,5 +173,51 @@ describe("pruneExpired", () => {
     expect(await pruneExpired(db, NOW, limits)).toEqual({ deleted: 0, version: null });
     expect(await count("videos")).toBe(1);
     expect(await count("catalog_versions")).toBe(1);
+  });
+});
+
+describe("pruneHistory", () => {
+  const NOW = new Date("2026-11-20T12:00:00Z");
+  const daysAgo = (n: number) => new Date(NOW.getTime() - n * 86_400_000).toISOString();
+  const run = (status: string, startedDaysAgo: number) => db.query<{ run_id: string }>(`INSERT INTO ingestion_runs (owner, status, started_at) VALUES ('t', $1, $2) RETURNING run_id`, [status, daysAgo(startedDaysAgo)]).then((rows) => Number(rows[0]!.run_id));
+  const version = (publishedDaysAgo: number, runId: number | null) => db.query(`INSERT INTO catalog_versions (mode, video_count, published_at, run_id) VALUES ('feed', 1, $1, $2)`, [daysAgo(publishedDaysAgo), runId]);
+  const ids = async (table: "catalog_versions" | "ingestion_runs") => (await db.query<{ id: string }>(`SELECT ${table === "catalog_versions" ? "version" : "run_id"} AS id FROM ${table} ORDER BY 1`)).map((row) => Number(row.id));
+
+  it("removes old history but keeps the newest version, the latest run, the latest success and runs kept versions point to", async () => {
+    const oldFailed = await run("failed", 40);
+    const oldFailed2 = await run("failed", 39);
+    const oldSucceeded = await run("succeeded", 38); // the latest run that did not fail
+    const oldFailed3 = await run("failed", 37);
+    const recentFailed = await run("failed", 1); // the latest run
+    await version(40, oldFailed); // superseded and old: goes
+    await version(35, null); // superseded and old: goes
+    await version(2, null); // the newest: stays
+
+    expect(await pruneHistory(db, NOW)).toEqual({ versions: 2, runs: 3 });
+    expect(await ids("catalog_versions")).toEqual([3]);
+    const remaining = await ids("ingestion_runs");
+    expect(remaining).toEqual([oldSucceeded, recentFailed].sort((a, b) => a - b));
+    for (const gone of [oldFailed, oldFailed2, oldFailed3]) expect(remaining).not.toContain(gone);
+  });
+
+  it("keeps a run that a surviving version points to, even when the run is old", async () => {
+    const old = await run("succeeded", 50);
+    await run("succeeded", 49);
+    await version(1, old); // the newest version still references the old run
+    await pruneHistory(db, NOW);
+    expect(await ids("ingestion_runs")).toContain(old);
+  });
+
+  it("never removes the newest version, however old, so the catalog keeps an identity", async () => {
+    await version(90, null);
+    expect(await pruneHistory(db, NOW)).toEqual({ versions: 0, runs: 0 });
+    expect(await count("catalog_versions")).toBe(1);
+  });
+
+  it("changes nothing on an empty database, and is safe to run twice", async () => {
+    expect(await pruneHistory(db, NOW)).toEqual({ versions: 0, runs: 0 });
+    await run("failed", 60);
+    await pruneHistory(db, NOW);
+    expect(await pruneHistory(db, NOW)).toEqual({ versions: 0, runs: 0 });
   });
 });

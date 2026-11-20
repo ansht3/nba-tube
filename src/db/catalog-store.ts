@@ -185,3 +185,37 @@ export async function pruneExpired(db: Db, now: Date, limits: RetentionLimits): 
   const row = rows![0]!;
   return { deleted: Number(row.deleted), version: row.version === null ? null : Number(row.version) };
 }
+
+/** How long finished runs and superseded versions are kept for looking back. */
+export const HISTORY_DAYS = 30;
+
+/**
+ * Trims the bookkeeping tables, which otherwise grow by about 288 rows a day each. Always kept: the newest catalog
+ * version (it is the identity every client and cache compares), the latest run, the latest run that did not fail (health
+ * reads it), and any run a kept version points to. Returns how many rows went.
+ */
+export async function pruneHistory(db: Db, now: Date, days: number = HISTORY_DAYS): Promise<{ versions: number; runs: number }> {
+  const cutoff = new Date(now.getTime() - days * DAY_MS).toISOString();
+  const [versions, runs] = await db.batch([
+    {
+      sql: `WITH gone AS (
+              DELETE FROM catalog_versions
+              WHERE published_at < $1 AND version < (SELECT max(version) FROM catalog_versions)
+              RETURNING version
+            ) SELECT count(*) AS n FROM gone`,
+      params: [cutoff],
+    },
+    {
+      sql: `WITH gone AS (
+              DELETE FROM ingestion_runs
+              WHERE started_at < $1
+                AND run_id NOT IN (SELECT run_id FROM catalog_versions WHERE run_id IS NOT NULL)
+                AND run_id <> COALESCE((SELECT max(run_id) FROM ingestion_runs), -1)
+                AND run_id <> COALESCE((SELECT max(run_id) FROM ingestion_runs WHERE status IN ('succeeded', 'partial')), -1)
+              RETURNING run_id
+            ) SELECT count(*) AS n FROM gone`,
+      params: [cutoff],
+    },
+  ]);
+  return { versions: Number(versions![0]!.n), runs: Number(runs![0]!.n) };
+}

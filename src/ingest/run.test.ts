@@ -257,6 +257,27 @@ describe("runIngestion", () => {
   });
 });
 
+describe("bookkeeping retention", () => {
+  it("trims old runs at once, and an old version once a newer one exists, never the newest or the run's own row", async () => {
+    await db.query(`INSERT INTO ingestion_runs (owner, status, started_at) VALUES ('old', 'failed', now() - interval '90 days'), ('old', 'failed', now() - interval '80 days')`);
+    await db.query(`INSERT INTO catalog_versions (mode, video_count, published_at) VALUES ('feed', 1, now() - interval '90 days')`);
+    const world = newWorld({ [CHANNEL_A]: [{ id: testId("a1"), channelId: CHANNEL_A }], [CHANNEL_B]: [], [CHANNEL_C]: [] });
+    const real = { now: () => new Date() };
+
+    // Retention runs first, so during this run the old version is still the newest and must stay.
+    const first = await runIngestion(deps(world, real));
+    expect(first.status).toBe("succeeded");
+    expect(await count("ingestion_runs")).toBe(1);
+    expect(await count("catalog_versions")).toBe(2);
+
+    // Now a newer version exists, so the old one is superseded and goes; the newest and the latest run stay.
+    const second = await runIngestion(deps(world, { ...real, owner: "run-2" }));
+    expect(await count("catalog_versions")).toBe(1);
+    expect((await db.query<{ version: string }>(`SELECT version FROM catalog_versions`)).map((row) => Number(row.version))).toEqual([first.version]);
+    expect((await db.query<{ run_id: string }>(`SELECT run_id FROM ingestion_runs ORDER BY run_id`)).map((row) => Number(row.run_id))).toEqual([first.runId, second.runId]);
+  });
+});
+
 describe("withdrawing videos that should no longer be shown", () => {
   const stale = "2026-11-15T00:00:00.000Z";
   const stored = (name: string, channelId: string, hours: number) => makeVideo({ youtubeId: testId(name), channelId, publishedAt: `2026-11-15T0${hours}:00:00.000Z`, provenance: { ...makeVideo().provenance, metadataCheckedAt: stale } });

@@ -59,8 +59,6 @@ feed) found the issues fixed on `dev` that day, and these that are **not fixed**
   trade-off without nonces. The site has no accounts or user content.
 - **No response-size cap on feed fetches (reported).** Low risk: trusted hosts and
   a timeout.
-- **`ingestion_runs` and `catalog_versions` grow without limit** (about 288 rows a
-  day each). Not pruned yet.
 - **Not verified in a browser this round.** The poller and the Liked/Watch later
   queue changes were checked by unit tests and by the browser tests earlier, but
   the final commits were not re-run in a browser; CI is the check.

@@ -1,6 +1,6 @@
 import { videoSchema, type Video } from "@/catalog/schema";
 import type { Source } from "@/catalog/sources";
-import { canonical, publishVideos, pruneExpired } from "@/db/catalog-store";
+import { canonical, publishVideos, pruneExpired, pruneHistory } from "@/db/catalog-store";
 import type { Db } from "@/db/db";
 import { acquireLease, releaseLease, renewLease } from "@/db/lease";
 import type { CandidateVideo } from "./candidate";
@@ -213,6 +213,8 @@ async function ingest(deps: IngestionDeps, options: IngestionOptions, now: Date,
     const pruned = await pruneExpired(db, now, { retentionDays: options.retentionDays, maxMetadataAgeDays: options.maxMetadataAgeDays });
     summary.removed += pruned.deleted;
     if (pruned.deleted > 0) summary.published = true;
+    // The bookkeeping tables are trimmed in the same protected step, so they cannot grow without bound.
+    await pruneHistory(db, now);
   } catch (error) {
     summary.failed++;
     summary.message ??= `Retention failed: ${describe(error)}`;
