@@ -169,6 +169,15 @@ describe("runIngestion", () => {
     expect(await idsInDb()).toEqual([testId("flaky")]);
   });
 
+  it("reports a partial run, not a success, when embed checks could not be completed", async () => {
+    const world = newWorld({ [CHANNEL_A]: [{ id: testId("a1"), channelId: CHANNEL_A }], [CHANNEL_B]: [], [CHANNEL_C]: [] }, { [testId("a1")]: "error" });
+    const summary = await runIngestion(deps(world));
+    expect(summary).toMatchObject({ status: "partial", failed: 1, failedChannels: [] });
+    expect(await count("videos")).toBe(0);
+    const [run] = await db.query<{ status: string }>(`SELECT status FROM ingestion_runs`);
+    expect(run!.status).toBe("partial");
+  });
+
   it("removes a stored video only when YouTube confirms it is gone, never on an inconclusive check", async () => {
     const old = { schemaVersion: 1 as const, mode: "feed" as const, generatedAt: "2026-11-10T00:00:00.000Z", videos: [
       makeVideo({ youtubeId: testId("gone"), channelId: CHANNEL_A, publishedAt: "2026-11-14T10:00:00.000Z", provenance: { ...makeVideo().provenance, metadataCheckedAt: "2026-11-10T00:00:00.000Z" } }),

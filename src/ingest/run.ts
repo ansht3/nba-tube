@@ -157,7 +157,9 @@ export async function runIngestion(deps: IngestionDeps): Promise<IngestionSummar
     await ingest(deps, options, now, summary);
 
     const anyChannelWorked = summary.failedChannels.length < Math.min(deps.sources.length, options.maxChannelsPerRun);
-    summary.status = summary.failedChannels.length === 0 ? "succeeded" : anyChannelWorked ? "partial" : "failed";
+    // Any failed work makes the run partial, not only a failed channel: embed checks that could not be completed, or a
+    // failed recheck, mean videos were neither stored nor rejected, and a status of "succeeded" would hide that.
+    summary.status = summary.failedChannels.length === 0 ? (summary.failed === 0 ? "succeeded" : "partial") : anyChannelWorked ? "partial" : "failed";
   } catch (error) {
     summary.status = "failed";
     summary.message = describe(error);
