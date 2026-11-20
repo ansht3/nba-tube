@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildQueue, playAllHref, watchHref, type QueueEntry } from "./queue";
+import { buildQueue, isSavedListId, playAllHref, savedListAsPlaylist, watchHref, type QueueEntry } from "./queue";
 import type { SavedVideo } from "./storage/library";
 import type { Playlist } from "./storage/playlists";
 
@@ -65,5 +65,29 @@ describe("addresses", () => {
   it("Play all opens the first video inside the playlist, or nothing for an empty one", () => {
     expect(playAllHref(playlist(7, 8))).toBe(`/watch/${id(7)}/?list=p1`);
     expect(playAllHref(playlist())).toBeNull();
+  });
+});
+
+describe("Liked and Watch later as queues", () => {
+  it("recognises only the two built-in ids, and never a playlist's UUID", () => {
+    expect(isSavedListId("liked")).toBe(true);
+    expect(isSavedListId("later")).toBe(true);
+    expect(isSavedListId(null)).toBe(false);
+    expect(isSavedListId("toString")).toBe(false);
+    expect(isSavedListId("3f2b8c1e-6a52-4a53-9d0f-0c9d6f6a1b11")).toBe(false);
+  });
+
+  it("plays in the order the list is shown, with real ends, and names the list", () => {
+    const liked = savedListAsPlaylist("liked", [saved(3), saved(2), saved(1)]);
+    const queue = buildQueue({ currentId: id(2), playlist: liked, ...base });
+    expect(queue).toMatchObject({ source: "playlist", listId: "liked", listName: "Liked videos", index: 1 });
+    expect(queue.previous?.id).toBe(id(3));
+    expect(queue.next?.id).toBe(id(1));
+    expect(buildQueue({ currentId: id(1), playlist: liked, ...base }).next).toBeNull();
+  });
+
+  it("opens the first video with the list id in the address", () => {
+    expect(playAllHref(savedListAsPlaylist("later", [saved(7), saved(8)]))).toBe(`/watch/${id(7)}/?list=later`);
+    expect(playAllHref(savedListAsPlaylist("later", []))).toBeNull();
   });
 });

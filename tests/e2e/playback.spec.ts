@@ -155,3 +155,32 @@ test("exporting a library and importing it in a fresh browser restores it, adds 
   await expect(fresh.locator("main").getByRole("alert")).toContainText("not an NBATube backup");
   await context.close();
 });
+
+for (const [name, key, path, listId, title] of [
+  ["Liked", "liked", "/liked/", "liked", "Liked videos"],
+  ["Watch later", "watch-later", "/watch-later/", "later", "Watch later"],
+] as const) {
+  test(`${name} plays from the top with Play all, in the order shown, and ends for real`, async ({ page }) => {
+    const [a, b, c] = three();
+    await page.addInitScript(([storageKey, videos]) => localStorage.setItem(`nbatube:v1:${storageKey}`, JSON.stringify(videos)), [key, [a, b, c].map((v, i) => saved(v, 10 - i))] as const);
+    await page.goto(path);
+    await page.getByRole("link", { name: "Play all" }).click();
+    await expect(page).toHaveURL(`/watch/${a.youtubeId}/?list=${listId}`);
+    const panel = page.getByRole("region", { name: title });
+    await expect(panel).toContainText("1 of 3 videos");
+
+    await page.getByRole("link", { name: "Next", exact: true }).click();
+    await expect(page).toHaveURL(`/watch/${b.youtubeId}/?list=${listId}`);
+    await page.getByRole("link", { name: "Next", exact: true }).click();
+    await expect(page).toHaveURL(`/watch/${c.youtubeId}/?list=${listId}`);
+    await expect(page.getByText("End of playlist")).toBeVisible();
+  });
+}
+
+test("History has no Play all: it is a record, not a list you curate", async ({ page }) => {
+  const [a] = three();
+  await page.addInitScript((video) => localStorage.setItem("nbatube:v1:history", JSON.stringify([video])), saved(a, 5));
+  await page.goto("/history/");
+  await expect(page.getByText("1 video")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Play all" })).toHaveCount(0);
+});

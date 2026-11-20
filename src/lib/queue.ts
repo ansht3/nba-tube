@@ -53,6 +53,22 @@ export function watchHref(youtubeId: string, listId?: string | null): string {
   return `/watch/${youtubeId}/${listId ? `?list=${encodeURIComponent(listId)}` : ""}`;
 }
 
+/**
+ * Liked and Watch later play like playlists, under fixed ids. A playlist's own
+ * id is a random UUID, so it can never be one of these.
+ */
+export const SAVED_LISTS = { liked: "Liked videos", later: "Watch later" } as const;
+export type SavedListId = keyof typeof SAVED_LISTS;
+
+export function isSavedListId(value: string | null): value is SavedListId {
+  return value !== null && Object.hasOwn(SAVED_LISTS, value);
+}
+
+/** A saved list in the shape a playlist has, so it can be queued and played the same way. */
+export function savedListAsPlaylist(id: SavedListId, items: SavedVideo[]): Playlist {
+  return { id, name: SAVED_LISTS[id], createdAt: 0, items };
+}
+
 /** The first video of a playlist, as the address "Play all" opens. Null for an empty playlist. */
 export function playAllHref(playlist: Pick<Playlist, "id" | "items">): string | null {
   const first = playlist.items[0];

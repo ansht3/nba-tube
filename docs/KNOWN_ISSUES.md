@@ -29,8 +29,9 @@ the top.
   runtime. docs/OPERATIONS.md lists the steps and the unverified items.
 - `/catalog.json` is still produced at build time. With `DATABASE_URL` set it is
   stale by design; the sync and the refresh check read it, nothing in the site does.
-- "Play all" and in-site Next/Previous exist for playlists. Liked and Watch later
-  have no queue yet.
+- "Play all" and in-site Next/Previous work for playlists, Liked and Watch later
+  (`?list=liked`, `?list=later`). History has none by design. Videos you watch are
+  not removed from Watch later automatically.
 - Best first treats a date later than the check time as the check time (a premiere
   or wrong date cannot outrank real news). Rows already in a database keep their old
   key until the video is next written, or `npm run db:import` is run again.
