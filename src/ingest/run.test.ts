@@ -257,6 +257,68 @@ describe("runIngestion", () => {
   });
 });
 
+describe("the run's time budget", () => {
+  /** A clock the test moves, and a YouTube where reading each channel takes `feedMs` of it (counted on the first request a channel makes; an empty one then falls back to a second). */
+  function slowWorld(world: World, feedMs: number) {
+    let t = 0;
+    const base = fakeYouTube(world);
+    const fetchImpl: FetchLike = async (url, init) => {
+      if (/playlist_id=UULF/.test(url)) t += feedMs;
+      return base(url, init);
+    };
+    return { clock: () => t, fetch: fetchImpl };
+  }
+  const sequential = { retry: noRetry, feedConcurrency: 1 };
+
+  it("stops starting channels once the lease is nearly spent, publishes what finished, and holds the rest back", async () => {
+    // Two feeds take 120 s each, so by the third channel 240 s have passed: past the 210 s deadline of a 240 s lease.
+    const world = newWorld({ [CHANNEL_A]: [], [CHANNEL_B]: [], [CHANNEL_C]: [] });
+    const slow = slowWorld(world, 120_000);
+    const summary = await runIngestion(deps(world, { ...slow, options: sequential }));
+    expect(summary.status).toBe("partial");
+    expect(summary.failedChannels).toEqual([expect.objectContaining({ channelId: CHANNEL_C, message: expect.stringMatching(/ran out of time/) })]);
+    const rows = await db.query<{ channel_id: string; consecutive_failures: number }>(`SELECT channel_id, consecutive_failures FROM source_checkpoints ORDER BY channel_id`);
+    expect(rows).toEqual([
+      { channel_id: CHANNEL_A, consecutive_failures: 0 },
+      { channel_id: CHANNEL_B, consecutive_failures: 0 },
+      { channel_id: CHANNEL_C, consecutive_failures: 1 },
+    ]);
+  });
+
+  it("does not verify new videos it has no time for, and neither stores nor rejects them, so the feed offers them again", async () => {
+    // Channels finish at 240 s, past the deadline, so the embed check for the new video is skipped.
+    const world = newWorld({ [CHANNEL_A]: [{ id: testId("a1"), channelId: CHANNEL_A }], [CHANNEL_B]: [], [CHANNEL_C]: [] });
+    const slow = slowWorld(world, 80_000);
+    const summary = await runIngestion(deps(world, { ...slow, options: sequential }));
+    expect(summary.accepted).toBe(1);
+    expect(summary.rejected).toBe(0);
+    expect(await count("videos")).toBe(0);
+    expect(summary.status).toBe("partial");
+    expect(summary.message).toMatch(/ran out of time/);
+    // Nothing was lost: the next run, with time, stores it.
+    const next = await runIngestion(deps(world, { owner: "run-2", options: sequential }));
+    expect(next.status).toBe("succeeded");
+    expect(await idsInDb()).toEqual([testId("a1")]);
+  });
+
+  it("does nothing different when requests are quick", async () => {
+    const world = newWorld({ [CHANNEL_A]: [{ id: testId("a1"), channelId: CHANNEL_A }], [CHANNEL_B]: [], [CHANNEL_C]: [] });
+    const quick = slowWorld(world, 1_000);
+    const summary = await runIngestion(deps(world, { ...quick, options: sequential }));
+    expect(summary).toMatchObject({ status: "succeeded", failed: 0, updated: 1 });
+  });
+
+  it("skips routine rechecks when out of time, without failing or removing anything", async () => {
+    const stale = "2026-11-10T00:00:00.000Z";
+    await importCatalog(db, { schemaVersion: 1, mode: "feed", generatedAt: stale, videos: [makeVideo({ youtubeId: testId("old"), channelId: CHANNEL_A, publishedAt: "2026-11-14T10:00:00.000Z", provenance: { ...makeVideo().provenance, metadataCheckedAt: stale } })] });
+    const world = newWorld({ [CHANNEL_A]: [], [CHANNEL_B]: [], [CHANNEL_C]: [] }, { [testId("old")]: "gone" });
+    const slow = slowWorld(world, 100_000);
+    const summary = await runIngestion(deps(world, { ...slow, options: sequential }));
+    expect(summary.removed).toBe(0);
+    expect(await count("videos")).toBe(1);
+  });
+});
+
 describe("bookkeeping retention", () => {
   it("trims old runs at once, and an old version once a newer one exists, never the newest or the run's own row", async () => {
     await db.query(`INSERT INTO ingestion_runs (owner, status, started_at) VALUES ('old', 'failed', now() - interval '90 days'), ('old', 'failed', now() - interval '80 days')`);

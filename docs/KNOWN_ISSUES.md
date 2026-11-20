@@ -48,9 +48,6 @@ feed) found the issues fixed on `dev` that day, and these that are **not fixed**
   refreshing durations, so a Data API duration can live up to the 45-day limit
   instead of 30 days. No fix without a way to tell "embed rechecked" from "metadata
   refreshed".
-- **No run-level deadline (reported).** Retries and rate-limit waits are bounded per
-  request, but a slow run can pass the 240-second lease and then writes nothing;
-  the next run starts over. Not observed; the arithmetic is the reviewer's.
 - **The legacy build-time sync can shrink the live catalog (reported).** If the
   published `catalog.json` cannot be fetched at build time, the sync starts fresh
   and publishes only the newest uploads per channel. Relevant only without

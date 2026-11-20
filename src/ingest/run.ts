@@ -74,8 +74,30 @@ export const DEFAULT_INGESTION_OPTIONS: IngestionOptions = {
   retry: { retries: 2, baseDelayMs: 500, timeoutMs: 12_000 },
 };
 
+/**
+ * Time left in a run. The lease is only as long as `leaseSeconds`, and a run that outlives it loses the lease and
+ * writes nothing, so the next run repeats the same slow work and also loses. Work is therefore not started once this
+ * much time is gone (the lease minus a margin for the request already in flight), and whatever finished is published.
+ */
+interface Budget {
+  expired(): boolean;
+}
+
+/** Room left for requests that are already running (a retried request can take most of a minute) and for the writes. */
+const DEADLINE_MARGIN_MS = 30_000;
+
+function createBudget(clock: () => number, leaseSeconds: number): Budget {
+  const margin = Math.min(DEADLINE_MARGIN_MS, leaseSeconds * 500);
+  const deadline = clock() + leaseSeconds * 1000 - margin;
+  return { expired: () => clock() >= deadline };
+}
+
+const OUT_OF_TIME = "The run ran out of time before it could finish everything, so the rest waits for the next run.";
+
 export interface IngestionDeps {
   db: Db;
+  /** Milliseconds, for the run's time budget. Defaults to Date.now; tests pass a fake that they advance. */
+  clock?: () => number;
   /** Approved channels only. */
   sources: Source[];
   overrides: Overrides;
@@ -177,7 +199,7 @@ export async function runIngestion(deps: IngestionDeps): Promise<IngestionSummar
     const [run] = await db.query<{ run_id: string | number }>(`INSERT INTO ingestion_runs (owner, status) VALUES ($1, 'running') RETURNING run_id`, [deps.owner]);
     summary.runId = Number(run!.run_id);
 
-    await ingest(deps, options, now, summary);
+    await ingest(deps, options, now, summary, createBudget(deps.clock ?? Date.now, options.leaseSeconds));
 
     const anyChannelWorked = summary.failedChannels.length < Math.min(deps.sources.length, options.maxChannelsPerRun);
     // Any failed work makes the run partial, not only a failed channel: embed checks that could not be completed, or a
@@ -203,7 +225,7 @@ export async function runIngestion(deps: IngestionDeps): Promise<IngestionSummar
   return summary;
 }
 
-async function ingest(deps: IngestionDeps, options: IngestionOptions, now: Date, summary: IngestionSummary): Promise<void> {
+async function ingest(deps: IngestionDeps, options: IngestionOptions, now: Date, summary: IngestionSummary, budget: Budget): Promise<void> {
   const { db, api } = deps;
 
   // Retention comes first and on its own. It must not depend on anything later in the run succeeding (a source
@@ -228,6 +250,12 @@ async function ingest(deps: IngestionDeps, options: IngestionOptions, now: Date,
   const todo = [...deps.sources].sort((a, b) => attemptedAt(a) - attemptedAt(b)).slice(0, options.maxChannelsPerRun);
 
   const outcomes: ChannelOutcome[] = await mapWithConcurrency(todo, options.feedConcurrency, async (source) => {
+    if (budget.expired()) {
+      // Not read at all this run. Counted as failed so its checkpoint stays put and it is first in line next time.
+      summary.failedChannels.push({ channelId: source.channelId, name: source.name, message: OUT_OF_TIME });
+      summary.failed++;
+      return { source, candidates: [], error: OUT_OF_TIME };
+    }
     try {
       const candidates = await fetchChannelFeed(source, deps.fetch, options.retry);
       const recovery = await recoverMissed(source, candidates, checkpoints.get(source.channelId), deps, options);
@@ -279,10 +307,10 @@ async function ingest(deps: IngestionDeps, options: IngestionOptions, now: Date,
     }
   }
 
-  toWrite.push(...(await verifyNew(toVerify, deps, options, summary)));
+  toWrite.push(...(await verifyNew(toVerify, deps, options, summary, budget)));
 
   remove.push(...(await withdrawnChannelVideos(db, deps.sources, summary)));
-  toWrite.push(...(await recheckStored(deps, options, now, new Set(unique.keys()), remove, summary)));
+  toWrite.push(...(await recheckStored(deps, options, now, new Set(unique.keys()), remove, summary, budget)));
 
   // The database decides who holds the lease. Losing it means another run may be writing, so this one must not.
   if (!(await renewLease(db, LEASE_NAME, deps.owner, options.leaseSeconds))) throw new LeaseLostError();
@@ -330,9 +358,14 @@ async function readStored(db: Db, ids: string[], summary: IngestionSummary): Pro
 }
 
 /** A feed entry says nothing about embedding, so a new video is checked before it is stored. */
-async function verifyNew(videos: Video[], deps: IngestionDeps, options: IngestionOptions, summary: IngestionSummary): Promise<Video[]> {
+async function verifyNew(videos: Video[], deps: IngestionDeps, options: IngestionOptions, summary: IngestionSummary, budget: Budget): Promise<Video[]> {
+  let skipped = false;
   const checked = await mapWithConcurrency(videos, options.embedConcurrency, async (video) => {
-    if (video.embeddable === true) return video;
+    if (video.embeddable === true) return video; // already known: no request, so no reason to wait
+    if (budget.expired()) {
+      skipped = true;
+      return null;
+    }
     const check = await checkEmbed(video.youtubeId, deps.fetch, options.retry);
     if (check.status === "ok") return { ...video, embeddable: true };
     if (check.status === "unavailable") summary.rejected++;
@@ -340,12 +373,17 @@ async function verifyNew(videos: Video[], deps: IngestionDeps, options: Ingestio
     else summary.failed++;
     return null;
   });
+  if (skipped) {
+    // Not stored and not rejected: the feed offers these again next run.
+    summary.failed++;
+    summary.message ??= OUT_OF_TIME;
+  }
   return checked.filter((video) => video !== null);
 }
 
 /** Re-verifies the stored videos checked longest ago. Only a confirmed "gone" removes one; an inconclusive check changes nothing. */
-async function recheckStored(deps: IngestionDeps, options: IngestionOptions, now: Date, skip: Set<string>, remove: string[], summary: IngestionSummary): Promise<Video[]> {
-  if (options.recheckPerRun <= 0) return [];
+async function recheckStored(deps: IngestionDeps, options: IngestionOptions, now: Date, skip: Set<string>, remove: string[], summary: IngestionSummary, budget: Budget): Promise<Video[]> {
+  if (options.recheckPerRun <= 0 || budget.expired()) return [];
   const cutoff = new Date(now.getTime() - options.recheckAfterHours * HOUR_MS).toISOString();
   const rows = await deps.db.query<{ youtube_id: string; data: unknown }>(
     `SELECT youtube_id, data FROM videos WHERE metadata_checked_at < $1 ORDER BY metadata_checked_at ASC, youtube_id LIMIT $2`,
@@ -360,6 +398,7 @@ async function recheckStored(deps: IngestionDeps, options: IngestionOptions, now
 
   const gone: string[] = [];
   const refreshed = await mapWithConcurrency(stale, options.embedConcurrency, async (video) => {
+    if (budget.expired()) return null; // rechecks are routine: whatever is skipped is first in line next time
     const check = await checkEmbed(video.youtubeId, deps.fetch, options.retry);
     if (check.status === "unavailable") gone.push(video.youtubeId);
     else if (check.status === "unknown") summary.failed++;

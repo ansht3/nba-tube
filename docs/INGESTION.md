@@ -37,6 +37,21 @@ wires secrets, the channel allowlist and the clock to it.
 
 A run that changes nothing does not create a catalog version.
 
+**Time budget.** A run that outlives its 240-second lease loses it and writes
+nothing, and the next run would repeat the same slow work. So no new channel read,
+embed check or recheck is started once 210 seconds have passed (the lease minus a
+30-second margin for requests already in flight), and what finished is published.
+Channels not read count as failed for that run, so their checkpoints stay put and
+they go first next time; new videos not yet verified are neither stored nor
+rejected, and the feed offers them again. The run is "partial" and says why.
+
+**Withdrawal.** A stored video is removed when it is rediscovered and rejected for
+a policy reason (manual exclusion, unverified publisher), and stored videos of
+channels no longer in the approved list are removed. Nothing is removed when the
+approved list is empty, or when it would remove most of the catalog. Title-rule
+and duration rejections never delete. Runs and versions older than 30 days are
+trimmed, always keeping the newest version, the latest run and the latest success.
+
 ## Run it locally (real feeds, no database account needed)
 ```
 npm run ingest -- --local --twice
