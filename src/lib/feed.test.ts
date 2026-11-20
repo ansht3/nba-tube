@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { makeVideo, testId } from "@/test/fixtures";
 import { NO_FILTERS } from "./browse";
-import { FEED_CACHE_MAX_ENTRIES, FEED_CACHE_TTL_MS, FeedCache, feedKey, feedParams, feedReducer, initialFeed, wantsMore, type FeedPage } from "./feed";
+import { FEED_CACHE_MAX_ENTRIES, FEED_CACHE_TTL_MS, FeedCache, feedKey, feedParams, feedReducer, initialFeed, parseFeedPage, wantsMore, type FeedPage } from "./feed";
 
 const v = (name: string) => makeVideo({ youtubeId: testId(name) });
 const page = (names: string[], total: number, nextCursor: string | null): FeedPage => ({ videos: names.map(v), total, nextCursor });
@@ -108,5 +108,21 @@ describe("FeedCache", () => {
     cache.save("extra", saved, 4);
     expect(cache.restore("k0", 5)?.scrollY).toBe(99);
     expect(cache.restore("k1", 5)).toBeNull();
+  });
+});
+
+describe("parseFeedPage", () => {
+  const good = { videos: [v("a"), v("b")], total: 9, nextCursor: "abc" };
+
+  it("accepts what the API sends, including the last page (no cursor) and an empty list", () => {
+    expect(parseFeedPage(good)).toEqual(good);
+    expect(parseFeedPage({ ...good, nextCursor: null })?.nextCursor).toBeNull();
+    expect(parseFeedPage({ videos: [], total: 0, nextCursor: null })).toEqual({ videos: [], total: 0, nextCursor: null });
+  });
+
+  it("refuses anything that is not a page, so it cannot throw inside the reducer", () => {
+    for (const bad of [null, undefined, 7, "x", [], {}, { error: "bad gateway" }, { ...good, videos: undefined }, { ...good, videos: "no" }, { ...good, total: "9" }, { ...good, total: -1 }, { ...good, total: Infinity }, { ...good, nextCursor: 5 }, { ...good, nextCursor: undefined }, { ...good, videos: [null] }, { ...good, videos: [{ youtubeId: 1 }] }, { ...good, videos: [{ youtubeId: "x" }] }]) {
+      expect(parseFeedPage(bad), JSON.stringify(bad)).toBeNull();
+    }
   });
 });

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from "react";
-import { FEED_PAGE_SIZE, FeedCache, feedKey, feedReducer, initialFeed, wantsMore, type FeedPage, type SavedFeed } from "./feed";
+import { FEED_PAGE_SIZE, FeedCache, feedKey, feedReducer, initialFeed, parseFeedPage, wantsMore, type FeedPage, type SavedFeed } from "./feed";
 import { BASE_PATH } from "./site";
 
 /** Lists the viewer has scrolled, kept for as long as the page is open so back and forward return to the same place. */
@@ -55,7 +55,8 @@ export function useVideoFeed({ path, params, initial }: UseVideoFeedOptions) {
     try {
       const response = await fetch(`${BASE_PATH}/api/videos?${query}`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const page = (await response.json()) as FeedPage;
+      const page = parseFeedPage(await response.json());
+      if (!page) throw new Error("The response was not a page of videos.");
       dispatch({ type: "loaded", key, page });
     } catch {
       dispatch({ type: "failed", key });

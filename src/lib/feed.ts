@@ -30,6 +30,21 @@ export interface FeedPage {
   nextCursor: string | null;
 }
 
+/**
+ * Checks a page the API answered with before the list takes it in. A response that is not a page (an error body a CDN
+ * served with a 200, an HTML page, a changed shape) would otherwise throw inside the reducer, during render, and take the
+ * whole view down; here it is simply "not a page" and the list shows its retry state. Only the fields the list relies on
+ * are checked: the server has already validated each video in full.
+ */
+export function parseFeedPage(value: unknown): FeedPage | null {
+  if (typeof value !== "object" || value === null) return null;
+  const { videos, total, nextCursor } = value as Record<string, unknown>;
+  if (!Array.isArray(videos) || typeof total !== "number" || !Number.isFinite(total) || total < 0) return null;
+  if (nextCursor !== null && typeof nextCursor !== "string") return null;
+  const usable = videos.every((video) => typeof video === "object" && video !== null && typeof (video as Video).youtubeId === "string" && typeof (video as Video).title === "string" && typeof (video as Video).publishedAt === "string");
+  return usable ? { videos: videos as Video[], total, nextCursor } : null;
+}
+
 export interface FeedState {
   key: string;
   videos: Video[];
