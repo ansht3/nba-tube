@@ -172,6 +172,19 @@ export async function runIngestion(deps: IngestionDeps): Promise<IngestionSummar
 
 async function ingest(deps: IngestionDeps, options: IngestionOptions, now: Date, summary: IngestionSummary): Promise<void> {
   const { db, api } = deps;
+
+  // Retention comes first and on its own. It must not depend on anything later in the run succeeding (a source
+  // outage, a lost lease, an unreadable row), or the 45-day and 30-day limits would stop being enforced exactly when
+  // something is wrong.
+  try {
+    const pruned = await pruneExpired(db, now, { retentionDays: options.retentionDays, maxMetadataAgeDays: options.maxMetadataAgeDays });
+    summary.removed += pruned.deleted;
+    if (pruned.deleted > 0) summary.published = true;
+  } catch (error) {
+    summary.failed++;
+    summary.message ??= `Retention failed: ${describe(error)}`;
+  }
+
   const bySource = new Map(deps.sources.map((source) => [source.channelId, source]));
 
   // Channels attempted longest ago go first, so a limited run still reaches every channel in turn.
@@ -200,7 +213,7 @@ async function ingest(deps: IngestionDeps, options: IngestionOptions, now: Date,
   }
   summary.discovered = unique.size;
 
-  const stored = await readStored(db, [...unique.keys()]);
+  const stored = await readStored(db, [...unique.keys()], summary);
   const toWrite: Video[] = [];
   const toVerify: Video[] = [];
 
@@ -229,19 +242,12 @@ async function ingest(deps: IngestionDeps, options: IngestionOptions, now: Date,
 
   const result = await publishVideos(db, toWrite, { mode: api ? "api" : "feed", runId: summary.runId, remove });
   summary.updated = result.inserted + result.updated;
-  summary.removed = result.removed;
+  summary.removed += result.removed;
   summary.version = result.version;
-  summary.published = result.published;
+  summary.published ||= result.published;
 
   // Checkpoints advance only now that the writes are durable. A failed write leaves them where they were, so nothing is skipped.
   await writeCheckpoints(db, outcomes);
-
-  const pruned = await pruneExpired(db, now, { retentionDays: options.retentionDays, maxMetadataAgeDays: options.maxMetadataAgeDays });
-  if (pruned.deleted > 0) {
-    summary.removed += pruned.deleted;
-    summary.version = pruned.version;
-    summary.published = true;
-  }
 }
 
 /** The feed lists only a channel's newest uploads. If all of them are newer than the last run saw, uploads may have fallen off the end; the API can fetch them. */
@@ -264,10 +270,17 @@ async function recoverMissed(source: Source, feed: CandidateVideo[], checkpoint:
   }
 }
 
-async function readStored(db: Db, ids: string[]): Promise<Map<string, Video>> {
+async function readStored(db: Db, ids: string[], summary: IngestionSummary): Promise<Map<string, Video>> {
   if (ids.length === 0) return new Map();
   const rows = await db.query<{ youtube_id: string; data: unknown }>(`SELECT youtube_id, data FROM videos WHERE youtube_id IN (SELECT jsonb_array_elements_text($1::jsonb))`, [JSON.stringify(ids)]);
-  return new Map(rows.map((row) => [row.youtube_id, videoSchema.parse(row.data)]));
+  const stored = new Map<string, Video>();
+  for (const row of rows) {
+    const parsed = videoSchema.safeParse(row.data);
+    // A row that no longer matches the schema is left alone and reported. Throwing would fail every run that meets it.
+    if (parsed.success) stored.set(row.youtube_id, parsed.data);
+    else summary.message ??= `Stored video ${row.youtube_id} does not match the schema and was skipped.`;
+  }
+  return stored;
 }
 
 /** A feed entry says nothing about embedding, so a new video is checked before it is stored. */
@@ -292,7 +305,12 @@ async function recheckStored(deps: IngestionDeps, options: IngestionOptions, now
     `SELECT youtube_id, data FROM videos WHERE metadata_checked_at < $1 ORDER BY metadata_checked_at ASC, youtube_id LIMIT $2`,
     [cutoff, options.recheckPerRun + skip.size],
   );
-  const stale = rows.filter((row) => !skip.has(row.youtube_id)).slice(0, options.recheckPerRun).map((row) => videoSchema.parse(row.data));
+  const stale: Video[] = [];
+  for (const row of rows.filter((candidate) => !skip.has(candidate.youtube_id)).slice(0, options.recheckPerRun)) {
+    const parsed = videoSchema.safeParse(row.data);
+    if (parsed.success) stale.push(parsed.data);
+    else summary.message ??= `Stored video ${row.youtube_id} does not match the schema and was skipped.`;
+  }
 
   const gone: string[] = [];
   const refreshed = await mapWithConcurrency(stale, options.embedConcurrency, async (video) => {

@@ -206,6 +206,27 @@ describe("runIngestion", () => {
     expect(await count("videos")).toBe(4);
   });
 
+  it("still enforces retention when a stored row is unreadable, and carries on instead of failing every run", async () => {
+    const old = makeVideo({ youtubeId: testId("expired"), channelId: CHANNEL_A, publishedAt: "2026-09-01T00:00:00.000Z" });
+    await importCatalog(db, { schemaVersion: 1, mode: "feed", generatedAt: "2026-11-10T00:00:00.000Z", videos: [old, makeVideo({ youtubeId: testId("healthy"), channelId: CHANNEL_A, publishedAt: "2026-11-14T10:00:00.000Z", provenance: { ...makeVideo().provenance, metadataCheckedAt: "2026-11-10T00:00:00.000Z" } })] });
+    // A row from some older shape of the data: it no longer parses.
+    await db.query(`UPDATE videos SET data = '{"youtubeId":"x"}'::jsonb WHERE youtube_id = $1`, [testId("healthy")]);
+    const world = newWorld({ [CHANNEL_A]: [{ id: testId("healthy"), channelId: CHANNEL_A }], [CHANNEL_B]: [], [CHANNEL_C]: [] });
+    const summary = await runIngestion(deps(world));
+    expect(summary.status).not.toBe("failed");
+    expect(summary.message).toMatch(/does not match the schema/);
+    expect(await idsInDb()).toEqual([testId("healthy")]);
+    expect(summary).toMatchObject({ removed: 1, published: true });
+  });
+
+  it("enforces retention even when every source is down", async () => {
+    await importCatalog(db, { schemaVersion: 1, mode: "feed", generatedAt: "2026-11-10T00:00:00.000Z", videos: [makeVideo({ youtubeId: testId("expired"), channelId: CHANNEL_A, publishedAt: "2026-09-01T00:00:00.000Z" })] });
+    const summary = await runIngestion(deps(newWorld({ [CHANNEL_A]: "down", [CHANNEL_B]: "down", [CHANNEL_C]: "down" })));
+    expect(summary.status).toBe("failed");
+    expect(await count("videos")).toBe(0);
+    expect(summary.removed).toBe(1);
+  });
+
   it("ages out videos past retention", async () => {
     await importCatalog(db, { schemaVersion: 1, mode: "feed", generatedAt: "2026-11-10T00:00:00.000Z", videos: [makeVideo({ youtubeId: testId("ancient"), channelId: CHANNEL_A, publishedAt: "2026-09-01T00:00:00.000Z" })] });
     const summary = await runIngestion(deps(newWorld({ [CHANNEL_A]: [], [CHANNEL_B]: [], [CHANNEL_C]: [] })));
