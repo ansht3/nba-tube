@@ -51,7 +51,21 @@ function filterClauses(filter: VideoFilter, params: Params): string[] {
 }
 
 const where = (clauses: string[]) => (clauses.length > 0 ? `WHERE ${clauses.join(" AND ")}` : "");
-const parse = (rows: { data: unknown }[]): Video[] => rows.map((row) => videoSchema.parse(row.data));
+/**
+ * Reads stored videos. A row whose data no longer matches the schema (written by an older version, or damaged) is left
+ * out and logged by id, instead of throwing: one bad row must not take down every page it would have appeared on.
+ */
+function parse(rows: { data: unknown }[]): Video[] {
+  const videos: Video[] = [];
+  for (const row of rows) {
+    const parsed = videoSchema.safeParse(row.data);
+    if (parsed.success) videos.push(parsed.data);
+    else console.error(`Skipping a stored video that does not match the schema: ${describeRow(row.data)}`);
+  }
+  return videos;
+}
+
+const describeRow = (data: unknown) => (typeof data === "object" && data !== null && typeof (data as { youtubeId?: unknown }).youtubeId === "string" ? (data as { youtubeId: string }).youtubeId : "(no id)");
 
 /**
  * The catalog answered by indexed queries instead of an in-memory array. Order
@@ -116,7 +130,7 @@ export class PostgresCatalogRepository implements CatalogRepository {
 
   async get(youtubeId: string): Promise<Video | null> {
     const rows = await this.db.query<{ data: unknown }>(`SELECT data FROM videos WHERE youtube_id = $1`, [youtubeId]);
-    return rows[0] ? videoSchema.parse(rows[0].data) : null;
+    return parse(rows)[0] ?? null;
   }
 
   async related(video: Video, limit: number): Promise<Video[]> {
