@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { BACKUP_VERSION, MAX_BACKUP_BYTES, createBackup, mergeLibrary, mergeSaved, parseBackup, type Library } from "./backup";
+import { describe, expect, it, vi } from "vitest";
+import { BACKUP_VERSION, MAX_BACKUP_BYTES, createBackup, mergeLibrary, mergeSaved, parseBackup, readBackupFile, type Library } from "./backup";
 import type { SavedVideo } from "./library";
 import type { Playlist } from "./playlists";
 
@@ -98,5 +98,31 @@ describe("mergeLibrary", () => {
     const twice = mergeLibrary(once, incoming);
     expect(twice.library).toEqual(once);
     expect(twice.added).toEqual({ liked: 0, watchLater: 0, history: 0, playlists: 0, playlistVideos: 0 });
+  });
+});
+
+describe("readBackupFile", () => {
+  const backupText = JSON.stringify(createBackup({ liked: [], watchLater: [], history: [], playlists: [] }, { includeHistory: false, now: NOW }));
+
+  it("refuses a file that is too large without ever reading it", async () => {
+    const text = vi.fn(async () => "never read");
+    const result = await readBackupFile({ size: MAX_BACKUP_BYTES + 1, text });
+    expect(result).toEqual({ ok: false, error: "That file is too large to be an NBATube backup." });
+    expect(text).not.toHaveBeenCalled();
+  });
+
+  it("reads and parses a file within the limit", async () => {
+    const result = await readBackupFile({ size: backupText.length, text: async () => backupText });
+    expect(result.ok).toBe(true);
+  });
+
+  it("answers a read that fails with a message, instead of an unhandled rejection", async () => {
+    const result = await readBackupFile({ size: 10, text: async () => { throw new DOMException("not readable", "NotReadableError"); } });
+    expect(result).toEqual({ ok: false, error: "That file could not be read." });
+  });
+
+  it("still refuses a file whose size was understated, once it is read", async () => {
+    const result = await readBackupFile({ size: 10, text: async () => "x".repeat(MAX_BACKUP_BYTES + 1) });
+    expect(result.ok).toBe(false);
   });
 });

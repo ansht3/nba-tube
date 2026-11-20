@@ -45,6 +45,21 @@ export type ParsedBackup = { ok: true; library: Partial<Library>; dropped: numbe
 
 const count = (value: unknown) => (Array.isArray(value) ? value.length : 0);
 
+/**
+ * Reads a chosen file and parses it as a backup. The size is checked before the file is read: reading a file into memory
+ * first and measuring it afterwards would let a multi-gigabyte file freeze or crash the tab before it could be refused.
+ */
+export async function readBackupFile(file: { size: number; text(): Promise<string> }): Promise<ParsedBackup> {
+  if (file.size > MAX_BACKUP_BYTES) return { ok: false, error: "That file is too large to be an NBATube backup." };
+  let text: string;
+  try {
+    text = await file.text();
+  } catch {
+    return { ok: false, error: "That file could not be read." };
+  }
+  return parseBackup(text);
+}
+
 export function parseBackup(text: string): ParsedBackup {
   if (text.length > MAX_BACKUP_BYTES) return { ok: false, error: "That file is too large to be an NBATube backup." };
   let raw: unknown;

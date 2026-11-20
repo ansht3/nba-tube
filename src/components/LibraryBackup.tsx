@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { createBackup, mergeLibrary, parseBackup, type Library } from "@/lib/storage/backup";
+import { createBackup, mergeLibrary, readBackupFile, type Library } from "@/lib/storage/backup";
 import { historyStore, likedStore, watchLaterStore } from "@/lib/storage/library";
 import { playlistsStore } from "@/lib/storage/playlists";
 import { DownloadIcon, UploadIcon } from "./icons";
@@ -28,7 +28,7 @@ export function LibraryBackup() {
 
   async function importLibrary(file: File | undefined) {
     if (!file) return;
-    const result = parseBackup(await file.text());
+    const result = await readBackupFile(file);
     if (picker.current) picker.current.value = "";
     if (!result.ok) return setMessage({ kind: "error", text: result.error });
 
