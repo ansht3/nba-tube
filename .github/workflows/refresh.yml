@@ -31,11 +31,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
-      # The hook URL is a secret: GitHub masks it in logs.
-      HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
       SITE_URL: ${{ vars.SITE_URL }}
     steps:
       - name: Require configuration
+        env:
+          # The hook URL is a secret. It is given only to the steps that use it, not to the whole job, so installing
+          # packages and third-party actions never see it.
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
           missing=""
           [ -z "$HOOK" ] && missing="$missing VERCEL_DEPLOY_HOOK (secret)"
@@ -54,9 +56,17 @@ jobs:
         run: npm run --silent check-updates
       - name: Ask Vercel to rebuild
         if: steps.check.outputs.changed == 'true'
-        run: curl --fail --silent --show-error -X POST "$HOOK" > /dev/null && echo "Rebuild requested."
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        # A hung request must not hold the job until its 10-minute limit.
+        run: curl --fail --silent --show-error --max-time 30 --retry 2 -X POST "$HOOK" > /dev/null && echo "Rebuild requested."
       - name: Fail when the refresh is not keeping up
         if: steps.check.outputs.status == 'stuck' || steps.check.outputs.status == 'unreachable'
+        # Values go in through the environment, never spliced into the script text.
+        env:
+          STATUS: ${{ steps.check.outputs.status }}
+          PENDING: ${{ steps.check.outputs.pending }}
+          OLDEST: ${{ steps.check.outputs.oldest_pending_minutes }}
         run: |
-          echo "::error title=Refresh is not keeping up::status=${{ steps.check.outputs.status }}, ${{ steps.check.outputs.pending }} video(s) waiting, the oldest ${{ steps.check.outputs.oldest_pending_minutes }} minutes since upload. A rebuild was requested if the hook is set; check the Vercel deployments and the latest build log."
+          echo "::error title=Refresh is not keeping up::status=$STATUS, $PENDING video(s) waiting, the oldest $OLDEST minutes since upload. A rebuild was requested if the hook is set; check the Vercel deployments and the latest build log."
           exit 1

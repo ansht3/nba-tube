@@ -8,6 +8,7 @@
  * YOUTUBE_API_KEY, when set, enables durations and recovery of missed uploads.
  */
 import { existsSync, readFileSync } from "node:fs";
+import { randomUUID } from "node:crypto";
 import { parseArgs } from "node:util";
 import { approvedSources, parseSourceRegistry } from "@/catalog/sources";
 import type { Db } from "@/db/db";
@@ -42,7 +43,8 @@ async function main() {
 
   for (let pass = 1; pass <= (values.twice ? 2 : 1); pass++) {
     const started = Date.now();
-    const summary = await runIngestion({ db, sources, overrides, fetch, api, owner: `local-${pass}-${Date.now()}` });
+    const summary = await runIngestion({ db, sources, overrides, fetch, api, owner: `local-${pass}-${randomUUID()}` });
+    if (summary.status === "failed") process.exitCode = 1;
     console.log(`Pass ${pass} (${((Date.now() - started) / 1000).toFixed(1)}s): ${JSON.stringify({ ...summary, failedChannels: summary.failedChannels.map((c) => c.name) })}`);
   }
   const [{ n, newest }] = await db.query<{ n: string; newest: string | null }>(`SELECT count(*) AS n, max(published_at) AS newest FROM videos`);
