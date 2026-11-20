@@ -53,10 +53,13 @@ test("a hidden tab does no polling, and checks when it becomes visible again", a
   await page.clock.fastForward("20:00");
   expect(versionRequests, "no requests while hidden").toHaveLength(0);
 
-  // Becoming visible only checks once the page's listener exists, so repeat the signal until it is answered.
+  // Becoming visible checks only once the page's listener exists, and only if a minute has passed since the page's
+  // last check. On a slow machine the page hydrates after the jump above, so move time on again before each signal,
+  // as a person returning to the tab after a while would.
   await expect
     .poll(
       async () => {
+        await page.clock.fastForward("02:00");
         await page.evaluate(() => {
           (window as unknown as { __hidden: boolean }).__hidden = false;
           document.dispatchEvent(new Event("visibilitychange"));
