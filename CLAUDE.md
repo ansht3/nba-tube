@@ -1,6 +1,6 @@
 # NBATube
 
-A static website of official NBA videos (game and player highlights, pregame and
+A website of official NBA videos (game and player highlights, pregame and
 postgame media sessions) taken only from the league's and the 30 teams' verified
 YouTube channels. No recommendation algorithm, no comments, no accounts. Inspired
 by HackerTube. MIT licensed.
@@ -10,7 +10,9 @@ by HackerTube. MIT licensed.
 ## Layout
 
 - `src/catalog/` the contract shared by both halves: schema, teams, content types, source registry, selectors, loader.
-- `src/ingest/` discovery and classification. Never imported by the site.
+- `src/ingest/` discovery, classification and the incremental `runIngestion`. Never imported by the site.
+- `src/db/` Postgres storage, migrations, the lease and `PostgresCatalogRepository` (Neon in production, PGlite in tests). `worker/` is the Cloudflare Worker that runs ingestion. See docs/MIGRATION.md and docs/OPERATIONS.md.
+- `src/lib/api/` the handlers behind `/api/*`; they take a repository, so they are tested against file and Postgres.
 - `src/app/`, `src/components/` the site. Reads the catalog only through `src/catalog/`.
 - `src/lib/storage/` everything kept in localStorage (lists, playlists, settings).
 - `scripts/sync.ts` builds `data/catalog.json` (git-ignored). `data/seed/catalog.json` is the committed fallback.
@@ -23,14 +25,16 @@ npm run dev          # dev server on :3000
 npm run sync         # rebuild data/catalog.json (Data API with YOUTUBE_API_KEY, keyless feeds without)
 npm run seed         # rebuild the committed seed (keyless)
 npm run lint && npm run typecheck && npm run test
-npm run build        # static export to out/
-npm run test:e2e     # Playwright against out/ (build first)
-npm run preview      # serve out/ on :3000
+npm run test:coverage  # the same tests with a coverage summary (v8); CI runs this
+npm run build:worker   # bundles the Cloudflare Worker; CI runs this too
+npm run build        # production build (.next)
+npm run test:e2e     # Playwright against `next start` (build first)
+npm run preview      # next start on :3000 (build first)
 ```
 
 ## Rules that matter
 
-- Static export only: no server actions, cookies, redirects, ISR or request-time code.
+- No accounts, cookies or server actions. Pages read the catalog only through `getCatalogRepository()` (src/catalog/server.ts); they are cached whole and refreshed by `revalidate`. Security headers live in `next.config.ts`, not `vercel.json`.
 - Do not export constants from a `"use client"` file for server components to use: they arrive as client references. Shared values go in `src/lib/`.
 - Videos only from approved channels in `data/sources.json`. Never keyword search.
 - Classification is deterministic. Every decision names a rule id. Reject when unsure. Add a real-title fixture to `src/ingest/classify.test.ts` with every rule change.

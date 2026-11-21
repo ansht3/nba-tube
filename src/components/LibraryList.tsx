@@ -13,6 +13,7 @@ const LISTS = {
     emptyTitle: "Nothing saved for later",
     emptyHint: "Use the clock button on any video to add it to this queue.",
     clearAllLabel: undefined,
+    queueId: "later",
   },
   liked: {
     store: likedStore,
@@ -21,6 +22,7 @@ const LISTS = {
     emptyTitle: "No liked videos yet",
     emptyHint: "Press Like on a video's page and it will be listed here.",
     clearAllLabel: undefined,
+    queueId: "liked",
   },
   history: {
     store: historyStore,
@@ -29,6 +31,7 @@ const LISTS = {
     emptyTitle: "No watch history",
     emptyHint: "Videos you open are listed here, unless history is paused in Settings.",
     clearAllLabel: "Clear history",
+    queueId: undefined,
   },
 } as const;
 

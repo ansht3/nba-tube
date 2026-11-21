@@ -1,4 +1,5 @@
 import { STORAGE_KEYS } from "./keys";
+import { isSavedListId } from "../queue";
 import { isSaved, parseSavedList, removeSaved, type SavedVideo } from "./library";
 import { createStore } from "./store";
 
@@ -13,6 +14,23 @@ export const PLAYLIST_NAME_MAX = 60;
 export const MAX_PLAYLISTS = 50;
 export const MAX_PLAYLIST_ITEMS = 500;
 
+/** Ids are used in addresses and compared as keys, so they must be short and plain. Every id this app has made fits. */
+const SAFE_ID = /^[\w-]{1,64}$/;
+
+/**
+ * The id a stored playlist is kept under. "liked" and "later" are the built-in
+ * queues, so a playlist stored or imported under one of them is kept under a
+ * different, stable id, or it would be played as the wrong list. Returns null
+ * for an id that is not plain enough to use.
+ */
+function playlistId(id: string, seen: Set<string>): string | null {
+  if (!SAFE_ID.test(id)) return null;
+  if (!isSavedListId(id)) return seen.has(id) ? null : id;
+  let renamed = `playlist-${id}`;
+  for (let n = 2; seen.has(renamed); n++) renamed = `playlist-${id}-${n}`;
+  return renamed;
+}
+
 export function parsePlaylists(stored: unknown): Playlist[] {
   if (!Array.isArray(stored)) return [];
   const seen = new Set<string>();
@@ -21,12 +39,14 @@ export function parsePlaylists(stored: unknown): Playlist[] {
   for (const value of stored) {
     if (typeof value !== "object" || value === null) continue;
     const entry = value as Record<string, unknown>;
-    if (typeof entry.id !== "string" || entry.id === "" || seen.has(entry.id)) continue;
+    if (typeof entry.id !== "string") continue;
     if (typeof entry.name !== "string" || entry.name.trim() === "") continue;
+    const id = playlistId(entry.id, seen);
+    if (id === null) continue;
 
-    seen.add(entry.id);
+    seen.add(id);
     playlists.push({
-      id: entry.id,
+      id,
       name: entry.name.trim().slice(0, PLAYLIST_NAME_MAX),
       createdAt: typeof entry.createdAt === "number" && Number.isFinite(entry.createdAt) ? entry.createdAt : 0,
       items: parseSavedList(entry.items, MAX_PLAYLIST_ITEMS),

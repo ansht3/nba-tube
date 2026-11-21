@@ -35,6 +35,7 @@ export function WatchLaterButton({ video, variant }: Props) {
       aria-label={`Watch later: ${video.title}`}
       title={saved ? "Saved to Watch later" : "Watch later"}
       data-on={saved}
+      data-action="later"
       className="thumb-action"
     >
       {saved ? <CheckIcon className="size-[18px]" /> : <ClockIcon className="size-[18px]" />}

@@ -6,7 +6,7 @@ import { ExternalIcon } from "./icons";
 
 // The few parts of YouTube's IFrame Player API that this component uses.
 interface YouTubeNamespace {
-  Player: new (element: HTMLIFrameElement, options: { events: { onError: (event: { data: number }) => void } }) => unknown;
+  Player: new (element: HTMLIFrameElement, options: { events: { onError: (event: { data: number }) => void; onStateChange: (event: { data: number }) => void } }) => unknown;
 }
 declare global {
   interface Window {
@@ -43,6 +43,12 @@ function loadPlayerApi(): Promise<YouTubeNamespace> {
 // (100), embedding disabled by the owner (101, 150), and a bad id (2).
 const UNPLAYABLE = new Set([2, 100, 101, 150]);
 
+/** YouTube's player state for a video that has finished. */
+const ENDED = 0;
+
+/** Heard by the queue controls under the player. It only announces that the video ended; nothing navigates because of it. */
+export const VIDEO_ENDED_EVENT = "nbatube:ended";
+
 /**
  * YouTube's own embedded player, unmodified and never covered by anything.
  *
@@ -68,6 +74,9 @@ export function Player({ youtubeId, title }: { youtubeId: string; title: string 
           events: {
             onError: (event) => {
               if (!cancelled && UNPLAYABLE.has(event.data)) setUnplayable(true);
+            },
+            onStateChange: (event) => {
+              if (!cancelled && event.data === ENDED) window.dispatchEvent(new CustomEvent(VIDEO_ENDED_EVENT, { detail: { youtubeId } }));
             },
           },
         });

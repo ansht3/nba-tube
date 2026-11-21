@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
-// Runs against the production build served as static files, the same way it is
-// deployed. Build first: npm run build && npm run test:e2e
+// Runs against the production build served by `next start`, the same server
+// Vercel runs. Build first: npm run build && npm run test:e2e
 const PORT = 4173;
 
 export default defineConfig({
@@ -16,8 +16,7 @@ export default defineConfig({
     { name: "mobile", use: { ...devices["Pixel 7"] } },
   ],
   webServer: {
-    command: `node scripts/preview.mjs`,
-    env: { PORT: String(PORT) },
+    command: `npx next start -p ${PORT}`,
     url: `http://localhost:${PORT}/`,
     reuseExistingServer: !process.env.CI,
   },

@@ -1,6 +1,6 @@
 # Architecture
 
-NBATube is a static website generated from one JSON file. A separate set of
+NBATube is a Next.js website whose catalog is, for now, one JSON file (a database takes over in docs/MIGRATION.md). A separate set of
 Node scripts builds that file from a registry of verified YouTube channels.
 Nothing runs on a server after deployment.
 
@@ -20,10 +20,10 @@ Nothing runs on a server after deployment.
  data/catalog.json          generated, never committed
         |
         v
- next build                 static HTML for every route and every video
+ next build                 prerendered pages, refreshed every minute (ISR)
         |
         v
- out/                       any static host; playback in YouTube's player
+ .next + next start         Vercel or any Node host; playback in YouTube's player
 ```
 
 ## Two halves that share one contract
@@ -97,3 +97,19 @@ and continues from the live `/catalog.json`, so no commit is needed to update
 videos. A scheduled GitHub Actions job checks the channel feeds every 10 minutes
 and calls a Vercel Deploy Hook only when there is a new video to publish. See
 docs/DEPLOYMENT.md.
+
+## Catalog access
+
+Pages and routes do not read the catalog file. They ask a `CatalogRepository`
+(`src/catalog/repository.ts`) through `getCatalogRepository()`
+(`src/catalog/server.ts`): a page of videos for a filter, a count, one video,
+related videos, per-team counts, channels, and catalog metadata. Order is
+always newest first with ties by YouTube id, and cursors are built from parsed
+timestamps, so a cursor stays valid while newer videos are inserted.
+
+`FileCatalogRepository` answers from `data/catalog.json` (or the committed
+seed) exactly as the site always has. A database implementation will answer the
+same questions with indexed queries; see docs/MIGRATION.md. The two JSON
+artifacts `/catalog.json` and `/status.json` still read the file directly: they
+are the published form of the file catalog.
+

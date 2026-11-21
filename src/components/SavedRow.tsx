@@ -16,6 +16,8 @@ interface Props {
   onRemove: () => void;
   /** Extra leading content, such as a position number in a playlist. */
   lead?: ReactNode;
+  /** Where an in-catalog video opens. Defaults to its watch page; a playlist passes one that keeps the playlist playing. */
+  href?: string;
 }
 
 /**
@@ -23,7 +25,7 @@ interface Props {
  * browser, so it still makes sense when the video has left the catalog: the
  * row then links to YouTube and says so, instead of leading to a 404.
  */
-export function SavedRow({ saved, inCatalog, note, removeLabel, onRemove, lead }: Props) {
+export function SavedRow({ saved, inCatalog, note, removeLabel, onRemove, lead, href }: Props) {
   const body = (
     <>
       <div className="relative aspect-video w-32 shrink-0 overflow-hidden rounded-md bg-surface-2 sm:w-44">
@@ -47,7 +49,7 @@ export function SavedRow({ saved, inCatalog, note, removeLabel, onRemove, lead }
     <li className="flex items-start gap-2">
       {lead}
       {inCatalog ? (
-        <Link href={watchPath(saved.id)} data-video-link className="group flex min-w-0 flex-1 gap-3 rounded-lg">
+        <Link href={href ?? watchPath(saved.id)} data-video-link className="group flex min-w-0 flex-1 gap-3 rounded-lg">
           {body}
         </Link>
       ) : (

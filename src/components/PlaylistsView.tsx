@@ -17,10 +17,10 @@ import {
   type Playlist,
 } from "@/lib/storage/playlists";
 import { useStore } from "@/lib/storage/use-store";
-import { useCatalog } from "@/lib/use-catalog";
-import { playAllUrl } from "@/lib/youtube";
+import { useKnownVideoIds } from "@/lib/use-known-videos";
+import { playAllHref, watchHref } from "@/lib/queue";
 import { EmptyState } from "./EmptyState";
-import { ExternalIcon, PencilIcon, PlusIcon, TrashIcon } from "./icons";
+import { PencilIcon, PlayIcon, PlusIcon, TrashIcon } from "./icons";
 import { SavedRow } from "./SavedRow";
 import { StorageNotice } from "./StorageNotice";
 
@@ -140,8 +140,7 @@ function PlaylistIndex({ playlists }: { playlists: Playlist[] }) {
 
 function PlaylistDetail({ playlist, playlists }: { playlist: Playlist; playlists: Playlist[] }) {
   const [renaming, setRenaming] = useState(false);
-  const catalog = useCatalog(playlist.items.length > 0);
-  const known = catalog.status === "ready" ? new Set(catalog.videos.map((video) => video.youtubeId)) : null;
+  const known = useKnownVideoIds(playlist.items.map((item) => item.id));
 
   return (
     <>
@@ -176,11 +175,11 @@ function PlaylistDetail({ playlist, playlists }: { playlist: Playlist; playlists
               <PencilIcon />
               Rename
             </button>
-            {playlist.items.length > 0 && (
-              <a href={playAllUrl(playlist.items.map((item) => item.id))} target="_blank" rel="noopener noreferrer" className="pill">
-                <ExternalIcon />
-                Play all on YouTube
-              </a>
+            {playAllHref(playlist) && (
+              <Link href={playAllHref(playlist)!} className="pill">
+                <PlayIcon />
+                Play all
+              </Link>
             )}
           </div>
         </header>
@@ -197,6 +196,7 @@ function PlaylistDetail({ playlist, playlists }: { playlist: Playlist; playlists
               key={item.id}
               saved={item}
               inCatalog={known ? known.has(item.id) : true}
+              href={watchHref(item.id, playlist.id)}
               removeLabel="Remove from playlist"
               onRemove={() => {
                 playlistsStore.update((current) => removeFromPlaylist(current, playlist.id, item.id));

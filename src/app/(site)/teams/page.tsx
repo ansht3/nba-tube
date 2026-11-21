@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { loadCatalog } from "@/catalog/load";
-import { countByTeam } from "@/catalog/select";
+import { getCatalogRepository } from "@/catalog/server";
 import { TEAMS, teamFullName, type Conference } from "@/catalog/teams";
 import { PageHeader } from "@/components/PageHeader";
 import { pluralize } from "@/lib/format";
@@ -14,8 +13,8 @@ const CONFERENCES: { id: Conference; title: string }[] = [
   { id: "West", title: "Western Conference" },
 ];
 
-export default function TeamsPage() {
-  const counts = countByTeam(loadCatalog().videos);
+export default async function TeamsPage() {
+  const counts = await getCatalogRepository().countsByTeam();
 
   return (
     <>

@@ -1,0 +1,17 @@
+name = "nbatube-ingest"
+main = "index.ts"
+compatibility_date = "2026-11-01"
+workers_dev = false
+
+[triggers]
+# Every five minutes. Overlapping runs are prevented by a database lease, not by this schedule.
+crons = ["*/5 * * * *"]
+
+# Secrets are set with `wrangler secret put`, never written here:
+#   DATABASE_URL        the Neon connection string (required)
+#   YOUTUBE_API_KEY     optional: durations and recovery of missed uploads
+#
+# Optional variable, for Workers Free (50 subrequests per run): polls the least
+# recently polled channels first, so every channel is still reached in turn.
+# [vars]
+# MAX_CHANNELS_PER_RUN = "12"

@@ -1,4 +1,4 @@
-import { fetchWithRetry, NetworkError, type FetchLike, type RetryOptions } from "../http";
+import { fetchWithRetry, MAX_OEMBED_BYTES, NetworkError, readJsonLimited, type FetchLike, type RetryOptions } from "../http";
 
 export type EmbedCheck =
   | { status: "ok"; title: string; channelTitle: string }
@@ -29,7 +29,7 @@ export async function checkEmbed(youtubeId: string, fetchImpl: FetchLike, retry?
   if (!response.ok) return { status: "unknown" };
 
   try {
-    const body = (await response.json()) as { title?: unknown; author_name?: unknown };
+    const body = (await readJsonLimited(response, MAX_OEMBED_BYTES)) as { title?: unknown; author_name?: unknown };
     if (typeof body.title !== "string" || typeof body.author_name !== "string") return { status: "unknown" };
     return { status: "ok", title: body.title, channelTitle: body.author_name };
   } catch {

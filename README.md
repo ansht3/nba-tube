@@ -52,7 +52,7 @@ See [docs/YOUTUBE_SETUP.md](docs/YOUTUBE_SETUP.md) for the optional API key.
 npm run lint
 npm run typecheck
 npm run test        # unit tests (Vitest)
-npm run build       # static site in out/
+npm run build       # production build
 npm run test:e2e    # browser tests (Playwright) against out/
 npm run preview     # serve out/ locally
 ```

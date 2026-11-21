@@ -176,3 +176,27 @@ export const ChevronRightIcon = (props: IconProps) => (
     <path d="M9.5 6l6 6-6 6" />
   </Icon>
 );
+
+export const SkipNextIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path d="M6 5.5v13l9-6.5zM18 5.5v13" />
+  </Icon>
+);
+
+export const SkipPreviousIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path d="M18 5.5v13L9 12zM6 5.5v13" />
+  </Icon>
+);
+
+export const DownloadIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14" />
+  </Icon>
+);
+
+export const UploadIcon = (props: IconProps) => (
+  <Icon {...props}>
+    <path d="M12 15V4m0 0L8 8m4-4l4 4M5 19h14" />
+  </Icon>
+);

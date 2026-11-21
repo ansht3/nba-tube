@@ -1,3 +1,4 @@
+import { compareVideos } from "@/catalog/repository";
 import { CATALOG_SCHEMA_VERSION, type Catalog, type CatalogMode, type Video } from "@/catalog/schema";
 import type { Source } from "@/catalog/sources";
 import type { CandidateVideo } from "./candidate";
@@ -264,9 +265,9 @@ function recordRejection(
 
 /** Newest first. The id breaks ties so that two runs over the same data give the same file. */
 export function sortVideos(videos: Video[]): Video[] {
-  return [...videos].sort(
-    (a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt) || a.youtubeId.localeCompare(b.youtubeId),
-  );
+  // One definition of catalog order for the sync, the site and the database:
+  // newest first, ties by YouTube id in byte order (localeCompare would vary by machine).
+  return [...videos].sort(compareVideos);
 }
 
 function prune(videos: Video[], now: Date, limits: SyncLimits): Video[] {

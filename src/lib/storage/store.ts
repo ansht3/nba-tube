@@ -60,11 +60,19 @@ export function createStore<Value>(options: StoreOptions<Value>): Store<Value> {
   }
 
   function notify() {
-    for (const listener of listeners) listener();
+    // One subscriber that throws must not keep the others from hearing about the change.
+    for (const listener of [...listeners]) {
+      try {
+        listener();
+      } catch (error) {
+        console.error(`A listener of "${key}" threw:`, error);
+      }
+    }
   }
 
   function onStorageEvent(event: StorageEvent) {
-    if (event.key !== key) return;
+    // A null key means another tab cleared all of storage, which changes this key too.
+    if (event.key !== null && event.key !== key) return;
     // Another tab changed this key: pick up its value so both tabs agree.
     load();
     notify();

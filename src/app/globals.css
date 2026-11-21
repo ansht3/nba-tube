@@ -142,6 +142,13 @@ body {
     gap: 2.25rem 1rem;
   }
 
+  /* A long list is thousands of cards. The browser skips layout and paint for the ones far off screen and
+     keeps their place with this estimated height, so scrolling stays cheap as the list grows. */
+  .video-grid > article {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 18rem;
+  }
+
   .pill {
     @apply inline-flex h-11 cursor-pointer items-center gap-2 rounded-full bg-surface-2 px-4 text-sm font-medium whitespace-nowrap transition-colors hover:bg-line;
   }

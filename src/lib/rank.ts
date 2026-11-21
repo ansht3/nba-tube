@@ -27,8 +27,33 @@ const DAY_MS = 86_400_000;
 export const BEST_FIRST_EXPLANATION =
   "Game recaps first, then postgame sessions and player highlights, then the rest. Each day since upload counts against a video.";
 
+/**
+ * The score without the clock: weight + bonus + (published time in days). The
+ * score at any moment is this minus (now in days), the same for every video,
+ * so ordering by this key is exactly ordering by score, and it never changes.
+ * That is what lets "best first" be paginated with a stable cursor and stored
+ * in the database.
+ */
+export function bestKey(video: Video): number {
+  const leagueRecap = video.provenance.publisherType === "league" && video.labels.contentType === "GAME_HIGHLIGHTS";
+  return KIND_WEIGHTS[video.labels.contentType] + (leagueRecap ? LEAGUE_RECAP_BONUS : 0) + effectivePublishedMs(video) / DAY_MS;
+}
+
+/**
+ * When a video counts as published for ranking. A date later than the moment
+ * the catalog checked the video cannot be real (a premiere, or a wrong date),
+ * and without this it would outrank everything for as long as it stayed
+ * in the future. This uses a stored value rather than the clock, so the key
+ * stays the same however often it is computed.
+ */
+export function effectivePublishedMs(video: Video): number {
+  const published = Date.parse(video.publishedAt);
+  const checked = Date.parse(video.provenance.metadataCheckedAt);
+  return Number.isFinite(checked) ? Math.min(published, checked) : published;
+}
+
 export function bestFirstScore(video: Video, now: number): number {
-  const ageDays = Math.max(0, now - Date.parse(video.publishedAt)) / DAY_MS;
+  const ageDays = Math.max(0, now - effectivePublishedMs(video)) / DAY_MS;
   const leagueRecap = video.provenance.publisherType === "league" && video.labels.contentType === "GAME_HIGHLIGHTS";
   return KIND_WEIGHTS[video.labels.contentType] + (leagueRecap ? LEAGUE_RECAP_BONUS : 0) - ageDays;
 }

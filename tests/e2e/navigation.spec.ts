@@ -85,9 +85,13 @@ test("every home quick link opens a populated page", async ({ page, consoleError
     // "All" is the home page itself.
     if (await link.getAttribute("aria-current")) continue;
     const label = await link.textContent();
+    // A time window ("Last 24 hours") can honestly be empty on a quiet day; every other link must have videos.
+    const isTimeWindow = (await link.getAttribute("href"))?.includes("date=") ?? false;
     await link.click();
     await expect(page.getByRole("heading", { level: 1 }), label!).toBeVisible();
-    await expect(page.locator('main a[href^="/watch/"], main a[href^="/teams/"]').first(), label!).toBeVisible();
+    const populated = page.locator('main a[href^="/watch/"], main a[href^="/teams/"]').first();
+    if (isTimeWindow) await expect(populated.or(page.getByText("No videos match")), label!).toBeVisible();
+    else await expect(populated, label!).toBeVisible();
   }
   expect(consoleErrors).toEqual([]);
 });

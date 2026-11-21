@@ -1,8 +1,7 @@
 import Link from "next/link";
-import type { ContentType, SectionId } from "@/catalog/content-types";
-import { loadCatalog } from "@/catalog/load";
-import { videosInSection } from "@/catalog/select";
-import type { Video } from "@/catalog/schema";
+import type { SectionId } from "@/catalog/content-types";
+import type { VideoFilter } from "@/catalog/repository";
+import { getCatalogRepository } from "@/catalog/server";
 import { EmptyState } from "@/components/EmptyState";
 import { FavoriteTeamsShelf } from "@/components/FavoriteTeamsShelf";
 import { ChevronRightIcon } from "@/components/icons";
@@ -15,20 +14,18 @@ interface Shelf {
   /** The Settings section this shelf belongs to, so hiding a section hides its shelves. */
   section: SectionId;
   size: number;
-  select: (videos: Video[]) => Video[];
+  filter: VideoFilter;
   seeAll: string;
 }
-
-const ofType = (types: ContentType[]) => (videos: Video[]) => videos.filter((video) => types.includes(video.labels.contentType));
 
 // Full-game recaps lead: they are what most people come for the morning after
 // a game. Postgame sessions follow, then the rest.
 const SHELVES: Shelf[] = [
-  { id: "games", title: "Latest game highlights", section: "highlights", size: 6, select: ofType(["GAME_HIGHLIGHTS"]), seeAll: "/browse/?type=GAME_HIGHLIGHTS" },
-  { id: "postgame", title: "Postgame", section: "postgame", size: 6, select: (videos) => videosInSection(videos, "postgame"), seeAll: "/postgame/" },
-  { id: "players", title: "Player highlights and top plays", section: "highlights", size: 6, select: ofType(["PLAYER_HIGHLIGHTS", "TOP_PLAYS"]), seeAll: "/browse/?section=highlights" },
-  { id: "pregame", title: "Pregame", section: "pregame", size: 3, select: (videos) => videosInSection(videos, "pregame"), seeAll: "/pregame/" },
-  { id: "interviews", title: "Interviews", section: "interviews", size: 3, select: (videos) => videosInSection(videos, "interviews"), seeAll: "/interviews/" },
+  { id: "games", title: "Latest game highlights", section: "highlights", size: 6, filter: { contentTypes: ["GAME_HIGHLIGHTS"] }, seeAll: "/browse/?type=GAME_HIGHLIGHTS" },
+  { id: "postgame", title: "Postgame", section: "postgame", size: 6, filter: { section: "postgame" }, seeAll: "/postgame/" },
+  { id: "players", title: "Player highlights and top plays", section: "highlights", size: 6, filter: { contentTypes: ["PLAYER_HIGHLIGHTS", "TOP_PLAYS"] }, seeAll: "/browse/?section=highlights" },
+  { id: "pregame", title: "Pregame", section: "pregame", size: 3, filter: { section: "pregame" }, seeAll: "/pregame/" },
+  { id: "interviews", title: "Interviews", section: "interviews", size: 3, filter: { section: "interviews" }, seeAll: "/interviews/" },
 ];
 
 const QUICK_LINKS = [
@@ -41,8 +38,12 @@ const QUICK_LINKS = [
   { label: "Teams", href: "/teams/" },
 ];
 
-export default function HomePage() {
-  const { videos } = loadCatalog();
+export default async function HomePage() {
+  const repository = getCatalogRepository();
+  const [{ total }, shelves] = await Promise.all([
+    repository.meta(),
+    Promise.all(SHELVES.map(async (shelf) => ({ shelf, page: await repository.list({ ...shelf.filter, limit: shelf.size }) }))),
+  ]);
 
   return (
     <>
@@ -65,7 +66,7 @@ export default function HomePage() {
         </ul>
       </nav>
 
-      {videos.length === 0 && (
+      {total === 0 && (
         <EmptyState title="The catalog is empty">
           <p>
             Run <code>npm run sync</code> to fetch the latest official videos.
@@ -75,9 +76,8 @@ export default function HomePage() {
 
       <FavoriteTeamsShelf />
 
-      {SHELVES.map((shelf) => {
-        const all = shelf.select(videos);
-        if (all.length === 0) return null;
+      {shelves.map(({ shelf, page }) => {
+        if (page.total === 0) return null;
 
         return (
           <section key={shelf.id} data-shelf={shelf.section} aria-labelledby={`shelf-${shelf.id}`} className="mb-10">
@@ -86,11 +86,11 @@ export default function HomePage() {
                 {shelf.title}
               </h2>
               <Link href={shelf.seeAll} className="flex shrink-0 items-center gap-0.5 text-sm text-muted hover:text-text hover:underline">
-                See all {all.length.toLocaleString("en-US")}
+                See all {page.total.toLocaleString("en-US")}
                 <ChevronRightIcon className="size-4" />
               </Link>
             </div>
-            <VideoGrid videos={all.slice(0, shelf.size)} />
+            <VideoGrid videos={page.videos} />
           </section>
         );
       })}

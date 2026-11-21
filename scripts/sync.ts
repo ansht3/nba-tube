@@ -9,10 +9,12 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
-import { catalogSchema, type Catalog } from "@/catalog/schema";
+import { type Catalog } from "@/catalog/schema";
 import { approvedSources, parseSourceRegistry } from "@/catalog/sources";
+import { type SyncStatus } from "@/catalog/status";
 import { resolveMode } from "@/ingest/mode";
 import { parseOverrides } from "@/ingest/overrides";
+import { planFailure, readPreviousCatalog } from "@/ingest/previous";
 import { runSync, type SyncReport, type SyncResult } from "@/ingest/sync";
 import { createYouTubeApi, YouTubeApiError } from "@/ingest/youtube/api";
 import { fetchChannelFeed } from "@/ingest/youtube/feed";
@@ -22,6 +24,7 @@ const DATA_DIR = path.join(process.cwd(), "data");
 const CATALOG_PATH = path.join(DATA_DIR, "catalog.json");
 const SEED_PATH = path.join(DATA_DIR, "seed", "catalog.json");
 const REPORT_PATH = path.join(DATA_DIR, "sync-report.json");
+const STATUS_PATH = path.join(DATA_DIR, "sync-status.json");
 
 /** A seed is a small sample, so it takes only the newest few videos of each channel. */
 const SEED_VIDEOS_PER_CHANNEL = 8;
@@ -50,29 +53,15 @@ function previousCatalogUrl(): string | null {
   return production ? `https://${production}/catalog.json` : null;
 }
 
-async function readPreviousCatalog(): Promise<Catalog | null> {
-  if (existsSync(CATALOG_PATH)) {
-    const parsed = catalogSchema.safeParse(readJson(CATALOG_PATH));
-    if (parsed.success) return parsed.data;
-    console.warn("The existing data/catalog.json is not valid and will be rebuilt from scratch.");
-    return null;
-  }
-
-  const url = previousCatalogUrl();
-  if (!url) return null;
-  try {
-    const response = await fetch(url, { signal: AbortSignal.timeout(15_000) });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const parsed = catalogSchema.safeParse(await response.json());
-    // The seed is a sample, not a sync, so it is never carried forward.
-    if (!parsed.success || parsed.data.mode === "seed") return null;
-    console.log(`Continuing from the published catalog (${parsed.data.videos.length} videos).`);
-    return parsed.data;
-  } catch (error) {
-    // First deploy, or the site is down: start fresh rather than fail the build.
-    console.warn(`Could not read the published catalog (${error instanceof Error ? error.message : error}). Starting fresh.`);
-    return null;
-  }
+async function previousCatalog(): Promise<Catalog | null> {
+  const catalog = await readPreviousCatalog({
+    local: () => (existsSync(CATALOG_PATH) ? readJson(CATALOG_PATH) : undefined),
+    url: previousCatalogUrl(),
+    fetch,
+    warn: (message) => console.warn(message),
+  });
+  if (catalog && !existsSync(CATALOG_PATH)) console.log(`Continuing from the published catalog (${catalog.videos.length} videos).`);
+  return catalog;
 }
 
 function printReport(report: SyncReport, target: string, dryRun: boolean) {
@@ -116,7 +105,7 @@ async function main() {
   let result: SyncResult;
   if (mode === "api") {
     const api = createYouTubeApi({ apiKey: apiKey!, fetch });
-    result = await runSync({ ...common, mode: "api", api, previous: await readPreviousCatalog() });
+    result = await runSync({ ...common, mode: "api", api, previous: await previousCatalog() });
   } else {
     result = await runSync({
       ...common,
@@ -124,7 +113,7 @@ async function main() {
       fetchFeed: (source) => fetchChannelFeed(source, fetch),
       checkEmbed: (youtubeId) => checkEmbed(youtubeId, fetch),
       // A seed always starts clean so that it only contains what was verified in this run.
-      previous: values.seed ? null : await readPreviousCatalog(),
+      previous: values.seed ? null : await previousCatalog(),
       catalogMode: values.seed ? "seed" : "feed",
       limits: values.seed ? { perSourceLimit: SEED_VIDEOS_PER_CHANNEL } : undefined,
     });
@@ -134,13 +123,32 @@ async function main() {
   if (!values["dry-run"]) {
     writeJson(target, result.catalog);
     writeJson(REPORT_PATH, result.report);
+    if (!values.seed) {
+      const status: SyncStatus = { ok: true, finishedAt: new Date().toISOString(), mode: result.catalog.mode, usedFallback: "none", sourceErrors: result.report.sourceErrors.length, error: null };
+      writeJson(STATUS_PATH, status);
+    }
   }
   printReport(result.report, target, values["dry-run"]);
 }
 
-main().catch((error: unknown) => {
+/**
+ * A failed sync must not turn into a deploy of the committed seed over a
+ * fresher live catalog. Keep the last published catalog, and say so.
+ */
+async function recordFailure(message: string) {
+  if (process.argv.includes("--seed") || process.argv.includes("--dry-run")) return;
+  const previous = await previousCatalog().catch(() => null);
+  const plan = planFailure(previous, existsSync(CATALOG_PATH));
+  if (plan.writePrevious && previous) writeJson(CATALOG_PATH, previous);
+  const status: SyncStatus = { ok: false, finishedAt: new Date().toISOString(), mode: null, usedFallback: plan.fallback, sourceErrors: 0, error: message.slice(0, 300) };
+  writeJson(STATUS_PATH, status);
+  console.error(`Kept ${plan.fallback === "previous-catalog" ? "the last published catalog" : "the committed seed catalog (there was nothing earlier to keep)"}.`);
+}
+
+main().catch(async (error: unknown) => {
   // Error messages from the API client never contain the key or a request URL.
   const message = error instanceof YouTubeApiError || error instanceof Error ? error.message : String(error);
   console.error(`Sync failed: ${message}`);
+  await recordFailure(message).catch((inner: unknown) => console.error(`Could not record the failure: ${inner instanceof Error ? inner.message : inner}`));
   process.exitCode = 1;
 });

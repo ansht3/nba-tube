@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CONTENT_TYPES, CONTENT_TYPE_LABELS } from "@/catalog/content-types";
-import { loadCatalog, loadSources } from "@/catalog/load";
+import { loadSources } from "@/catalog/load";
+import { getCatalogRepository } from "@/catalog/server";
 import { approvedSources } from "@/catalog/sources";
 import { formatLongDate, pluralize } from "@/lib/format";
 import { KIND_WEIGHTS, LEAGUE_RECAP_BONUS } from "@/lib/rank";
@@ -16,8 +17,8 @@ const MODE_DESCRIPTIONS = {
   seed: "the small sample snapshot that ships with the code, not a live sync",
 } as const;
 
-export default function AboutPage() {
-  const catalog = loadCatalog();
+export default async function AboutPage() {
+  const catalog = await getCatalogRepository().meta();
   const sources = approvedSources(loadSources());
 
   return (
@@ -64,7 +65,8 @@ export default function AboutPage() {
       <p>
         There is no recommendation algorithm and no view or like counts. Best first is a fixed formula: each kind of
         video has a weight, and every day since upload subtracts one point. Recaps from the league channel, which cover
-        both teams, get {LEAGUE_RECAP_BONUS} extra. Ties go to the newer video.
+        both teams, get {LEAGUE_RECAP_BONUS} extra. Ties go to the newer video. A video whose date is later than the day this site
+        checked it (a scheduled premiere, say) counts from the day it was checked, so it cannot jump to the top early.
       </p>
       <ul className="mt-3 list-disc pl-6">
         {CONTENT_TYPES.map((type) => (
@@ -76,7 +78,7 @@ export default function AboutPage() {
 
       <h2>This catalog</h2>
       <p>
-        {pluralize(catalog.videos.length, "video")}, generated on {formatLongDate(catalog.generatedAt)}. It is{" "}
+        {pluralize(catalog.total, "video")}, generated on {formatLongDate(catalog.generatedAt)}. It is{" "}
         {MODE_DESCRIPTIONS[catalog.mode]}.
       </p>
 

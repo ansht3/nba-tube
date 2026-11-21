@@ -133,4 +133,22 @@ describe("parsePlaylists", () => {
   it("returns an empty list for anything that is not an array", () => {
     for (const stored of [null, "x", 1, {}]) expect(parsePlaylists(stored)).toEqual([]);
   });
+
+  it("keeps a playlist stored as liked or later under another id, so it cannot be played as the built-in queue", () => {
+    const parsed = parsePlaylists([
+      { id: "liked", name: "Mine", items: [] },
+      { id: "later", name: "Also mine", items: [] },
+      { id: "liked", name: "A second one", items: [] },
+    ]);
+    expect(parsed.map((playlist) => playlist.id)).toEqual(["playlist-liked", "playlist-later", "playlist-liked-2"]);
+    expect(parsed.map((playlist) => playlist.name)).toEqual(["Mine", "Also mine", "A second one"]);
+    // Stable: parsing what was written back gives the same ids.
+    expect(parsePlaylists(parsed).map((playlist) => playlist.id)).toEqual(parsed.map((playlist) => playlist.id));
+  });
+
+  it("drops ids that are not plain: too long, or with characters that do not belong in an address", () => {
+    const ids = ["a".repeat(65), "a/b", "a?b=1", "../x", "has space", "ok-id_1", "3f2b8c1e-6a52-4a53-9d0f-0c9d6f6a1b11"];
+    const parsed = parsePlaylists(ids.map((id) => ({ id, name: "n", items: [] })));
+    expect(parsed.map((playlist) => playlist.id)).toEqual(["ok-id_1", "3f2b8c1e-6a52-4a53-9d0f-0c9d6f6a1b11"]);
+  });
 });
