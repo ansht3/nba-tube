@@ -57,9 +57,6 @@ feed) found the issues fixed on `dev` that day, and these that are **not fixed**
   smaller still. Relevant only without `DATABASE_URL`.
 - **`script-src 'unsafe-inline'` in the CSP (confirmed).** The usual Next.js
   trade-off without nonces. The site has no accounts or user content.
-- **Not verified in a browser this round.** The poller and the Liked/Watch later
-  queue changes were checked by unit tests and by the browser tests earlier, but
-  the final commits were not re-run in a browser; CI is the check.
 
 ## Keyless mode
 
@@ -77,7 +74,11 @@ feed) found the issues fixed on `dev` that day, and these that are **not fixed**
   the job used to succeed anyway. It now fails when they are missing. Until the
   owner adds them (docs/DEPLOYMENT.md) the live site only updates on a push to
   `main`. Checked against production on 2026-11-16: 168 videos waiting, the
-  oldest for 78 hours.
+  oldest for 78 hours. Checked again on 2026-11-21: the live catalog was generated
+  on 2026-11-12 (209 hours earlier), `/status.json` was a 404, pull request #1
+  (`dev` into `main`, 72 commits) was still open and the repository had no secret
+  or variable. The scheduled run on `main` is still the old version that reports
+  success without publishing.
 - Vercel has not built the site yet. `vercel.json`'s build command and headers
   were run locally.
 - The Data API path is covered by unit tests with recorded response shapes, but
