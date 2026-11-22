@@ -1,3 +1,4 @@
+import { lastEmbedCheckMs } from "@/catalog/embed-check";
 import { compareVideos } from "@/catalog/repository";
 import { CATALOG_SCHEMA_VERSION, type Catalog, type CatalogMode, type Video } from "@/catalog/schema";
 import type { Source } from "@/catalog/sources";
@@ -106,7 +107,7 @@ function describeError(error: unknown): string {
 }
 
 function isStale(video: Video, now: Date, hours: number): boolean {
-  return now.getTime() - Date.parse(video.provenance.metadataCheckedAt) > hours * HOUR_MS;
+  return now.getTime() - lastEmbedCheckMs(video) > hours * HOUR_MS;
 }
 
 /** Rebuilds a candidate from a stored record so it can be re-decided with a refreshed title. */

@@ -41,13 +41,10 @@ the top.
 
 Three read-only reviews (API and SQL, ingestion and database, client storage and
 feed) found the issues fixed on `dev` that day, and these that are **not fixed**.
+(The oEmbed recheck resetting the 30-day clock was fixed on 2026-11-22: see
+docs/DECISIONS.md #16.)
 "Confirmed" means I read the code path myself; "reported" means only the reviewer did.
 
-- **oEmbed rechecks reset the 30-day clock for API-derived data (confirmed in
-  code, behaviour reasoned).** A recheck stamps a fresh `metadataCheckedAt` without
-  refreshing durations, so a Data API duration can live up to the 45-day limit
-  instead of 30 days. No fix without a way to tell "embed rechecked" from "metadata
-  refreshed".
 - **The legacy build-time sync can still shrink the live catalog (confirmed, reduced).**
   If the published `catalog.json` stays unreachable for a whole build (after two
   retries), the build starts fresh and publishes only the newest uploads per

@@ -33,6 +33,7 @@ const sources = [
 ];
 const overrides = parseOverrides({ schemaVersion: 1, include: [], exclude: [] });
 const NOW = new Date("2026-11-16T12:00:00Z");
+const HOUR = 3_600_000;
 const noRetry = { retries: 0, baseDelayMs: 1, sleep: async () => {} };
 
 interface Upload {
@@ -189,8 +190,51 @@ describe("runIngestion", () => {
     const summary = await runIngestion(deps(world));
     expect(summary).toMatchObject({ removed: 1, published: true });
     expect(await idsInDb()).toEqual([testId("fine"), testId("flaky")].sort());
-    const [fine] = await db.query<{ metadata_checked_at: string }>(`SELECT metadata_checked_at FROM videos WHERE youtube_id = $1`, [testId("fine")]);
-    expect(new Date(fine!.metadata_checked_at).toISOString()).toBe(NOW.toISOString());
+    // The recheck records when playability was confirmed, and leaves the metadata age alone.
+    const [fine] = await db.query<{ metadata_checked_at: string; data: { provenance: { embedCheckedAt?: string } } }>(`SELECT metadata_checked_at, data FROM videos WHERE youtube_id = $1`, [testId("fine")]);
+    expect(fine!.data.provenance.embedCheckedAt).toBe(NOW.toISOString());
+    expect(new Date(fine!.metadata_checked_at).toISOString()).toBe("2026-11-10T00:00:00.000Z");
+  });
+
+  it("does not let a playability recheck extend how long API-derived data may be kept", async () => {
+    const id = testId("apidata");
+    const fetched = "2026-10-20T00:00:00.000Z"; // 27 days before NOW: kept today, over the 30-day limit in four more
+    const base = makeVideo();
+    await importCatalog(db, { schemaVersion: 1, mode: "api", generatedAt: fetched, videos: [
+      makeVideo({ youtubeId: id, channelId: CHANNEL_A, publishedAt: "2026-11-14T10:00:00.000Z", durationSeconds: 754, embeddable: true, provenance: { ...base.provenance, discoveryMethod: "data-api", metadataCheckedAt: fetched } }),
+    ] });
+    const world = newWorld({ [CHANNEL_A]: [], [CHANNEL_B]: [], [CHANNEL_C]: [] });
+
+    await runIngestion(deps(world));
+    const [rechecked] = await db.query<{ metadata_checked_at: string; data: { durationSeconds: number; provenance: { embedCheckedAt?: string } } }>(`SELECT metadata_checked_at, data FROM videos WHERE youtube_id = $1`, [id]);
+    expect(rechecked!.data.provenance.embedCheckedAt).toBe(NOW.toISOString());
+    expect(new Date(rechecked!.metadata_checked_at).toISOString()).toBe(fetched);
+    expect(rechecked!.data.durationSeconds).toBe(754);
+
+    // Four days on, the API data is 31 days old. The recheck in between must not have bought it more time.
+    const later = new Date(NOW.getTime() + 4 * 24 * HOUR);
+    const summary = await runIngestion(deps(world, { owner: "run-2", now: () => later }));
+    expect(summary.removed).toBe(1); // counted as a removal: retention enforced the 30-day limit
+    expect(await idsInDb()).toEqual([]);
+  });
+
+  it("rotates rechecks through every due video instead of repeating the same one", async () => {
+    const [older, newer] = [testId("older"), testId("newer")];
+    const stale = (checked: string, id: string, hours: number) => makeVideo({ youtubeId: id, channelId: CHANNEL_A, publishedAt: `2026-11-14T0${hours}:00:00.000Z`, provenance: { ...makeVideo().provenance, discoveryMethod: "data-api", metadataCheckedAt: checked } });
+    await importCatalog(db, { schemaVersion: 1, mode: "api", generatedAt: "2026-11-09T00:00:00.000Z", videos: [stale("2026-11-09T00:00:00.000Z", older, 1), stale("2026-11-10T00:00:00.000Z", newer, 2)] });
+    const world = newWorld({ [CHANNEL_A]: [], [CHANNEL_B]: [], [CHANNEL_C]: [] });
+    const one = { retry: noRetry, recheckPerRun: 1 };
+    const embedChecked = async (id: string) => (await db.query<{ at: string | null }>(`SELECT data->'provenance'->>'embedCheckedAt' AS at FROM videos WHERE youtube_id = $1`, [id]))[0]!.at;
+
+    await runIngestion(deps(world, { options: one }));
+    expect(await embedChecked(older)).toBe(NOW.toISOString());
+    expect(await embedChecked(newer)).toBeNull();
+
+    // An hour later the first is not due again (24 h), so the second gets its turn.
+    const anHourOn = new Date(NOW.getTime() + HOUR);
+    await runIngestion(deps(world, { owner: "run-2", now: () => anHourOn, options: one }));
+    expect(await embedChecked(newer)).toBe(anHourOn.toISOString());
+    expect(await embedChecked(older)).toBe(NOW.toISOString());
   });
 
   it("removes nothing when most of a batch comes back unavailable at once: that is a block or an outage, not takedowns", async () => {

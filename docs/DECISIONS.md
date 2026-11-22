@@ -125,3 +125,28 @@ repository is chosen.
 Not enforced yet: `src/catalog` imports `src/lib/rank` (the Best first formula),
 a cycle between the contract and shared code. Moving `rank` into the contract is
 the clean fix and is left for its own change.
+
+## 16. Two clocks for one record: metadata age and playability checks
+
+*2026-11-22.*
+
+`provenance.metadataCheckedAt` was asked to answer two questions: how old is the
+data the YouTube Data API gave us (its terms allow storing it for 30 days), and
+when did we last confirm the video still plays. A recheck answers only the
+second, but stamping the one field also reset the first, so a duration could be
+kept up to the 45-day ceiling instead of 30. KNOWN_ISSUES recorded this as
+unfixable without a way to tell the two apart.
+
+The record now carries both. `metadataCheckedAt` moves only when YouTube
+supplies metadata; the optional `embedCheckedAt` moves on an oEmbed recheck.
+Rechecks rotate on the later of the two (`lastEmbedCheckMs`), computed in SQL with
+`GREATEST`, so a checked video goes to the back of the line and the same ten rows
+are not picked forever. Retention and the Best first clamp keep reading
+`metadataCheckedAt`.
+
+Alternatives rejected: a real `embed_checked_at` column (a migration and a second
+copy of a value already in the validated JSON, for at most a few thousand rows),
+and shortening the recheck so the clock never matters (it would still overstate
+how fresh the API data is). The field is optional, so no schema version bump,
+migration or backfill: a stored row without it behaves exactly as before until
+its first recheck.

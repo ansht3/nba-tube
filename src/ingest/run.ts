@@ -386,7 +386,12 @@ async function recheckStored(deps: IngestionDeps, options: IngestionOptions, now
   if (options.recheckPerRun <= 0 || budget.expired()) return [];
   const cutoff = new Date(now.getTime() - options.recheckAfterHours * HOUR_MS).toISOString();
   const rows = await deps.db.query<{ youtube_id: string; data: unknown }>(
-    `SELECT youtube_id, data FROM videos WHERE metadata_checked_at < $1 ORDER BY metadata_checked_at ASC, youtube_id LIMIT $2`,
+    // Due is judged by the later of the last metadata fetch and the last recheck (src/catalog/embed-check.ts), so a
+    // recheck moves a video to the back of the line without touching metadata_checked_at, which is the age of
+    // API-derived data. GREATEST ignores a NULL embedCheckedAt, so rows written before it existed still qualify.
+    `SELECT youtube_id, data FROM videos
+     WHERE GREATEST(metadata_checked_at, (data->'provenance'->>'embedCheckedAt')::timestamptz) < $1
+     ORDER BY GREATEST(metadata_checked_at, (data->'provenance'->>'embedCheckedAt')::timestamptz) ASC, youtube_id LIMIT $2`,
     [cutoff, options.recheckPerRun + skip.size],
   );
   const stale: Video[] = [];
@@ -402,7 +407,9 @@ async function recheckStored(deps: IngestionDeps, options: IngestionOptions, now
     const check = await checkEmbed(video.youtubeId, deps.fetch, options.retry);
     if (check.status === "unavailable") gone.push(video.youtubeId);
     else if (check.status === "unknown") summary.failed++;
-    else return { ...video, embeddable: true, provenance: { ...video.provenance, metadataCheckedAt: now.toISOString() } };
+    // oEmbed confirms playability and nothing else, so only embedCheckedAt moves. metadataCheckedAt stays the age of
+    // whatever the Data API last supplied (duration), which YouTube's terms limit to 30 days from that fetch.
+    else return { ...video, embeddable: true, provenance: { ...video.provenance, embedCheckedAt: now.toISOString() } };
     return null;
   });
 

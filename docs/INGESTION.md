@@ -24,6 +24,9 @@ wires secrets, the channel allowlist and the clock to it.
    next run.
 6. **Re-check.** The 10 stored videos checked longest ago are re-verified.
    Only a confirmed "gone" removes one; an inconclusive check changes nothing.
+   A passing check records `provenance.embedCheckedAt` and leaves
+   `metadataCheckedAt` alone: oEmbed refreshes no API data, so it must not extend
+   the 30-day limit on it. "Checked longest ago" means the later of the two.
 7. **Write.** Checks the lease is still held, then writes changed videos,
    confirmed removals and the new catalog version in **one transaction**. Rediscovered
    videos keep what a feed cannot know (duration, embedding, provenance), so an
