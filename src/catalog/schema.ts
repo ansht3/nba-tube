@@ -43,7 +43,16 @@ const provenanceSchema = z.object({
   publisherType: z.enum(PUBLISHER_TYPES),
   discoveryMethod: z.enum(DISCOVERY_METHODS),
   verificationStatus: z.enum(VERIFICATION_STATUSES),
+  /**
+   * When YouTube last supplied this record's metadata (title, duration, embeddability). The Data API's 30-day storage
+   * rule counts from here, so only a real metadata fetch may move it.
+   */
   metadataCheckedAt: isoDateTime,
+  /**
+   * When playability was last confirmed by the cheap oEmbed request, which learns nothing else. Absent until a
+   * recheck has run; readers must go through `lastEmbedCheckMs` (src/catalog/embed-check.ts).
+   */
+  embedCheckedAt: isoDateTime.optional(),
 });
 
 export const videoSchema = z.object({
