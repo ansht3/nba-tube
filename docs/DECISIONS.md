@@ -101,3 +101,27 @@ YouTube instead of showing an anonymous broken row.
 
 Work is committed to `dev` and pushed often. `main` is only fast-forwarded to a
 commit that has passed lint, type checking, tests and a production build.
+
+## 15. Layer boundaries are lint errors, not conventions
+
+*2026-11-22.*
+
+The code is split into layers with one-way dependencies: the site (`src/app`,
+`src/components`, `src/lib`) reads the catalog through `src/catalog`; ingestion
+(`src/ingest`) and storage (`src/db`) never import the site; `src/catalog` is the
+contract and imports neither ingestion nor the site. An import graph of the
+repository showed all of this already true, but only because nobody had broken it.
+The Worker deploys `src/ingest` on its own, so one UI import slipping into it
+would pull React into a bundle that cannot run it, and a page importing `src/db`
+would bypass the repository that lets the site run without a database.
+
+`eslint.config.mjs` now forbids those imports (alias and relative forms alike)
+with `no-restricted-imports`, one object per file set, since a later object
+replaces an earlier one's patterns instead of adding to them. Tests are exempt:
+they wire layers together on purpose. `src/catalog/server.ts` is the single file
+in the contract layer allowed to import `src/db`, because it is where the
+repository is chosen.
+
+Not enforced yet: `src/catalog` imports `src/lib/rank` (the Best first formula),
+a cycle between the contract and shared code. Moving `rank` into the contract is
+the clean fix and is left for its own change.

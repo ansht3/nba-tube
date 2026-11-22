@@ -36,6 +36,7 @@ npm run preview      # next start on :3000 (build first)
 
 - No accounts, cookies or server actions. Pages read the catalog only through `getCatalogRepository()` (src/catalog/server.ts); they are cached whole and refreshed by `revalidate`. Security headers live in `next.config.ts`, not `vercel.json`.
 - Do not export constants from a `"use client"` file for server components to use: they arrive as client references. Shared values go in `src/lib/`.
+- Layer boundaries are enforced by `eslint.config.mjs` (docs/DECISIONS.md #15): the site never imports `src/ingest` or `src/db`; only `src/catalog/server.ts` imports `src/db`.
 - Videos only from approved channels in `data/sources.json`. Never keyword search.
 - Classification is deterministic. Every decision names a rule id. Reject when unsure. Add a real-title fixture to `src/ingest/classify.test.ts` with every rule change.
 - Never invent teams, players, dates or durations. Unknown is `null` or empty.
