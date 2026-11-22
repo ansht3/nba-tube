@@ -20,7 +20,7 @@ refreshed from the catalog at most every minute; until a database is configured
   Deploy Hook. New videos appear about 10 to 15 minutes after upload, and Vercel
   only builds when something changed.
 - **Security headers** (Content-Security-Policy, no framing, nosniff) are set in
-  `vercel.json`. `npm run preview` applies the same headers locally.
+  `next.config.ts`, so `npm run preview` (`next start`) sends the same ones.
 
 ## One-time setup
 

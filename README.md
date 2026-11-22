@@ -53,8 +53,8 @@ npm run lint
 npm run typecheck
 npm run test        # unit tests (Vitest)
 npm run build       # production build
-npm run test:e2e    # browser tests (Playwright) against out/
-npm run preview     # serve out/ locally
+npm run test:e2e    # browser tests (Playwright) against `next start`; build first
+npm run preview     # next start on :3000; build first
 ```
 
 More: [architecture](docs/ARCHITECTURE.md), [decisions](docs/DECISIONS.md),
