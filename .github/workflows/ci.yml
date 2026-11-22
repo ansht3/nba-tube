@@ -21,8 +21,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
-      # The same unit and integration tests, with a coverage summary in the log. There is no threshold yet: a number
-      # chosen before the baseline was known would be arbitrary, and a failing gate would hide real failures.
+      # The same unit and integration tests, with a coverage summary in the log and a floor set just under the
+      # measured baseline (vitest.config.mts), so a change that stops testing code fails here instead of silently.
       - run: npm run test:coverage
       # CI builds from the committed seed catalog. No API key is needed or used.
       - run: npm run build

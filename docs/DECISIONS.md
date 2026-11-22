@@ -150,3 +150,20 @@ and shortening the recheck so the clock never matters (it would still overstate
 how fresh the API data is). The field is optional, so no schema version bump,
 migration or backfill: a stored row without it behaves exactly as before until
 its first recheck.
+
+## 17. A coverage floor, set from a measurement
+
+*2026-11-22.*
+
+CI reported coverage with no threshold, on the reasoning that a number picked
+before a baseline existed would be arbitrary and a failing gate would hide real
+failures. The baseline is now known (77.4% statements, 80.7% branches, 74.3%
+functions, 78.1% lines over `src`, `worker` and `scripts`; components and pages are
+covered by the browser tests and are not in the denominator).
+
+`vitest.config.mts` sets a floor about two points under it: 75 / 78 / 72 / 76.
+It is a ratchet, not a target: it exists so a change that deletes or skips tests
+fails CI, which a summary nobody reads does not. Raise it when coverage rises.
+Lowering it to land a change defeats the point; add the test instead. There is no
+per-file threshold, because the contract file `repository-contract.ts` and
+generated or test-only code would distort it.
