@@ -24,7 +24,7 @@ after the full check suite passes.
 | HackerTube-style browsing: filter panel, Best first, list search, icon rail, YouTube-style watch layout | Playwright on desktop and Pixel 7; screenshots compared with hackertube.org |
 | Keyboard shortcuts (`/`, `j`/`k`, `Enter`, `l`, `w`, `h`, `?`) and a search heading ("Results for …") | tests/e2e/shortcuts.spec.ts on desktop and Pixel 7 |
 
-## Scalable catalog work (2026-11-16, branch `dev`, unpushed)
+## Scalable catalog work (2026-11-16, branch `dev`, pushed; pull request #1 into `main` is open)
 
 Built and verified locally: visible refresh failures, a catalog repository with
 file and Postgres implementations passing one contract, idempotent storage with
@@ -33,6 +33,26 @@ version and updates endpoints, infinite scrolling with position restore,
 in-site playlist playback, library export and import, same-game related videos,
 `/api/health`, and a load test. Manual steps and unverified items:
 docs/OPERATIONS.md. The plan: docs/MIGRATION.md.
+
+## Architecture hardening (2026-11-22, branch `dev`)
+
+Six small changes, each with its reasoning in docs/DECISIONS.md:
+
+- Layer boundaries are lint errors (#15): the site never imports ingestion or
+  storage, the contract imports neither, `src/catalog` and `src/db` never import
+  `src/lib`. The Best first formula and the ingestion-health type moved into
+  `src/catalog` to close the last two cycles.
+- Playability rechecks no longer extend the 30-day life of Data API metadata (#16):
+  a new `provenance.embedCheckedAt` moves on a recheck, `metadataCheckedAt` only on a
+  real metadata fetch. Three regression tests fail against the old behaviour.
+- CI fails when coverage drops under a floor set from the measured baseline (#17).
+- The architecture, README and deployment docs no longer describe the static export.
+
+Verified locally: lint, typecheck, 527 unit tests, the Worker bundle, the production
+build and 180 Playwright tests (desktop and Pixel 7). Not verified: the Data API
+paths against the live API, Neon, Cloudflare and a Vercel deploy (unchanged; see
+docs/OPERATIONS.md). Still open, in order: the owner steps below, the coach-name
+roster, one live Data API sync.
 
 ## Production refresh status (re-checked 2026-11-16)
 
