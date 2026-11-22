@@ -35,19 +35,19 @@ function layerBoundaries() {
     restrict(
       ["src/catalog/**/*.ts"],
       [
-        { layers: ["ingest", "app", "components"], message: "src/catalog is the shared contract and cannot depend on ingestion or the site." },
+        { layers: ["ingest", "app", "components", "lib"], message: "src/catalog is the shared contract and cannot depend on ingestion, the site or shared UI code (move what it needs into src/catalog)." },
         { layers: ["db"], message: "Only src/catalog/server.ts may import src/db; everything else here must stay storage-agnostic." },
       ],
       [...TESTS, "src/catalog/server.ts"],
     ),
     restrict(
       ["src/catalog/server.ts"],
-      [{ layers: ["ingest", "app", "components"], message: "src/catalog is the shared contract and cannot depend on ingestion or the site." }],
+      [{ layers: ["ingest", "app", "components", "lib"], message: "src/catalog is the shared contract and cannot depend on ingestion, the site or shared UI code (move what it needs into src/catalog)." }],
     ),
     // Ingestion: reads the contract and writes through the database, never the site.
     restrict(["src/ingest/**/*.ts"], [{ layers: ["app", "components", "lib"], message: "Ingestion must not import site code; it is deployed on its own (the Worker)." }]),
     // Storage: contract in, rows out.
-    restrict(["src/db/**/*.ts"], [{ layers: ["ingest", "app", "components"], message: "Storage must not depend on ingestion or the site." }]),
+    restrict(["src/db/**/*.ts"], [{ layers: ["ingest", "app", "components", "lib"], message: "Storage depends on the contract only: not on ingestion, the site or lib." }]),
   ];
 }
 

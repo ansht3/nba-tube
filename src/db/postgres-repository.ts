@@ -12,7 +12,7 @@ import {
 import { videoSchema, type Video } from "@/catalog/schema";
 import { searchWords } from "@/catalog/search";
 import { SAME_GAME_BONUS, SAME_GAME_WINDOW_MS } from "@/catalog/select";
-import type { IngestionHealth } from "@/lib/api/health";
+import type { IngestionHealth } from "@/catalog/repository";
 import type { Db } from "./db";
 
 /** Collects query values and hands back their $n placeholders. */

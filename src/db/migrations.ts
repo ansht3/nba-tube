@@ -91,7 +91,7 @@ export const MIGRATIONS: Migration[] = [
   {
     id: "0004_best_key",
     statements: [
-      // The clock-independent "Best first" key (see bestKey in src/lib/rank.ts), so that order can be paged with a keyset cursor.
+      // The clock-independent "Best first" key (see bestKey in src/catalog/rank.ts), so that order can be paged with a keyset cursor.
       `ALTER TABLE videos ADD COLUMN IF NOT EXISTS best_key double precision NOT NULL DEFAULT 0`,
       `CREATE INDEX IF NOT EXISTS videos_best_idx ON videos (best_key DESC, published_at DESC, youtube_id)`,
     ],

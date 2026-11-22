@@ -1,4 +1,6 @@
-import type { CatalogMeta, CatalogRepository } from "@/catalog/repository";
+import type { CatalogMeta, CatalogRepository, IngestionHealth } from "@/catalog/repository";
+
+export type { IngestionHealth };
 import { errorResponse, json, NO_STORE } from "./http";
 
 const MINUTE_MS = 60_000;
@@ -7,18 +9,6 @@ export const WORKER_LATE_AFTER_MIN = 15;
 export const WORKER_DOWN_AFTER_MIN = 60;
 export const SOURCES_STALE_AFTER_MIN = 60;
 export const FAILING_CHANNELS_LIMIT = 3;
-
-/** What the database knows about ingestion. Only a database-backed repository can answer. */
-export interface IngestionHealth {
-  lastRunAt: string | null;
-  lastRunStatus: string | null;
-  lastSuccessAt: string | null;
-  channelsTracked: number;
-  /** Channels that have failed three or more runs in a row. */
-  channelsFailing: number;
-  /** When the least recently read channel last succeeded. */
-  oldestSourceSuccessAt: string | null;
-}
 
 export interface HealthReport {
   status: "ok" | "degraded" | "down";

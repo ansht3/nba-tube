@@ -1,4 +1,4 @@
-import { bestKey } from "@/lib/rank";
+import { bestKey } from "./rank";
 import { sectionOf } from "./content-types";
 import { searchTextFor, searchWords } from "./search";
 import {

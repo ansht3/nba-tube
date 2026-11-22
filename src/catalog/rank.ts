@@ -1,5 +1,5 @@
-import type { ContentType } from "@/catalog/content-types";
-import type { Video } from "@/catalog/schema";
+import type { ContentType } from "./content-types";
+import type { Video } from "./schema";
 
 /**
  * "Best first" is a published formula, not a recommendation model. Each kind

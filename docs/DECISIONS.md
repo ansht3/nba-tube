@@ -122,9 +122,11 @@ they wire layers together on purpose. `src/catalog/server.ts` is the single file
 in the contract layer allowed to import `src/db`, because it is where the
 repository is chosen.
 
-Not enforced yet: `src/catalog` imports `src/lib/rank` (the Best first formula),
-a cycle between the contract and shared code. Moving `rank` into the contract is
-the clean fix and is left for its own change.
+*Update, same day:* the one gap left open here is closed. `src/lib/rank.ts` (the
+Best first formula) imported only from `src/catalog`, so it moved there, and the
+`IngestionHealth` type that `src/db` took from `src/lib/api/health` now sits next
+to `CatalogRepository`. `src/catalog` and `src/db` may no longer import `src/lib`
+at all, and the lint rules say so.
 
 ## 16. Two clocks for one record: metadata age and playability checks
 

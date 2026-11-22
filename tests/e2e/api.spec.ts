@@ -1,5 +1,5 @@
 import { compareVideos } from "@/catalog/repository";
-import { bestKey } from "@/lib/rank";
+import { bestKey } from "@/catalog/rank";
 import { expect, test } from "@playwright/test";
 import { builtCatalog } from "./fixtures";
 

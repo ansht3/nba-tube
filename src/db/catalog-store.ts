@@ -1,6 +1,6 @@
 import { sectionOf } from "@/catalog/content-types";
 import { searchTextFor } from "@/catalog/search";
-import { bestKey } from "@/lib/rank";
+import { bestKey } from "@/catalog/rank";
 import { catalogSchema, videoSchema, type Catalog, type Video } from "@/catalog/schema";
 import type { Db, Statement } from "./db";
 

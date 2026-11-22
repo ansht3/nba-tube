@@ -2,7 +2,7 @@ import { SECTIONS, isContentType, sectionOf, type ContentType, type SectionId } 
 import type { Video } from "@/catalog/schema";
 import { searchTextFor, searchWords } from "@/catalog/search";
 import { getTeam } from "@/catalog/teams";
-import { sortBestFirst } from "./rank";
+import { sortBestFirst } from "@/catalog/rank";
 
 export const DURATION_BUCKETS = [
   { id: "short", label: "Under 5 minutes", min: 0, max: 5 * 60 },

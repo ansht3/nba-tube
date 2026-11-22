@@ -4,7 +4,7 @@ import type { ContentType } from "./content-types";
 import { InvalidCursorError, compareVideos, decodeCursor, encodeCursor, type CatalogRepository } from "./repository";
 import type { Video } from "./schema";
 import { relatedVideos } from "./select";
-import { sortBestFirst } from "@/lib/rank";
+import { sortBestFirst } from "./rank";
 
 /**
  * What every CatalogRepository must do, whatever it is backed by. The same

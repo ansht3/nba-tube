@@ -16,7 +16,7 @@ import {
 } from "@/lib/browse";
 import { feedKey, feedParams, type FeedPage } from "@/lib/feed";
 import { pluralize } from "@/lib/format";
-import { BEST_FIRST_EXPLANATION } from "@/lib/rank";
+import { BEST_FIRST_EXPLANATION } from "@/catalog/rank";
 import { SITE_NAME } from "@/lib/site";
 import { useVideoFeed } from "@/lib/use-video-feed";
 import { EmptyState } from "./EmptyState";

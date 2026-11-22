@@ -1,5 +1,5 @@
 import type { ContentType, SectionId } from "./content-types";
-import { bestKey } from "@/lib/rank";
+import { bestKey } from "./rank";
 import type { Catalog, Video } from "./schema";
 
 /**
@@ -29,7 +29,7 @@ export interface VideoFilter {
 
 /**
  * latest: newest first. oldest: exactly the reverse, ties included.
- * best: the published "Best first" order (see src/lib/rank.ts), ties newest first then by id.
+ * best: the published "Best first" order (see src/catalog/rank.ts), ties newest first then by id.
  */
 export type VideoSort = "latest" | "oldest" | "best";
 
@@ -62,6 +62,18 @@ export interface ChannelSummary {
   channelId: string;
   channelTitle: string;
   count: number;
+}
+
+/** What the database knows about ingestion. Only a database-backed repository can answer. */
+export interface IngestionHealth {
+  lastRunAt: string | null;
+  lastRunStatus: string | null;
+  lastSuccessAt: string | null;
+  channelsTracked: number;
+  /** Channels that have failed three or more runs in a row. */
+  channelsFailing: number;
+  /** When the least recently read channel last succeeded. */
+  oldestSourceSuccessAt: string | null;
 }
 
 export interface CatalogRepository {

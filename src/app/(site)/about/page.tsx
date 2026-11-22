@@ -5,7 +5,7 @@ import { loadSources } from "@/catalog/load";
 import { getCatalogRepository } from "@/catalog/server";
 import { approvedSources } from "@/catalog/sources";
 import { formatLongDate, pluralize } from "@/lib/format";
-import { KIND_WEIGHTS, LEAGUE_RECAP_BONUS } from "@/lib/rank";
+import { KIND_WEIGHTS, LEAGUE_RECAP_BONUS } from "@/catalog/rank";
 import { REPOSITORY_URL, SITE_NAME } from "@/lib/site";
 import { channelUrl } from "@/lib/youtube";
 
