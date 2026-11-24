@@ -169,3 +169,22 @@ fails CI, which a summary nobody reads does not. Raise it when coverage rises.
 Lowering it to land a change defeats the point; add the test instead. There is no
 per-file threshold, because the contract file `repository-contract.ts` and
 generated or test-only code would distort it.
+
+## 18. Team-channel opponents come from exact names only
+
+*2026-11-24.*
+
+A team channel's video used to be tagged with that team only, so a postgame
+presser after Hawks vs. Lakers never appeared on the Lakers page. `opponentOf`
+(src/ingest/decide.ts) now reads the opponent from "vs", "at" or "@" in the
+title: the first exact nickname from the team table in the next three words
+("Raptors", "Trail Blazers", "Cavs"), or an exact upper-case code ("HOU"). When
+that name is the channel's own team, the name just before the keyword is used.
+
+Cities are not matched, because "Los Angeles" is two teams and "LA" is used for
+both; "Highlights vs Milwaukee" therefore stays untagged. Lower-case codes are
+words, not teams. This keeps the rule the league channel already follows:
+anything that is not an exact team name gets no tag rather than a guess. A wrong
+opponent would put a video on a team page it has nothing to do with, which costs
+more than a missing one. Stored rows keep their old tags until the video is next
+written; no backfill, since team pages are a convenience over search.

@@ -34,6 +34,15 @@ in-site playlist playback, library export and import, same-game related videos,
 `/api/health`, and a load test. Manual steps and unverified items:
 docs/OPERATIONS.md. The plan: docs/MIGRATION.md.
 
+## Opponent tagging (2026-11-24, branch `dev`)
+
+- Team-channel videos are tagged with the opponent when the title names it
+  exactly (DECISIONS #18): "Hawks vs. Lakers Postgame…" now lists under both
+  teams. 18 real channel titles pin the matches and the deliberate misses
+  (a city alone, "at Madison Square Garden").
+
+Verified locally: lint, typecheck, 544 unit tests.
+
 ## Architecture hardening (2026-11-22, branch `dev`)
 
 Six small changes, each with its reasoning in docs/DECISIONS.md:
