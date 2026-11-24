@@ -77,6 +77,55 @@ export async function fetchWithRetry(
   throw new NetworkError(`No response after ${retries + 1} attempts: ${reason}`, { cause: lastError });
 }
 
+/** An upstream body was larger than the caller is willing to hold in memory. */
+export class ResponseTooLargeError extends Error {
+  constructor(maxBytes: number) {
+    super(`The response is larger than ${maxBytes} bytes.`);
+    this.name = "ResponseTooLargeError";
+  }
+}
+
+/**
+ * Reads a response body as text, refusing more than `maxBytes`. `response.text()` buffers whatever the server sends, and
+ * the worker has a small memory limit, so a broken or hostile upstream could otherwise make one request cost all of it.
+ * A declared Content-Length over the limit is refused without reading; a body that is longer than it declared (or is
+ * streamed with no length) is cut off as soon as it passes the limit.
+ */
+export async function readTextLimited(response: Response, maxBytes: number): Promise<string> {
+  const declared = Number(response.headers.get("content-length"));
+  if (Number.isFinite(declared) && declared > maxBytes) {
+    await response.body?.cancel().catch(() => {});
+    throw new ResponseTooLargeError(maxBytes);
+  }
+  if (!response.body) return response.text();
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let received = 0;
+  let text = "";
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    received += value.byteLength;
+    if (received > maxBytes) {
+      await reader.cancel().catch(() => {});
+      throw new ResponseTooLargeError(maxBytes);
+    }
+    text += decoder.decode(value, { stream: true });
+  }
+  return text + decoder.decode();
+}
+
+export async function readJsonLimited(response: Response, maxBytes: number): Promise<unknown> {
+  return JSON.parse(await readTextLimited(response, maxBytes));
+}
+
+/** Largest bodies each upstream is allowed to send. All are far above what the real endpoints return. */
+export const MAX_FEED_BYTES = 1_000_000;
+export const MAX_API_BYTES = 4_000_000;
+export const MAX_OEMBED_BYTES = 100_000;
+export const MAX_CATALOG_BYTES = 30_000_000;
+
 /** Runs async work over a list a few items at a time, keeping results in input order. */
 export async function mapWithConcurrency<Item, Result>(
   items: Item[],

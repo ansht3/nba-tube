@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { fetchWithRetry, mapWithConcurrency, NetworkError, type FetchLike } from "./http";
+import { fetchWithRetry, mapWithConcurrency, NetworkError, readJsonLimited, readTextLimited, ResponseTooLargeError, type FetchLike } from "./http";
 
 const noSleep = { sleep: async () => {} };
 
@@ -90,5 +90,46 @@ describe("mapWithConcurrency", () => {
 
   it("handles an empty list", async () => {
     expect(await mapWithConcurrency([], 4, async (item) => item)).toEqual([]);
+  });
+});
+
+describe("readTextLimited", () => {
+  /** A body that arrives in separate chunks, like a real network response, with no Content-Length. */
+  const streamed = (...chunks: string[]) =>
+    new Response(new ReadableStream({ start(controller) { for (const chunk of chunks) controller.enqueue(new TextEncoder().encode(chunk)); controller.close(); } }));
+
+  it("reads a body within the limit, whole and in order, including multi-byte characters split across chunks", async () => {
+    expect(await readTextLimited(new Response("hello"), 100)).toBe("hello");
+    const bytes = new TextEncoder().encode("caf\u00e9 \u{1F3C0}");
+    const split = new Response(new ReadableStream({ start(c) { c.enqueue(bytes.slice(0, 4)); c.enqueue(bytes.slice(4, 9)); c.enqueue(bytes.slice(9)); c.close(); } }));
+    expect(await readTextLimited(split, 100)).toBe("caf\u00e9 \u{1F3C0}");
+  });
+
+  it("accepts a body exactly at the limit and refuses one byte over", async () => {
+    expect(await readTextLimited(new Response("12345"), 5)).toBe("12345");
+    await expect(readTextLimited(streamed("12345", "6"), 5)).rejects.toThrow(ResponseTooLargeError);
+  });
+
+  it("refuses a declared length over the limit without reading the body", async () => {
+    const response = new Response("x", { headers: { "content-length": "999999999" } });
+    const text = vi.spyOn(response, "text");
+    await expect(readTextLimited(response, 1000)).rejects.toThrow(ResponseTooLargeError);
+    expect(text).not.toHaveBeenCalled();
+  });
+
+  it("cuts off a stream that never ends, and a body longer than it declared", async () => {
+    let pulls = 0;
+    const endless = new Response(new ReadableStream({ pull(controller) { pulls++; controller.enqueue(new TextEncoder().encode("x".repeat(1000))); } }));
+    await expect(readTextLimited(endless, 5000)).rejects.toThrow(ResponseTooLargeError);
+    expect(pulls).toBeLessThan(20); // stopped soon after the limit, not read forever
+
+    const lying = new Response("x".repeat(500), { headers: { "content-length": "10" } });
+    await expect(readTextLimited(lying, 100)).rejects.toThrow(ResponseTooLargeError);
+  });
+
+  it("parses JSON through the same limit, and still throws on invalid JSON", async () => {
+    expect(await readJsonLimited(new Response('{"a":1}'), 100)).toEqual({ a: 1 });
+    await expect(readJsonLimited(new Response("not json"), 100)).rejects.toThrow(SyntaxError);
+    await expect(readJsonLimited(new Response('{"a":"' + "x".repeat(200) + '"}'), 100)).rejects.toThrow(ResponseTooLargeError);
   });
 });

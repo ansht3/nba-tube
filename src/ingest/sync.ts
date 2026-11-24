@@ -1,3 +1,5 @@
+import { lastEmbedCheckMs } from "@/catalog/embed-check";
+import { compareVideos } from "@/catalog/repository";
 import { CATALOG_SCHEMA_VERSION, type Catalog, type CatalogMode, type Video } from "@/catalog/schema";
 import type { Source } from "@/catalog/sources";
 import type { CandidateVideo } from "./candidate";
@@ -105,7 +107,7 @@ function describeError(error: unknown): string {
 }
 
 function isStale(video: Video, now: Date, hours: number): boolean {
-  return now.getTime() - Date.parse(video.provenance.metadataCheckedAt) > hours * HOUR_MS;
+  return now.getTime() - lastEmbedCheckMs(video) > hours * HOUR_MS;
 }
 
 /** Rebuilds a candidate from a stored record so it can be re-decided with a refreshed title. */
@@ -264,9 +266,9 @@ function recordRejection(
 
 /** Newest first. The id breaks ties so that two runs over the same data give the same file. */
 export function sortVideos(videos: Video[]): Video[] {
-  return [...videos].sort(
-    (a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt) || a.youtubeId.localeCompare(b.youtubeId),
-  );
+  // One definition of catalog order for the sync, the site and the database:
+  // newest first, ties by YouTube id in byte order (localeCompare would vary by machine).
+  return [...videos].sort(compareVideos);
 }
 
 function prune(videos: Video[], now: Date, limits: SyncLimits): Video[] {

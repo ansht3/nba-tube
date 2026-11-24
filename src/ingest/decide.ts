@@ -1,6 +1,6 @@
 import { videoSchema, type Video } from "@/catalog/schema";
 import type { Source } from "@/catalog/sources";
-import { findTeamByMatchupName } from "@/catalog/teams";
+import { findTeamByMatchupName, getTeam } from "@/catalog/teams";
 import type { CandidateVideo } from "./candidate";
 import { classify, type Classification, type RejectionReason } from "./classify";
 import type { Overrides } from "./overrides";
@@ -13,6 +13,47 @@ export type Decision =
 // "THUNDER at TRAIL BLAZERS | FULL GAME HIGHLIGHTS | November 10, 2026".
 const LEAGUE_MATCHUP = /^(?:EXTENDED:\s*)?(.+?)\s+(?:at|vs\.?)\s+(.+?)\s*\|\s*FULL GAME HIGHLIGHTS\b/i;
 
+// "vs", "vs.", "at" or "@" and what follows, up to a title separator.
+const VERSUS = /(?:^|\s)(?:vs\.?|at|@)\s+([^|:#]+)/gi;
+
+/**
+ * The team named in up to the first three words: a nickname from the team
+ * table ("Raptors", "Trail Blazers", "Cavs") or an exact upper-case code
+ * ("HOU"). Cities are not used: "Los Angeles" is two teams.
+ */
+function teamInWords(words: string[]): string | undefined {
+  const window = words.slice(0, 3);
+  for (let i = 0; i < window.length; i++) {
+    for (const length of [2, 1]) {
+      const name = window.slice(i, i + length).join(" ");
+      if (window.length < i + length) continue;
+      const team = findTeamByMatchupName(name) ?? (/^[A-Z]{3}$/.test(name) ? getTeam(name) : undefined);
+      if (team) return team.id;
+    }
+  }
+  return undefined;
+}
+
+/**
+ * The opponent on a team channel's video, read from "vs"/"at" in the title
+ * ("Hawks vs. Lakers Postgame…", "Highlights vs Toronto Raptors",
+ * "Media Availability vs. HOU"). When the name after "vs" is the channel's own
+ * team ("Hawks vs. Lakers" on the Lakers channel) the name before it is used.
+ * No exact team name, no opponent: never a guess.
+ */
+export function opponentOf(title: string, ownTeamId: string): string | null {
+  for (const match of title.matchAll(VERSUS)) {
+    const after = teamInWords(match[1].trim().split(/\s+/));
+    if (after && after !== ownTeamId) return after;
+    if (after === ownTeamId) {
+      const before = title.slice(0, match.index).trim().split(/\s+/).slice(-2);
+      const team = teamInWords(before);
+      if (team && team !== ownTeamId) return team;
+    }
+  }
+  return null;
+}
+
 /**
  * Which teams a video is about. A team channel's videos belong to that team.
  * For the league channel, both teams are read from the matchup title, and only
@@ -20,7 +61,10 @@ const LEAGUE_MATCHUP = /^(?:EXTENDED:\s*)?(.+?)\s+(?:at|vs\.?)\s+(.+?)\s*\|\s*FU
  * rather than a guess.
  */
 export function teamIdsFor(video: CandidateVideo, source: Source): string[] {
-  if (source.teamId) return [source.teamId];
+  if (source.teamId) {
+    const opponent = opponentOf(video.title, source.teamId);
+    return opponent ? [source.teamId, opponent] : [source.teamId];
+  }
 
   const match = LEAGUE_MATCHUP.exec(video.title);
   if (!match) return [];

@@ -21,9 +21,13 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
-      - run: npm run test
+      # The same unit and integration tests, with a coverage summary in the log and a floor set just under the
+      # measured baseline (vitest.config.mts), so a change that stops testing code fails here instead of silently.
+      - run: npm run test:coverage
       # CI builds from the committed seed catalog. No API key is needed or used.
       - run: npm run build
+      # The Cloudflare Worker is bundled separately from the site; a break in its imports would otherwise show up only at deploy.
+      - run: npm run build:worker
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
       - uses: actions/upload-artifact@v4

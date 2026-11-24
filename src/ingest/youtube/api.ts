@@ -1,6 +1,6 @@
 import { YOUTUBE_ID_PATTERN } from "@/catalog/schema";
 import { defaultThumbnailUrl, type CandidateVideo } from "../candidate";
-import { fetchWithRetry, type FetchLike, type RetryOptions } from "../http";
+import { fetchWithRetry, MAX_API_BYTES, MAX_OEMBED_BYTES, readJsonLimited, type FetchLike, type RetryOptions } from "../http";
 
 const API_BASE = "https://www.googleapis.com/youtube/v3";
 
@@ -38,7 +38,7 @@ const RATE_LIMIT_REASONS = ["rateLimitExceeded", "userRateLimitExceeded"];
 
 async function readErrorBody(response: Response): Promise<ApiErrorBody> {
   try {
-    return (await response.json()) as ApiErrorBody;
+    return (await readJsonLimited(response, MAX_OEMBED_BYTES)) as ApiErrorBody;
   } catch {
     return {};
   }
@@ -171,9 +171,9 @@ export function createYouTubeApi(options: YouTubeApiOptions): YouTubeApi {
     if (!response.ok) throw toApiError(response.status, await readErrorBody(response));
 
     try {
-      return (await response.json()) as Record<string, unknown>;
+      return (await readJsonLimited(response, MAX_API_BYTES)) as Record<string, unknown>;
     } catch {
-      throw new YouTubeApiError("bad-response", `YouTube returned a response that is not JSON for ${path}`);
+      throw new YouTubeApiError("bad-response", `YouTube returned a response that is not JSON, or is too large, for ${path}`);
     }
   }
 

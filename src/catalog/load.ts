@@ -1,17 +1,22 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { catalogSchema, type Catalog } from "./schema";
+import { syncStatusSchema, type SyncStatus } from "./status";
 import { parseSourceRegistry, type SourceRegistry } from "./sources";
 
-// This module reads from disk, so it only runs at build time or in the dev
-// server. Client components get the catalog from /catalog.json instead.
+// This module reads from disk: at build time, in the dev server, and when a page
+// is regenerated. The paths are variables, so Next's file tracer cannot scope them;
+// they are marked turbopackIgnore and the files this needs are listed in
+// outputFileTracingIncludes (next.config.ts). Without that the tracer would bundle
+// the whole project into every serverless function.
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const SYNCED_CATALOG = path.join(DATA_DIR, "catalog.json");
 const SEED_CATALOG = path.join(DATA_DIR, "seed", "catalog.json");
+const SYNC_STATUS = path.join(DATA_DIR, "sync-status.json");
 
 function readCatalog(file: string): Catalog {
-  const parsed = catalogSchema.safeParse(JSON.parse(readFileSync(file, "utf8")));
+  const parsed = catalogSchema.safeParse(JSON.parse(readFileSync(/*turbopackIgnore: true*/ file, "utf8")));
   if (!parsed.success) {
     const issue = parsed.error.issues[0];
     const where = issue.path.join(".");
@@ -42,10 +47,10 @@ let cached: { file: string; modifiedAt: number; catalog: Catalog } | null = null
  * sync shows up in a running dev server without a restart.
  */
 export function loadCatalog(): Catalog {
-  const candidates = [SYNCED_CATALOG, SEED_CATALOG].filter((file) => existsSync(file));
+  const candidates = [SYNCED_CATALOG, SEED_CATALOG].filter((file) => existsSync(/*turbopackIgnore: true*/ file));
 
   for (const file of candidates) {
-    const modifiedAt = statSync(file).mtimeMs;
+    const modifiedAt = statSync(/*turbopackIgnore: true*/ file).mtimeMs;
     if (cached?.file === file && cached.modifiedAt === modifiedAt) return cached.catalog;
 
     const catalog = withinStorageLimit(readCatalog(file), new Date());
@@ -61,4 +66,15 @@ export function loadCatalog(): Catalog {
 
 export function loadSources(): SourceRegistry {
   return parseSourceRegistry(JSON.parse(readFileSync(path.join(DATA_DIR, "sources.json"), "utf8")));
+}
+
+/** What the last sync on this machine did, or null when it never ran or the file is unreadable. */
+export function loadSyncStatus(): SyncStatus | null {
+  if (!existsSync(/*turbopackIgnore: true*/ SYNC_STATUS)) return null;
+  try {
+    const parsed = syncStatusSchema.safeParse(JSON.parse(readFileSync(/*turbopackIgnore: true*/ SYNC_STATUS, "utf8")));
+    return parsed.success ? parsed.data : null;
+  } catch {
+    return null;
+  }
 }

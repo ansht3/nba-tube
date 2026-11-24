@@ -6,6 +6,7 @@ import { TEAMS, teamFullName } from "@/catalog/teams";
 import { historyStore } from "@/lib/storage/library";
 import { DENSITIES, THEMES, settingsStore, type Settings } from "@/lib/storage/settings";
 import { useStore } from "@/lib/storage/use-store";
+import { LibraryBackup } from "./LibraryBackup";
 import { StorageNotice } from "./StorageNotice";
 
 const THEME_LABELS = { system: "Match device", light: "Light", dark: "Dark" } as const;
@@ -102,6 +103,10 @@ export function SettingsView() {
         <button type="button" className="pill mt-3 disabled:opacity-50" disabled={history.length === 0} onClick={() => historyStore.set([])}>
           {history.length === 0 ? "History is empty" : `Clear history (${history.length})`}
         </button>
+      </Group>
+
+      <Group title="Your library" description="Move your likes, watch later and playlists to another browser with a file. There is no account, and nothing is sent anywhere. Importing adds to what is here and never removes anything.">
+        <LibraryBackup />
       </Group>
     </div>
   );

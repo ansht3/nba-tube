@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { loadCatalog } from "@/catalog/load";
+import { getCatalogRepository } from "@/catalog/server";
 import { BrowseView } from "@/components/BrowseView";
 
 export const metadata: Metadata = {
@@ -9,16 +9,10 @@ export const metadata: Metadata = {
 
 const INITIAL_COUNT = 48;
 
-export default function BrowsePage() {
-  const { videos } = loadCatalog();
+export default async function BrowsePage() {
+  const repository = getCatalogRepository();
+  const [first, channels, withDuration] = await Promise.all([repository.list({ limit: INITIAL_COUNT }), repository.channels(), repository.count({ duration: { min: 0, max: null } })]);
+  const sources = channels.map(({ channelId, channelTitle }) => ({ channelId, name: channelTitle })).sort((a, b) => a.name.localeCompare(b.name));
 
-  const names = new Map<string, string>();
-  for (const video of videos) names.set(video.channelId, video.channelTitle);
-  const sources = [...names]
-    .map(([channelId, name]) => ({ channelId, name }))
-    .sort((a, b) => a.name.localeCompare(b.name));
-
-  return (
-    <BrowseView initial={videos.slice(0, INITIAL_COUNT)} total={videos.length} sources={sources} />
-  );
+  return <BrowseView initial={first.videos} total={first.total} initialCursor={first.nextCursor} sources={sources} hasDurations={withDuration > 0} />;
 }

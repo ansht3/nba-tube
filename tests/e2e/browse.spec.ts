@@ -11,7 +11,8 @@ test("search from the header finds matching videos and the reset clears it", asy
   await expect(page).toHaveURL(new RegExp(`/browse/\\?q=${word}`));
   await expect(page.getByRole("status").filter({ hasText: /videos?$/ })).toBeVisible();
   await expect(page.getByRole("button", { name: `Remove filter: “${word}”` })).toBeVisible();
-  // Search results are rows, each linking to a watch page.
+  // Search results are rows, each linking to a watch page. They load from the API, so wait for the first.
+  await expect(page.locator('main ul li a[href^="/watch/"]').first()).toBeVisible();
   expect(await page.locator('main ul li a[href^="/watch/"]').count()).toBeGreaterThan(0);
 
   await page.getByRole("button", { name: "Clear all" }).click();
@@ -53,9 +54,14 @@ test("the team filter shows only that team's videos", async ({ page }) => {
   await openFilters(page);
   await page.getByRole("group", { name: "Team" }).getByRole("button", { name: "Boston Celtics" }).click();
   await expect(page).toHaveURL(/team=BOS/);
-  const tags = await page.locator("article p.uppercase").allTextContents();
-  expect(tags.length).toBeGreaterThan(0);
-  for (const tag of tags) expect(tag).toContain("BOS");
+  // The list for the new filter loads from the API while the old one is still on screen for a moment,
+  // so wait for the condition that matters: every card shown is a Boston video.
+  await expect
+    .poll(async () => {
+      const tags = await page.locator("article p.uppercase").allTextContents();
+      return tags.length > 0 && tags.every((tag) => tag.includes("BOS"));
+    })
+    .toBe(true);
 });
 
 test("sorting: best first explains itself, oldest first reverses latest", async ({ page }) => {

@@ -17,17 +17,19 @@ test("j and k move between videos, Enter opens one, l and w save it, h goes home
 
   // "w" on a selected card saves that card, and only that card.
   await page.keyboard.press("w");
-  await expect(page.locator("main article").first().locator(".thumb-action")).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("main article").first().locator('[data-action="later"]')).toHaveAttribute("aria-pressed", "true");
   await expect(page.locator('main .thumb-action[aria-pressed="true"]')).toHaveCount(1);
+  // "w" saves for later only: it must not like the card or open the playlist dialog.
+  await expect(page.locator('main [data-action="like"][aria-pressed="true"]')).toHaveCount(0);
 
   await page.keyboard.press("Enter");
   await page.waitForURL(/\/watch\//);
 
   await page.keyboard.press("l");
-  await expect(page.getByRole("button", { name: "Like" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("button", { name: "Like", exact: true })).toHaveAttribute("aria-pressed", "true");
   // This video was saved from its card, so "w" here removes it again.
   await page.keyboard.press("w");
-  await expect(page.getByRole("button", { name: "Watch later" })).toHaveAttribute("aria-pressed", "false");
+  await expect(page.getByRole("button", { name: "Watch later", exact: true })).toHaveAttribute("aria-pressed", "false");
 
   await page.keyboard.press("h");
   await page.waitForURL((url) => url.pathname === "/");

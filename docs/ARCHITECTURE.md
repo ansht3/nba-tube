@@ -1,8 +1,12 @@
 # Architecture
 
-NBATube is a static website generated from one JSON file. A separate set of
-Node scripts builds that file from a registry of verified YouTube channels.
-Nothing runs on a server after deployment.
+NBATube is a Next.js app served by `next start` (Vercel in production). Its
+catalog has two interchangeable homes behind one interface: a JSON file built by
+the sync scripts (the default, and what a fresh clone runs on), or Postgres kept
+current by a separate ingestion Worker. One variable, `DATABASE_URL`, chooses
+between them (see "Catalog access" below and docs/MIGRATION.md).
+
+The file path, which is also the fallback:
 
 ```
  data/sources.json          verified channels (the allowlist)
@@ -20,10 +24,25 @@ Nothing runs on a server after deployment.
  data/catalog.json          generated, never committed
         |
         v
- next build                 static HTML for every route and every video
+ next build                 prerendered pages, refreshed every minute (ISR)
         |
         v
- out/                       any static host; playback in YouTube's player
+ .next + next start         Vercel or any Node host; playback in YouTube's player
+```
+
+The database path replaces the sync and the file, not the site:
+
+```
+ data/sources.json + overrides.json   bundled into the Worker at deploy time
+        |
+        v
+ Cloudflare Worker (cron, 5 min)      src/ingest/run.ts: lease, discover, classify,
+        |                             embed-check, one transaction per run
+        v
+ Postgres (Neon)                      videos, versions, runs, checkpoints, lease
+        |
+        v
+ PostgresCatalogRepository            read by pages and /api/*, cached at the CDN
 ```
 
 ## Two halves that share one contract
@@ -78,11 +97,16 @@ the cases the rules get wrong.
 
 ## The website
 
-- Next.js App Router, built with `output: "export"`. Every page is prerendered,
-  including one page per video under `/watch/<id>/`.
-- Listing pages are server components that read the catalog at build time.
-- Search, filters and the personal lists are client components. They fetch
-  `catalog.json`, a static file emitted by a route handler, once per visit.
+- Next.js App Router on a normal Node server (DECISIONS #1; there is no static
+  export). Pages are generated once and refreshed at most every 60 seconds
+  (`revalidate` in `src/app/layout.tsx`); a video published since the last build
+  renders on its first request (`/watch/[id]` has `dynamicParams = true`).
+  Team pages come from the fixed team list.
+- Listing pages are server components that ask the catalog repository.
+- Search, filters and infinite scrolling are client components that call the
+  public read API (`/api/videos`, `/api/version`, `/api/updates`; docs/API.md)
+  one page at a time. They do not download the catalog. `/catalog.json` and
+  `/status.json` still exist as the published form of the file catalog.
 - Likes, watch later, history, playlists and settings live in `localStorage`
   under versioned keys. `src/lib/storage/` owns reading, validating and writing
   them. No request ever carries this data.
@@ -92,8 +116,31 @@ the cases the rules get wrong.
 
 ## Deployment
 
-`npm run build` writes `out/`, hosted on Vercel. Each Vercel build syncs first
-and continues from the live `/catalog.json`, so no commit is needed to update
-videos. A scheduled GitHub Actions job checks the channel feeds every 10 minutes
-and calls a Vercel Deploy Hook only when there is a new video to publish. See
-docs/DEPLOYMENT.md.
+The app is built with `npm run build` (`.next`) and run with `next start` on
+Vercel. `vercel.json` syncs the file catalog before each build, continuing from
+the live `/catalog.json`, so a build needs no commit to carry videos forward.
+Security headers are set in `next.config.ts`, not `vercel.json`, so
+`next start` and Vercel send the same ones.
+
+Freshness has two mechanisms during the migration. The old one is a scheduled
+GitHub Actions job that checks the channel feeds every 10 minutes and calls a
+Vercel Deploy Hook only when there is something new (docs/DEPLOYMENT.md). The new
+one is the Worker writing to Postgres, which needs no deploy at all
+(docs/OPERATIONS.md). The old one is retired after the Worker has run cleanly
+for a week.
+
+## Catalog access
+
+Pages and routes do not read the catalog file. They ask a `CatalogRepository`
+(`src/catalog/repository.ts`) through `getCatalogRepository()`
+(`src/catalog/server.ts`): a page of videos for a filter, a count, one video,
+related videos, per-team counts, channels, and catalog metadata. Order is
+always newest first with ties by YouTube id, and cursors are built from parsed
+timestamps, so a cursor stays valid while newer videos are inserted.
+
+`FileCatalogRepository` answers from `data/catalog.json` (or the committed
+seed) exactly as the site always has. A database implementation will answer the
+same questions with indexed queries; see docs/MIGRATION.md. The two JSON
+artifacts `/catalog.json` and `/status.json` still read the file directly: they
+are the published form of the file catalog.
+

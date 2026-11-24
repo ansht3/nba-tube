@@ -1,7 +1,8 @@
-import { CONTENT_TYPE_LABELS, SECTIONS, isContentType, sectionOf, type ContentType, type SectionId } from "@/catalog/content-types";
+import { SECTIONS, isContentType, sectionOf, type ContentType, type SectionId } from "@/catalog/content-types";
 import type { Video } from "@/catalog/schema";
-import { getTeam, teamFullName } from "@/catalog/teams";
-import { sortBestFirst } from "./rank";
+import { searchTextFor, searchWords } from "@/catalog/search";
+import { getTeam } from "@/catalog/teams";
+import { sortBestFirst } from "@/catalog/rank";
 
 export const DURATION_BUCKETS = [
   { id: "short", label: "Under 5 minutes", min: 0, max: 5 * 60 },
@@ -90,14 +91,6 @@ export function hasActiveFilters(filters: BrowseFilters): boolean {
   return filtersToQuery({ ...filters, sort: "latest" }) !== "";
 }
 
-/** Lower case, with accents removed, so "jokic" finds "Jokić". */
-function normalize(text: string): string {
-  return text
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase();
-}
-
 export interface SearchableVideo {
   video: Video;
   /** Everything a search can match, normalised once up front. */
@@ -109,14 +102,7 @@ export interface SearchableVideo {
  * catalog keeps each keystroke to a plain substring scan.
  */
 export function buildSearchIndex(videos: Video[]): SearchableVideo[] {
-  return videos.map((video) => {
-    const teams = video.labels.teamIds.map((id) => {
-      const team = getTeam(id);
-      return team ? `${teamFullName(team)} ${team.id}` : id;
-    });
-    const parts = [video.title, video.channelTitle, CONTENT_TYPE_LABELS[video.labels.contentType], ...teams];
-    return { video, text: normalize(parts.join(" ")) };
-  });
+  return videos.map((video) => ({ video, text: searchTextFor(video) }));
 }
 
 function inDurationBucket(video: Video, bucketId: DurationBucket): boolean {
@@ -130,7 +116,7 @@ function inDurationBucket(video: Video, bucketId: DurationBucket): boolean {
  * words, in any order. `now` is passed in so results are reproducible.
  */
 export function filterVideos(index: SearchableVideo[], filters: BrowseFilters, now: number = Date.now()): Video[] {
-  const words = normalize(filters.query).split(/\s+/).filter(Boolean);
+  const words = searchWords(filters.query);
   const window = UPLOAD_WINDOWS.find((candidate) => candidate.id === filters.date);
   const publishedAfter = window ? now - window.days * 86_400_000 : -Infinity;
 

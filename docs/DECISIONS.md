@@ -2,18 +2,28 @@
 
 Short records of choices that were not obvious. Newest at the bottom.
 
-## 1. Static export instead of a running server
+## 1. A normal Next server instead of a static export
 
-The catalog changes a few times a day at most and every visitor sees the same
-videos. Prerendering everything means free hosting, no cold starts and no API
-key anywhere near a browser. The cost is that a video page exists only for
-videos in the catalog at build time, so the site is rebuilt on each sync.
+*Reverses the original decision (static export), 2026-11-16.*
+
+The site began as a static export: prerendered pages, free hosting, no API key
+near a browser. The cost was that new videos needed a rebuild, and on
+2026-11-16 the rebuild trigger had silently stopped, leaving the live catalog 82
+hours stale. docs/MIGRATION.md moves ingestion out of the deploy path, which
+needs API routes, so the export is gone.
+
+Pages are still generated once and served from the CDN; each is refreshed from
+the catalog at most every minute (`revalidate = 60` in the root layout), and a
+video published since the last build renders on its first request. Without a
+`DATABASE_URL` the site reads the same JSON file as before, so nothing changes
+until the database is switched on.
 
 ## 2. Cache Components left off
 
 `create-next-app` now turns on `cacheComponents`. It exists to mix static shells
-with streamed dynamic content, and a static export has no dynamic content. It is
-off to keep the mental model small: pages read a file at build time.
+with streamed dynamic content. It stays off to keep the mental model small:
+pages are cached whole and refreshed on a timer (`revalidate`), and API
+responses set their own `Cache-Control`.
 
 ## 3. Verified channels only, never search
 
@@ -91,3 +101,90 @@ YouTube instead of showing an anonymous broken row.
 
 Work is committed to `dev` and pushed often. `main` is only fast-forwarded to a
 commit that has passed lint, type checking, tests and a production build.
+
+## 15. Layer boundaries are lint errors, not conventions
+
+*2026-11-22.*
+
+The code is split into layers with one-way dependencies: the site (`src/app`,
+`src/components`, `src/lib`) reads the catalog through `src/catalog`; ingestion
+(`src/ingest`) and storage (`src/db`) never import the site; `src/catalog` is the
+contract and imports neither ingestion nor the site. An import graph of the
+repository showed all of this already true, but only because nobody had broken it.
+The Worker deploys `src/ingest` on its own, so one UI import slipping into it
+would pull React into a bundle that cannot run it, and a page importing `src/db`
+would bypass the repository that lets the site run without a database.
+
+`eslint.config.mjs` now forbids those imports (alias and relative forms alike)
+with `no-restricted-imports`, one object per file set, since a later object
+replaces an earlier one's patterns instead of adding to them. Tests are exempt:
+they wire layers together on purpose. `src/catalog/server.ts` is the single file
+in the contract layer allowed to import `src/db`, because it is where the
+repository is chosen.
+
+*Update, same day:* the one gap left open here is closed. `src/lib/rank.ts` (the
+Best first formula) imported only from `src/catalog`, so it moved there, and the
+`IngestionHealth` type that `src/db` took from `src/lib/api/health` now sits next
+to `CatalogRepository`. `src/catalog` and `src/db` may no longer import `src/lib`
+at all, and the lint rules say so.
+
+## 16. Two clocks for one record: metadata age and playability checks
+
+*2026-11-22.*
+
+`provenance.metadataCheckedAt` was asked to answer two questions: how old is the
+data the YouTube Data API gave us (its terms allow storing it for 30 days), and
+when did we last confirm the video still plays. A recheck answers only the
+second, but stamping the one field also reset the first, so a duration could be
+kept up to the 45-day ceiling instead of 30. KNOWN_ISSUES recorded this as
+unfixable without a way to tell the two apart.
+
+The record now carries both. `metadataCheckedAt` moves only when YouTube
+supplies metadata; the optional `embedCheckedAt` moves on an oEmbed recheck.
+Rechecks rotate on the later of the two (`lastEmbedCheckMs`), computed in SQL with
+`GREATEST`, so a checked video goes to the back of the line and the same ten rows
+are not picked forever. Retention and the Best first clamp keep reading
+`metadataCheckedAt`.
+
+Alternatives rejected: a real `embed_checked_at` column (a migration and a second
+copy of a value already in the validated JSON, for at most a few thousand rows),
+and shortening the recheck so the clock never matters (it would still overstate
+how fresh the API data is). The field is optional, so no schema version bump,
+migration or backfill: a stored row without it behaves exactly as before until
+its first recheck.
+
+## 17. A coverage floor, set from a measurement
+
+*2026-11-22.*
+
+CI reported coverage with no threshold, on the reasoning that a number picked
+before a baseline existed would be arbitrary and a failing gate would hide real
+failures. The baseline is now known (77.4% statements, 80.7% branches, 74.3%
+functions, 78.1% lines over `src`, `worker` and `scripts`; components and pages are
+covered by the browser tests and are not in the denominator).
+
+`vitest.config.mts` sets a floor about two points under it: 75 / 78 / 72 / 76.
+It is a ratchet, not a target: it exists so a change that deletes or skips tests
+fails CI, which a summary nobody reads does not. Raise it when coverage rises.
+Lowering it to land a change defeats the point; add the test instead. There is no
+per-file threshold, because the contract file `repository-contract.ts` and
+generated or test-only code would distort it.
+
+## 18. Team-channel opponents come from exact names only
+
+*2026-11-24.*
+
+A team channel's video used to be tagged with that team only, so a postgame
+presser after Hawks vs. Lakers never appeared on the Lakers page. `opponentOf`
+(src/ingest/decide.ts) now reads the opponent from "vs", "at" or "@" in the
+title: the first exact nickname from the team table in the next three words
+("Raptors", "Trail Blazers", "Cavs"), or an exact upper-case code ("HOU"). When
+that name is the channel's own team, the name just before the keyword is used.
+
+Cities are not matched, because "Los Angeles" is two teams and "LA" is used for
+both; "Highlights vs Milwaukee" therefore stays untagged. Lower-case codes are
+words, not teams. This keeps the rule the league channel already follows:
+anything that is not an exact team name gets no tag rather than a guess. A wrong
+opponent would put a video on a team page it has nothing to do with, which costs
+more than a missing one. Stored rows keep their old tags until the video is next
+written; no backfill, since team pages are a convenience over search.

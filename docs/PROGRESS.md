@@ -24,26 +24,64 @@ after the full check suite passes.
 | HackerTube-style browsing: filter panel, Best first, list search, icon rail, YouTube-style watch layout | Playwright on desktop and Pixel 7; screenshots compared with hackertube.org |
 | Keyboard shortcuts (`/`, `j`/`k`, `Enter`, `l`, `w`, `h`, `?`) and a search heading ("Results for …") | tests/e2e/shortcuts.spec.ts on desktop and Pixel 7 |
 
-## Production refresh status (re-checked 2026-11-12, 16:50 UTC run still failed)
+## Scalable catalog work (2026-11-16, branch `dev`, pushed; pull request #1 into `main` is open)
 
-The site is live at https://nba-tube.vercel.app and Vercel deploys every push
-to `main` (each build syncs the latest videos). The every-10-minutes refresh is
-**not running yet**, for three reasons that need the owner:
+Built and verified locally: visible refresh failures, a catalog repository with
+file and Postgres implementations passing one contract, idempotent storage with
+atomic versions, a leased incremental ingestion worker, cached paginated feeds,
+version and updates endpoints, infinite scrolling with position restore,
+in-site playlist playback, library export and import, same-game related videos,
+`/api/health`, and a load test. Manual steps and unverified items:
+docs/OPERATIONS.md. The plan: docs/MIGRATION.md.
 
-1. **GitHub Actions is blocked by a billing lock.** Every job, including the
-   scheduled `Refresh videos` run, fails with "The job was not started because
-   your account is locked due to a billing issue". Fix: GitHub > Settings >
-   Billing and plans.
-2. **No Vercel Deploy Hook exists.** Create one: Vercel > nba-tube > Settings >
-   Git > Deploy Hooks, name `refresh`, branch `main`.
-3. **The repository has no `VERCEL_DEPLOY_HOOK` secret or `SITE_URL` variable.**
-   Add them under GitHub > nba-tube > Settings > Secrets and variables >
-   Actions (`SITE_URL` = `https://nba-tube.vercel.app`). Creating these from
-   the CLI was attempted and refused by the session's permission policy for
-   writing secrets, so it was left to the owner.
+## Opponent tagging (2026-11-24, branch `dev`)
 
-Once all three are done, the `Refresh videos` workflow can be started by hand
-from the Actions tab to confirm it, and then runs on its own.
+- Team-channel videos are tagged with the opponent when the title names it
+  exactly (DECISIONS #18): "Hawks vs. Lakers Postgame…" now lists under both
+  teams. 17 cases pin the matches and the deliberate misses: 14 real channel
+  titles (one checked from both teams' channels) and 2 made-up negatives (a
+  title with no matchup, a lower-case "hou"). A city alone and "at Madison
+  Square Garden" stay untagged.
+
+Verified locally: lint, typecheck, 544 unit tests.
+
+## Architecture hardening (2026-11-22, branch `dev`)
+
+Six small changes, each with its reasoning in docs/DECISIONS.md:
+
+- Layer boundaries are lint errors (#15): the site never imports ingestion or
+  storage, the contract imports neither, `src/catalog` and `src/db` never import
+  `src/lib`. The Best first formula and the ingestion-health type moved into
+  `src/catalog` to close the last two cycles.
+- Playability rechecks no longer extend the 30-day life of Data API metadata (#16):
+  a new `provenance.embedCheckedAt` moves on a recheck, `metadataCheckedAt` only on a
+  real metadata fetch. Three regression tests fail against the old behaviour.
+- CI fails when coverage drops under a floor set from the measured baseline (#17).
+- The architecture, README and deployment docs no longer describe the static export.
+
+Verified locally: lint, typecheck, 527 unit tests, the Worker bundle, the production
+build and 180 Playwright tests (desktop and Pixel 7). Not verified: the Data API
+paths against the live API, Neon, Cloudflare and a Vercel deploy (unchanged; see
+docs/OPERATIONS.md). Still open, in order: the owner steps below, the coach-name
+roster, one live Data API sync.
+
+## Production refresh status (re-checked 2026-11-16)
+
+The site is live at https://nba-tube.vercel.app. The refresh is **not
+publishing**, and it is now visible instead of silent:
+
+- The live catalog is from 2026-11-12 (82 hours old). A real keyless sync adds
+  168 videos it does not have.
+- `Refresh videos` runs on GitHub (the earlier billing lock is gone) but ran
+  green while doing nothing. It now fails when the hook or `SITE_URL` is missing
+  or when a video has waited over an hour.
+- Remaining owner steps (cannot be done from code):
+  1. Vercel > nba-tube > Settings > Git > Deploy Hooks: create `refresh` for
+     branch `main` and copy the URL.
+  2. GitHub > nba-tube > Settings > Secrets and variables > Actions: secret
+     `VERCEL_DEPLOY_HOOK` = that URL; variable `SITE_URL` =
+     `https://nba-tube.vercel.app`.
+  3. Run `Refresh videos` once from the Actions tab and read its summary.
 
 ## Next useful work
 

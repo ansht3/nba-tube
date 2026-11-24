@@ -1,7 +1,7 @@
 import type { Source } from "@/catalog/sources";
 import { YOUTUBE_ID_PATTERN } from "@/catalog/schema";
 import { defaultThumbnailUrl, type CandidateVideo } from "../candidate";
-import { fetchWithRetry, type FetchLike, type RetryOptions } from "../http";
+import { fetchWithRetry, MAX_FEED_BYTES, readTextLimited, type FetchLike, type RetryOptions } from "../http";
 
 const FEED_URL = "https://www.youtube.com/feeds/videos.xml";
 
@@ -13,10 +13,29 @@ const XML_ENTITIES: Record<string, string> = {
   apos: "'",
 };
 
+/** The characters XML 1.0 allows: tab, newline, carriage return, and everything from space up except surrogates and U+FFFE/U+FFFF. */
+function isXmlChar(codePoint: number): boolean {
+  return (
+    codePoint === 0x9 ||
+    codePoint === 0xa ||
+    codePoint === 0xd ||
+    (codePoint >= 0x20 && codePoint <= 0xd7ff) ||
+    (codePoint >= 0xe000 && codePoint <= 0xfffd) ||
+    (codePoint >= 0x10000 && codePoint <= 0x10ffff)
+  );
+}
+
+/** A character reference's character, or null when it is not a legal one. fromCodePoint throws on anything outside Unicode, so it is only called on a checked value. */
+function characterFor(digits: string, radix: 10 | 16): string | null {
+  const codePoint = parseInt(digits, radix);
+  return Number.isSafeInteger(codePoint) && isXmlChar(codePoint) ? String.fromCodePoint(codePoint) : null;
+}
+
 function decodeXml(text: string): string {
   return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole, entity: string) => {
-    if (entity.startsWith("#x") || entity.startsWith("#X")) return String.fromCodePoint(parseInt(entity.slice(2), 16));
-    if (entity.startsWith("#")) return String.fromCodePoint(parseInt(entity.slice(1), 10));
+    // A reference that is not a legal character is left as written: one odd title must not throw out the whole channel's feed.
+    if (entity.startsWith("#x") || entity.startsWith("#X")) return characterFor(entity.slice(2), 16) ?? whole;
+    if (entity.startsWith("#")) return characterFor(entity.slice(1), 10) ?? whole;
     return XML_ENTITIES[entity.toLowerCase()] ?? whole;
   });
 }
@@ -77,7 +96,7 @@ async function fetchFeed(url: string, fetchImpl: FetchLike, retry?: RetryOptions
   const response = await fetchWithRetry(fetchImpl, url, retry);
   if (response.status === 404) return null;
   if (!response.ok) throw new FeedError(`Feed request failed with HTTP ${response.status}`);
-  return parseFeed(await response.text());
+  return parseFeed(await readTextLimited(response, MAX_FEED_BYTES));
 }
 
 /**
