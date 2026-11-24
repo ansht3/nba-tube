@@ -38,8 +38,10 @@ docs/OPERATIONS.md. The plan: docs/MIGRATION.md.
 
 - Team-channel videos are tagged with the opponent when the title names it
   exactly (DECISIONS #18): "Hawks vs. Lakers Postgame…" now lists under both
-  teams. 18 real channel titles pin the matches and the deliberate misses
-  (a city alone, "at Madison Square Garden").
+  teams. 17 cases pin the matches and the deliberate misses: 14 real channel
+  titles (one checked from both teams' channels) and 2 made-up negatives (a
+  title with no matchup, a lower-case "hou"). A city alone and "at Madison
+  Square Garden" stay untagged.
 
 Verified locally: lint, typecheck, 544 unit tests.
 
