@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { videoSchema } from "@/catalog/schema";
 import { makeCandidate, makeSource } from "@/test/fixtures";
-import { decide, teamIdsFor } from "./decide";
+import { decide, opponentOf, teamIdsFor } from "./decide";
 import { NO_OVERRIDES, type Overrides } from "./overrides";
 
 const NOW = new Date("2026-11-11T18:00:00.000Z");
@@ -9,9 +9,11 @@ const league = makeSource();
 const hawks = makeSource({ channelId: "UCpfcwELvR1wtcRJ0UxNXHYw", name: "Atlanta Hawks", handle: "@ATLHawks", publisherType: "team", teamId: "ATL" });
 
 describe("teamIdsFor", () => {
-  it("tags a team channel's video with that team only, whoever the opponent was", () => {
+  it("tags a team channel's video with that team and an exactly named opponent", () => {
     const video = makeCandidate({ title: "Hawks vs. Lakers Postgame Press Conference: Dyson Daniels" });
-    expect(teamIdsFor(video, hawks)).toEqual(["ATL"]);
+    expect(teamIdsFor(video, hawks)).toEqual(["ATL", "LAL"]);
+    const other = makeCandidate({ title: "Hawks Practice Report | November 10, 2026" });
+    expect(teamIdsFor(other, hawks)).toEqual(["ATL"]);
   });
 
   it("reads both teams from the league channel's matchup format", () => {
@@ -36,6 +38,34 @@ describe("teamIdsFor", () => {
     ];
     for (const title of titles) expect(teamIdsFor(makeCandidate({ title }), league), title).toEqual([]);
   });
+});
+
+describe("opponentOf", () => {
+  // Real titles from team channels (see classify.test.ts), own team second.
+  const cases: [string, string, string | null][] = [
+    ["Hawks vs. Lakers Postgame Press Conference: Dyson Daniels", "ATL", "LAL"],
+    ["Hawks vs. Lakers Postgame Press Conference: Dyson Daniels", "LAL", "ATL"],
+    ["Cavs at Hornets | Kenny Atkinson Post Game | 11.09.2026", "CLE", "CHA"],
+    ["Cavs vs 76ers | Game Highlights | 11.06.2026", "CLE", "PHI"],
+    ["Memphis Grizzlies Highlights vs Toronto Raptors", "MEM", "TOR"],
+    ["Detroit Pistons vs. Los Angeles Lakers Highlights | 11.08.26 #NBA", "DET", "LAL"],
+    ["EVERY TRIPLE in Suns Season-High 22 3PM vs Los Angeles Clippers | Phoenix Suns Highlights", "PHX", "LAC"],
+    ["Daniss Jenkins Highlights  l  Pistons vs Wizards  l 11.09.26 #NBA", "DET", "WAS"],
+    ["Post Game Press Conference l Ausar Thompson l Pistons at Hornets   11.04.26 #NBA", "DET", "CHA"],
+    ["Full Denver Nuggets Postgame Media Availability vs. HOU 🎙", "DEN", "HOU"],
+    ["Kyrie Irving (35 points) vs. Indiana Pacers | November 9, 2026", "DAL", "IND"],
+    ["Highlights: Anthony Davis secures double-double vs. Hawks", "WAS", "ATL"],
+    // A city alone is not a team, and "at" a place is not an opponent.
+    ["OG Anunoby HIGHLIGHT REEL vs Milwaukee | November 10, 2026", "NYK", null],
+    ["New York Knicks Defeat the Milwaukee Bucks at Madison Square Garden | November 10, 2026", "NYK", null],
+    ["Ty Jerome Walk-Off Interview | Grizzlies vs. Raptors", "MEM", "TOR"],
+    ["Inside the Locker Room | Media Day 2026", "BOS", null],
+    // Lower-case "hou" is a word, not a code.
+    ["Shooting drills vs hou style defense", "DEN", null],
+  ];
+  for (const [title, own, expected] of cases) {
+    it(`${own}: ${title}`, () => expect(opponentOf(title, own)).toBe(expected));
+  }
 });
 
 describe("decide", () => {

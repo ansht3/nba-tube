@@ -17,9 +17,10 @@ the top.
   in `data/overrides.json`.
 - **A few highlight packages are mislabelled game versus player.** "Bryce Hopkins
   PUT ON A SHOW | Game Highlights DEN vs. TOR" is filed as game highlights.
-- **Opponent teams are not tagged on team-channel videos.** A Hawks postgame
-  presser after a Lakers game appears under the Hawks only. The league channel's
-  full-game recaps are tagged with both teams.
+- **Opponents are tagged only when the title names them exactly.** A team
+  channel's "Hawks vs. Lakers Postgame…" now appears under both teams, but
+  "Highlights vs Milwaukee" (a city, not a team) stays under the channel's team
+  only. Rows already stored keep their old tags until the video is next written.
 
 ## Database and worker (built, not yet running anywhere)
 
